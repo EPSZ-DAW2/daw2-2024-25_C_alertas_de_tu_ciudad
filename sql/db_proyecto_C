@@ -1,0 +1,39 @@
+-- --------------------------------------------------------------------------
+-- Esquema de la Base de Datos para un sistema de gestión de usuarios
+-- --------------------------------------------------------------------------
+
+SET FOREIGN_KEY_CHECKS=0;
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+SET AUTOCOMMIT=0;
+START TRANSACTION;
+
+-- --------------------------------------------------------
+-- Base de datos: `daw_proyecto_C`
+-- --------------------------------------------------------
+DROP DATABASE IF EXISTS `proyecto_C`;
+CREATE DATABASE IF NOT EXISTS `proyecto_C`
+  CHARACTER SET 'utf8'
+  COLLATE 'utf8_general_ci';
+
+USE `proyecto_C`;
+
+-- --------------------------------------------------------
+-- Tabla: `usuario`
+-- --------------------------------------------------------
+DROP TABLE IF EXISTS `usuario`;
+CREATE TABLE IF NOT EXISTS `usuario` (
+  `id` INT AUTO_INCREMENT COMMENT 'ID único para cada usuario',
+  `email` VARCHAR(255) NOT NULL UNIQUE COMMENT 'Correo electrónico único del usuario',
+  `password` VARCHAR(255) NOT NULL COMMENT 'Contraseña encriptada del usuario',
+  `nick` VARCHAR(100) NOT NULL COMMENT 'Apodo o nombre de usuario',
+  `register_date` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de registro del usuario',
+  `confirmed` BOOLEAN DEFAULT FALSE COMMENT 'Indica si el usuario ha confirmado su registro',
+  `role` ENUM('guest', 'normal', 'moderator', 'admin', 'sysadmin') DEFAULT 'normal' COMMENT 'Rol del usuario en el sistema',
+  `attempts` INT DEFAULT 0 COMMENT 'Intentos fallidos de acceso',
+  `locked` BOOLEAN DEFAULT FALSE COMMENT 'Indica si el usuario está bloqueado',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+COMMIT;
+
