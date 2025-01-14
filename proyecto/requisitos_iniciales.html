@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Requisitos Iniciales - Publicación de Alertas</title>
+  <style>
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 1.1em;
+      background-color: #F0F0F0;
+      margin: 0;
+      padding: 10px;
+      box-sizing: border-box;
+      line-height: 1.5;
+    }
+
+
+    .titulo {
+      font-weight: bold;
+      margin: 20px 10px;
+    }
+
+    .titulo1 {
+      color: black;
+      font-size: 4em;
+    }
+
+    .titulo2 {
+      color: grey;
+      font-size: 1.4em;
+    }
+
+    .titulo3 {
+      color: black;
+      font-size: 1.3em;
+      margin-top: 40px;
+    }
+
+    p {
+      color: black;
+      font-size: 1.1em;
+      margin: 20px 10px;
+      text-align: justify;
+    }
+
+    .bloque {
+      border: 2px solid grey;
+      padding: 20px 70px 20px 70px;
+      margin: 20px 40px 20px 40px;
+      background-color: #FFF;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    ul {
+      list-style-type: circle;
+      margin-left: 10px;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    hr {
+      background-color: grey;
+      margin: 20px;
+    }
+
+    table {
+      margin: 20px;
+      background-color: #FFF;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: grey;
+      color: white;
+      text-align: center;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #ddd;
+    }
+
+    footer {
+      color: grey;
+      text-align: center;
+      border: 2px solid grey;
+      padding: 20px 70px 20px 70px;
+      margin: 20px 40px 20px 40px;
+      background-color: rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bloque">
+    <div class="titulo titulo1">Publicación de Alertas de tu Ciudad</div>
+    <div class="titulo titulo2">Publicación y Gestión de Alertas, Avisos, Sucesos, Eventos que ocurren en tu Ciudad o cercanías.</div>
+    <div class="titulo titulo2">Desarrollo de Aplicaciones Web II - Proyecto en Grupo</div>
+
+    <div class="titulo titulo3">Requisitos Iniciales</div>
+      <div>
+        <p>
+          Se desea diseñar una aplicación web para la <strong>Publicación de Alertas de tu Ciudad</strong>. La aplicación web permitirá 
+          a los usuarios visualizar y gestionar alertas, avisos, sucesos y eventos ocurridos en su ciudad o cercanías. Se podrán realizar 
+          búsquedas mediante un sistema de filtros por categorías, etiquetas, ubicación o palabras clave, mostrando los resultados en listas 
+          o mapas interactivos. Cada alerta contará con una ficha detallada que incluirá datos como título, descripción, horarios, ubicación, 
+          imágenes asociadas, estado, comentarios y valoraciones de otros usuarios.<br>
+          Los usuarios registrados podrán gestionar su perfil, crear y administrar alertas, comentar, etc. Además, podrán gestionar sus 
+          publicaciones y las respuestas de moderadores o administradores.<br>
+          La plataforma contará con roles diferenciados para moderadores y administradores. Los moderadores supervisarán áreas específicas, 
+          gestionando alertas y comentarios en su jurisdicción. Los administradores tendrán funciones avanzadas para gestionar categorías, 
+          etiquetas, ubicaciones y garantizar la organización y funcionalidad del sistema.<br><br>
+          El sistema incluye una serie de funcionalidades necesarias para el manejo eficiente de alertas y usuarios:<br>
+        </p>
+      </div>
+
+      <div class="titulo titulo3">Especificación del Diccionario de Datos</div>
+      <p>Información y Datos que debe almacenar y manejar el sistema para proporcionar las funcionalidades indicadas en los requisitos.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Elemento</th>
+              <th>Descripción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Alerta</b></td>
+              <td>Es el objeto principal de la aplicación. Contiene los datos fundamentales de un suceso, evento, aviso o alerta en la ciudad o cercanías. Cada alerta incluye: <br> <b>id</b> (Identificador único), <b>título</b> (Nombre o título descriptivo), <b>descripción</b> (Detalles sobre el evento), <b>fecha/hora de inicio</b> (El momento en el que se inicia la alerta), <b>duración estimada</b> (Duración que se espera que dure la alerta), <b>Lugar</b> (Ubicación geográfica, referida a la tabla Lugar), <b>detalles</b> (Información adicional), <b>notas</b> (Notas relevantes), <b>url externa</b> (Enlace web opcional relacionado con la alerta), <b>Imagen principal</b> (Imagen asociada a la alerta), <b>[Imágenes adicionales]</b> (Otras imágenes relacionadas), <b>Etiquetas</b> (Palabras clave asociadas), <b>Clasificación</b> (Categoría de la alerta), <b>Estados de alerta</b> (Estado actual de la alerta), <b>Registro de usuario</b> (Información del usuario que crea o modifica la alerta), <b>Comentarios</b> (Respuestas de usuarios).</td>
+            </tr>
+            <tr>
+              <td><b>Lugar</b></td>
+              <td>Es la ubicación geográfica asociada a una alerta. Puede ser un punto específico en el mapa, como una calle, un barrio o una ciudad, y se relaciona con la tabla correspondiente. Este dato es crucial para filtrar alertas según la ubicación geográfica. Incluye: <b>dirección</b> (Dirección completa), <b>notas del lugar</b> (Información adicional relevante sobre el lugar), <b>Área</b> (Puede asociarse con áreas como País, Estado, Ciudad, etc.).</td>
+            </tr>
+            <tr>
+              <td><b>Área</b></td>
+              <td>Define las áreas geográficas relacionadas con una alerta. Esto puede incluir categorías como país, estado, provincia, municipio, zona, etc., y se utiliza para agrupar alertas en función de la ubicación. Las áreas se organizan en jerarquías, de modo que cada área puede tener un área padre. Por ejemplo: <br> 1=País, 2=Estado, 3=Provincia, 4=Población, 5=Zona. Además, pueden incluir códigos de área como 1=Continente, 2=País, 3=Estado, etc. Estas relaciones jerárquicas permiten realizar búsquedas filtradas por ubicación geográfica.</td>
+            </tr>
+            <tr>
+              <td><b>Imagen</b></td>
+              <td>Elemento que representa la imagen asociada a una alerta. Se puede almacenar como un archivo externo en una carpeta específica o como un campo binario en la base de datos. La imagen puede ser una foto relacionada con el evento o una representación gráfica que ayude a ilustrar la alerta. Cada alerta puede tener una o más imágenes asociadas.</td>
+            </tr>
+            <tr>
+              <td><b>Imágenes Adicionales</b></td>
+              <td>Enlace a las imágenes adicionales asociadas a una alerta. Este campo permite vincular múltiples imágenes a una alerta en caso de que haya más de una imagen relevante. Cada imagen adicional se relaciona a través de un identificador único y puede incluir fotos adicionales de la zona o del evento.</td>
+            </tr>
+            <tr>
+              <td><b>Etiquetas de Alerta</b></td>
+              <td>Las etiquetas son palabras clave o términos que describen la alerta. Estas etiquetas pueden ayudar a clasificar y categorizar alertas. Por ejemplo, una alerta puede tener etiquetas como "tormenta", "accidente", "emergencia", etc. <br> Existen tres formas de gestionar las etiquetas: <br> 1) Relación directa entre la <b>Etiqueta</b> y la <b>Alerta</b>. <br> 2) Lista de identificadores de etiqueta asociada a una alerta. <br> 3) Lista de nombres de etiquetas asociada a la alerta.</td>
+            </tr>
+            <tr>
+              <td><b>Categoría</b></td>
+              <td>Las categorías sirven para organizar las alertas de manera jerárquica. Cada categoría tiene un nombre y una descripción, y puede tener una categoría padre. De esta forma, las alertas pueden ser clasificadas según temas específicos como "Incendios", "Inundaciones", "Accidentes", etc. Esta organización jerárquica facilita el filtrado y la gestión de las alertas.</td>
+            </tr>
+            <tr>
+              <td><b>Estados de alerta</b></td>
+              <td>Indican el estado actual de la alerta, si está activa, visible o cerrada. Además, se registra información sobre el número de denuncias recibidas, la fecha y hora de la primera denuncia, el motivo de terminación y las razones del bloqueo de la alerta. Se pueden incluir detalles como: <b>activa</b>, <b>cerrada</b>, <b>visible</b>, <b>bloqueada</b> por denuncias o por un moderador, y el <b>usuario bloqueador</b> (si aplica).</td>
+            </tr>
+            <tr>
+              <td><b>Comentarios</b></td>
+              <td>Los usuarios pueden agregar comentarios a una alerta. Cada comentario tiene un texto, un registro de usuario asociado (quién lo realizó), y un estado (abierto, cerrado). Los comentarios también pueden ser denunciados, lo que puede resultar en su bloqueo si se recibe un número determinado de denuncias. Los comentarios también pueden tener una jerarquía si son respuestas a otros comentarios.</td>
+            </tr>
+            <tr>
+              <td><b>Comentario</b></td>
+              <td>Es una respuesta individual o reacción dentro del sistema. Cada comentario tiene un texto, un estado de cierre (abierto o cerrado), un número de denuncias, y un estado de bloqueo si ha sido reportado. Los comentarios también se asocian con el usuario que los crea y pueden tener un comentario padre si es una respuesta a otro comentario.</td>
+            </tr>
+            <tr>
+              <td><b>Registro de usuario</b></td>
+              <td>El registro de usuario se utiliza para almacenar información sobre las acciones de los usuarios. Esto incluye datos sobre la fecha y hora de creación de un elemento (alerta, comentario), así como la fecha y hora de su modificación. Se vincula a los usuarios que crearon o modificaron una alerta o comentario, lo que permite hacer un seguimiento de las modificaciones en el sistema.</td>
+            </tr>
+            <tr>
+              <td><b>Usuario</b></td>
+              <td>Un usuario tiene varios atributos como el <b>email</b>, <b>password</b>, <b>nick</b>, <b>nombre</b>, <b>apellidos</b>, <b>dirección</b>, <b>fecha de registro</b>, <b>estado de bloqueo</b>, etc. Los usuarios son esenciales para la creación de alertas, comentarios y la gestión de moderación. También se incluye información sobre las <b>áreas de moderación</b>, las <b>denuncias</b> y las alertas que han creado o gestionado.</td>
+            </tr>
+            <tr>
+              <td><b>Áreas de moderación</b></td>
+              <td>Las áreas de moderación permiten a los usuarios actuar como moderadores dentro de un área geográfica específica. Un usuario puede ser asignado a una o varias áreas para gestionar alertas, comentarios y otros elementos dentro de esa zona. Las áreas pueden ser territoriales (país, estado, ciudad, etc.) y están asociadas a permisos de moderación.</td>
+            </tr>
+            <tr>
+              <td><b>Incidencia</b></td>
+              <td>Una incidencia es un informe relacionado con una alerta o comentario. Las incidencias pueden ser de varios tipos, como avisos, notificaciones, denuncias o consultas, y se utilizan para gestionar el sistema. Las incidencias pueden tener fechas y horas de lectura, texto relacionado, y pueden estar asociadas a un <b>Usuario</b> (quién generó la incidencia), una <b>Alerta</b> o un <b>Comentario</b>.</td>
+            </tr>
+            <tr>
+              <td><b>Configuración</b></td>
+              <td>La configuración es un conjunto de parámetros que definen el comportamiento y las limitaciones de la aplicación. Estos parámetros incluyen <b>número de alertas</b>, <b>número de denuncias</b>, <b>tiempos de bloqueo</b>, <b>etc.</b> Se utilizan para establecer valores predeterminados y ajustes que afectan la experiencia de usuario y las reglas de moderación.</td>
+            </tr>
+          </tbody>
+        </table>
+        <hr>
+  </div>
+  <footer>
+    Proyecto en Grupo - Requisitos Iniciales - Grupo C - 2024/2025
+  </footer>
+</body>
+</html>
