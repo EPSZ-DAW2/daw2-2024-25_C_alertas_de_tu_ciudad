@@ -25,7 +25,7 @@ class Usuario extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['email', 'nick', 'password'], 'required'], // ✅ 移除 role 作为必填项
+            [['email', 'username', 'password'], 'required'], // ✅ 移除 role 作为必填项
             [['email'], 'email'],
             [['email'], 'unique'],
             [['password'], 'string', 'min' => 6],
@@ -43,14 +43,27 @@ class Usuario extends ActiveRecord implements IdentityInterface
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'email' => 'Correo Electrónico',
-            'nick' => 'Nombre de Usuario',
-            'password' => 'Contraseña',
-            'password1' => 'Nueva Contraseña',
-            'password2' => 'Confirmar Nueva Contraseña',
-            'role' => 'Rol de Usuario'
+            [['email', 'username', 'password'], 'required'],
+            [['email'], 'email'],
+            [['email'], 'unique'],
+            [['password'], 'string', 'min' => 6],
+            [['password1', 'password2'], 'string', 'min' => 6],
+            [['password2'], 'compare', 'compareAttribute' => 'password1', 'message' => 'Las contraseñas no coinciden'],
+            [['role'], 'default', 'value' => 'usuario'],
+            [['role'], 'in', 'range' => ['usuario', 'moderador', 'administrador', 'sysadmin']],
+            [['auth_key'], 'string', 'max' => 255],
         ];
+    }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                $this->auth_key = Yii::$app->security->generateRandomString();
+            }
+            return true;
+        }
+        return false;
     }
 
     public static function findIdentity($id)
@@ -85,8 +98,9 @@ class Usuario extends ActiveRecord implements IdentityInterface
 
     public function validatePassword($password)
     {
-        return $this->password === $password;
+        return Yii::$app->security->validatePassword($password, $this->password);
     }
+
 
     public function setPassword($password)
     {
