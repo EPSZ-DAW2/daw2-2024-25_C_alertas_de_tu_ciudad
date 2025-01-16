@@ -33,6 +33,7 @@ class Usuario extends ActiveRecord implements IdentityInterface
             [['password2'], 'compare', 'compareAttribute' => 'password1', 'message' => 'Las contraseñas no coinciden'],
             [['role'], 'default', 'value' => 'usuario'], // ✅ 让 role 默认值为 "usuario"
             [['role'], 'in', 'range' => ['usuario', 'moderador', 'administrador', 'sysadmin']],
+            [['nick', 'surname'], 'string', 'max' => 255], // Validación para 'nick' y 'surname'
         ];
     }
 
@@ -49,9 +50,10 @@ class Usuario extends ActiveRecord implements IdentityInterface
             [['password'], 'string', 'min' => 6],
             [['password1', 'password2'], 'string', 'min' => 6],
             [['password2'], 'compare', 'compareAttribute' => 'password1', 'message' => 'Las contraseñas no coinciden'],
-            [['role'], 'default', 'value' => 'usuario'],
-            [['role'], 'in', 'range' => ['usuario', 'moderador', 'administrador', 'sysadmin']],
+            [['role'], 'default', 'value' => 'normal'],
+            [['role'], 'in', 'range' => ['guest', 'normal', 'moderador', 'administrador', 'sysadmin']],
             [['auth_key'], 'string', 'max' => 255],
+            [['nick', 'surname'], 'Apodo, Apellido'],
         ];
     }
 
@@ -105,6 +107,52 @@ class Usuario extends ActiveRecord implements IdentityInterface
     public function setPassword($password)
     {
         $this->password = $password;
+    }
+
+
+     /**
+     * Verifica si el usuario es administrador del portal
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Verifica si el usuario es moderador
+     * @return bool
+     */
+    public function isModerator()
+    {
+        return $this->role === 'moderator';
+    }
+
+    /**
+     * Verifica si el usuario es un usuario registrado
+     * @return bool
+     */
+    public function isNormalUser()
+    {
+        return $this->role === 'normal';
+    }
+
+    /**
+     * Verifica si el usuario es sysadmin
+     * @return bool
+     */
+    public function isSysAdmin()
+    {
+        return $this->role === 'sysadmin';
+    }
+
+    /**
+     * Verifica si el usuario es invitado (guest)
+     * @return bool
+     */
+    public function isGuest()
+    {
+        return $this->role === 'guest';
     }
 }
 
