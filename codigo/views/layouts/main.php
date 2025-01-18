@@ -30,33 +30,53 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <?php $this->beginBody() ?>
 
 <header id="header">
-    <?php
-    NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top']
-    ]);
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            ['label' => 'Test', 'url' => ['/test/index']],
-            Yii::$app->user->isGuest
-                ? ['label' => 'Login', 'url' => ['/site/login']]
-                : '<li class="nav-item">'
-                    . Html::beginForm(['/site/logout'])
-                    . Html::submitButton(
-                        'Logout (' . Yii::$app->user->identity->username . ')',
-                        ['class' => 'nav-link btn btn-link logout']
-                    )
-                    . Html::endForm()
-                    . '</li>'
-        ]
-    ]);
-    NavBar::end();
-    ?>
+<?php
+NavBar::begin([
+    'brandLabel' => Yii::$app->name,
+    'brandUrl' => Yii::$app->homeUrl,
+    'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top']
+]);
+echo Nav::widget([
+    'options' => ['class' => 'navbar-nav me-auto'],
+    'items' => [
+        ['label' => 'Home', 'url' => ['/site/index']],
+        ['label' => 'About', 'url' => ['/site/about']],
+        ['label' => 'Contact', 'url' => ['/site/contact']],
+        ['label' => 'Test', 'url' => ['/test/index']],
+        ['label' => 'Publicar', 'url' => ['/publicar/index']], // Add "Publicar" menu item
+        Yii::$app->user->isGuest
+            ? ['label' => 'Login', 'url' => ['/site/login']]
+            : '<li class="nav-item">'
+                . Html::beginForm(['/site/logout'])
+                . Html::submitButton(
+                    'Logout (' . Yii::$app->user->identity->username . ')',
+                    ['class' => 'nav-link btn btn-link logout']
+                )
+                . Html::endForm()
+                . '</li>'
+    ]
+]);
+
+// Add a text search bar to the navigation bar
+echo Html::beginForm(['/site/search'], 'get', ['class' => 'd-flex']);
+echo Html::textInput('search', '', ['class' => 'form-control me-2', 'placeholder' => 'Search']);
+echo Html::submitButton('Search', ['class' => 'btn btn-outline-light']);
+echo Html::endForm();
+
+// 用户信息圆形按钮
+if (!Yii::$app->user->isGuest) {
+    echo '<div class="ms-auto d-flex align-items-center">';
+    echo '<a href="' . \yii\helpers\Url::to(['/user/profile']) . '" class="btn btn-light rounded-circle d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; text-decoration: none; font-size: 12px; font-weight: bold;">'
+        . Html::encode(Yii::$app->user->identity->username) // 将用户名放入圆形按钮中
+        . '</a>';
+    echo '</div>';
+}
+
+
+
+NavBar::end();
+?>
+
 </header>
 
 <main id="main" class="flex-shrink-0" role="main">

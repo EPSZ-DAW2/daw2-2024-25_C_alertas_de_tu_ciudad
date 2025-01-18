@@ -26,8 +26,8 @@ SET time_zone = "+00:00";
 --
 -- Estructura de tabla para la tabla `alerta`
 --
-
-CREATE TABLE `alerta` (
+DROP TABLE IF EXISTS `alerta`;
+CREATE TABLE IF NOT EXISTS `alerta`(
   `id` int(11) NOT NULL COMMENT 'ID único de la alerta',
   `titulo` varchar(255) NOT NULL COMMENT 'Título de la alerta',
   `descripcion` text NOT NULL COMMENT 'Descripción detallada de la alerta',
@@ -48,7 +48,8 @@ INSERT INTO `alerta` (`id`, `titulo`, `descripcion`, `usuario_id`, `fecha_creaci
 -- Estructura de tabla para la tabla `usuario`
 --
 
-CREATE TABLE `usuario` (
+DROP TABLE IF EXISTS `usuario`;
+CREATE TABLE IF NOT EXISTS `usuario`(
   `id` int(11) NOT NULL COMMENT 'ID único para cada usuario',
   `email` varchar(255) NOT NULL COMMENT 'Correo electrónico único del usuario',
   `password` varchar(255) NOT NULL COMMENT 'Contraseña encriptada del usuario',
@@ -67,7 +68,10 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`id`, `email`, `password`, `auth_key`, `username`, `register_date`, `confirmed`, `role`, `attempts`, `locked`) VALUES
 (3, 'dj@usal.es', '$2y$13$IXRmKNxfNNMSd7DGQkFo3.aOUovcBEKYby3qojNLF761o4xXfX2.2', 'h5uq58uxdPNhFEmtStMDYoD2a8V60ebT', 'djPiri', '2025-01-14 12:37:44', 1, 'normal', 0, 0),
-(7, 'mem@usal.es', '$2y$13$hqt.XD489dM.v9JGloiNLeyE.W4B1fqkFQ26pXWAcN4WtHyc354KW', 'RUwSX2LdFVBK0tx0mDsT0ZbBhUQla5v8', 'mem1', '2025-01-15 19:39:22', 1, 'normal', 0, 0);
+(7, 'mem@usal.es', '$2y$13$hqt.XD489dM.v9JGloiNLeyE.W4B1fqkFQ26pXWAcN4WtHyc354KW', 'RUwSX2LdFVBK0tx0mDsT0ZbBhUQla5v8', 'mem1', '2025-01-15 19:39:22', 1, 'normal', 0, 0),
+(8, 'moderator@example.com', '$2y$13$MXcf66AJlWJvFKek7WcZxeeGnkILvm/OCniMrPeJGr9Gxei1Cve8i', 'wMHOAxYIHIwbD0B3CpRqjBTM5', 'moderator_user', NOW(), 1, 'moderator', 0, 0),
+(9, 'admin@example.com', '$2y$13$MXcf66AJlWJvFKek7WcZxeeGnkILvm/OCniMrPeJGr9Gxei1Cve8i', 'wMHOAxYIHIwbD0B3CpRqjBTM5', 'admin_user', NOW(), 1, 'admin', 0, 0),
+(10, 'sysadmin@example.com', '$2y$13$MXcf66AJlWJvFKek7WcZxeeGnkILvm/OCniMrPeJGr9Gxei1Cve8i', 'wMHOAxYIHIwbD0B3CpRqjBTM5', 'sysadmin_user', NOW(), 1, 'sysadmin', 0, 0);
 
 --
 -- Índices para tablas volcadas
@@ -101,7 +105,7 @@ ALTER TABLE `alerta`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada usuario', AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada usuario', AUTO_INCREMENT=11;
 
 --
 -- Restricciones para tablas volcadas

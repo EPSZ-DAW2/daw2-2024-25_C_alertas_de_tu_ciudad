@@ -49,8 +49,10 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            'baseUrl' => '/Web2/daw2_2024-25_yii2_basic_epsz/codigo/web', // 添加项目子目录路径
             'rules' => [
                 'registrar' => 'auth/registrar',
+                'profile' => 'user/profile', 
             ],
         ],
 

@@ -10,6 +10,7 @@ class Usuario extends ActiveRecord implements IdentityInterface
 {
     public $password1;
     public $password2;
+    public $nick; // 添加 nick 属性，确保可以被访问
 
     /**
      * {@inheritdoc}
@@ -44,16 +45,13 @@ class Usuario extends ActiveRecord implements IdentityInterface
     public function attributeLabels()
     {
         return [
-            [['email', 'username', 'password'], 'required'],
-            [['email'], 'email'],
-            [['email'], 'unique'],
-            [['password'], 'string', 'min' => 6],
-            [['password1', 'password2'], 'string', 'min' => 6],
-            [['password2'], 'compare', 'compareAttribute' => 'password1', 'message' => 'Las contraseñas no coinciden'],
-            [['role'], 'default', 'value' => 'normal'],
-            [['role'], 'in', 'range' => ['guest', 'normal', 'moderador', 'administrador', 'sysadmin']],
-            [['auth_key'], 'string', 'max' => 255],
-            [['nick', 'surname'], 'Apodo, Apellido'],
+            'email' => 'Correo Electrónico', // 邮件
+            'username' => 'Nombre de Usuario', // 用户名
+            'password' => 'Contraseña', // 密码
+            'nick' => 'Apodo', // 昵称
+            'surname' => 'Apellido', // 姓氏
+            'role' => 'Rol de Usuario', // 用户角色
+            'auth_key' => 'Clave de Autenticación', // 认证密钥
         ];
     }
 
