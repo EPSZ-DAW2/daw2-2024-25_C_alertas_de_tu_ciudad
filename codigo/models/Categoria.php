@@ -61,4 +61,15 @@ class Categoria extends ActiveRecord
     {
         return $this->hasOne(self::className(), ['id' => 'id_padre']);
     }
+
+    /**
+     * Relación con las etiquetas asociadas a la categoría.
+     *
+     * @return ActiveQuery
+     */
+    public function getEtiquetas()
+    {
+        return $this->hasMany(Etiqueta::className(), ['id' => 'id_etiqueta'])
+                    ->viaTable('categoria_etiqueta', ['id_categoria' => 'id']);
+    }
 }

@@ -95,9 +95,9 @@ class EtiquetaController extends Controller
     {
         $model = $this->findModel($id);
 
-        return $this->render('view-categorias', [
+        return $this->render('//categoria/view-categorias', [
             'model' => $model,
-            'categorias' => $model->getCategorias(),
+            'categorias' => $model->getCategorias()->all(),
         ]);
     }
 
