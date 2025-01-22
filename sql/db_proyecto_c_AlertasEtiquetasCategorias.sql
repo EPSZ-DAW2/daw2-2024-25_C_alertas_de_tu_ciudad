@@ -23,6 +23,26 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
+
+
+--
+-- Estructura de tabla para la tabla `comentarios`
+--
+
+CREATE TABLE `comentarios` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `contenido` TEXT NOT NULL,
+    `numero_denuncias` INT DEFAULT 0,
+    `es_denunciado` TINYINT(1) DEFAULT 0,
+    `es_visible` TINYINT(1) DEFAULT 1,
+    `es_cerrado` TINYINT(1) DEFAULT 0,
+    `creado_en` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `actualizado_en` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+
+
+
 --
 -- Estructura de tabla para la tabla `alertas`
 --
@@ -82,6 +102,39 @@ CREATE TABLE `usuario` (
   `locked` tinyint(1) DEFAULT 0 COMMENT 'Indica si el usuario está bloqueado'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+
+
+
+--
+-- Estructura de tabla para la tabla `configuracion`
+--
+
+CREATE TABLE configurations (
+   id INT AUTO_INCREMENT PRIMARY KEY, -- ID único para cada configuración
+   key_name VARCHAR(100) NOT NULL,    -- Clave única de la configuración (ejemplo: "site_title")
+   value TEXT NOT NULL,               -- Valor de la configuración (ejemplo: "Mi Aplicación")
+   description TEXT,                  -- Descripción de la configuración
+   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha de creación
+   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- Fecha de actualización
+);
+
+
+--
+-- Estructura de tabla para la tabla `backup`
+--
+CREATE TABLE backups (
+  id INT AUTO_INCREMENT PRIMARY KEY, -- ID único para cada archivo de respaldo
+  file_name VARCHAR(255) NOT NULL,  -- Nombre del archivo de respaldo
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Fecha de creación del respaldo
+);
+
+
+-- Insertar configuraciones iniciales
+INSERT INTO configurations (key_name, value, description)
+VALUES
+    ('pagination_size', '10', 'Número de elementos por página');
+
+
 --
 -- Volcado de datos para la tabla `usuario`
 --
@@ -90,8 +143,16 @@ INSERT INTO `usuario` (`id`, `email`, `password`, `auth_key`, `nick`, `username`
 (3, 'dj@usal.es', '$2y$13$IXRmKNxfNNMSd7DGQkFo3.aOUovcBEKYby3qojNLF761o4xXfX2.2', 'h5uq58uxdPNhFEmtStMDYoD2a8V60ebT', 'djPiri', 'djPiri', '2025-01-14 12:37:44', 1, '', 0, 0);
 
 --
--- Índices para tablas volcadas
+-- Índices para tablas comentarios
 --
+INSERT INTO comentarios (contenido, numero_denuncias, es_denunciado, es_visible, es_cerrado)
+VALUES
+    ('Primer comentario de prueba', 0, 0, 1, 0),
+    ('Segundo comentario denunciado', 2, 1, 1, 0),
+    ('Tercer comentario bloqueado', 0, 0, 0, 0),
+    ('Cuarto comentario cerrado', 0, 0, 1, 1),
+    ('Quinto comentario activo', 1, 0, 1, 0);
+
 
 --
 -- Indices de la tabla `alertas`

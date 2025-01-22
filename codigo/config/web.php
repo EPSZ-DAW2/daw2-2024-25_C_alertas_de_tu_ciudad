@@ -43,11 +43,14 @@ $config = [
             ],
         ],
         'db' => $db,
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-                'registrar' => 'auth/registrar',
+
+
+        'urlManager' => [  // 配置 URL 管理器
+            'enablePrettyUrl' => false,  // 启用简洁 URL
+            'showScriptName' => false,  // 隐藏入口脚本 `index.php`
+            'rules' => [  // 定义自定义路由规则
+                'comentarios' => 'comentarios/index',  // 将 `comentarios` 映射到 `ComentariosController` 的 `actionIndex`
+                'comentarios/revisar-denuncias' => 'comentarios/revisar-denuncias',  // 将 `comentarios/revisar-denuncias` 映射到 `ComentariosController` 的 `actionRevisarDenuncias`
             ],
         ],
 
