@@ -19,7 +19,7 @@ class TestController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        return $this->render('/alert/index');
     }
     
     public function actionBuscarLenguaje( $term=null)
