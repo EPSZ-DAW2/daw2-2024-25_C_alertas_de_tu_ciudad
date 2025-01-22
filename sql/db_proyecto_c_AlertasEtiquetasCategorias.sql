@@ -68,6 +68,28 @@ CREATE TABLE `categorias` (
   `id_etiqueta` int(11) DEFAULT NULL COMMENT 'ID de la etiqueta relacionada'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+--
+-- Volcado de datos para la tabla `categorias`
+--
+
+INSERT INTO `categorias` (`id`, `nombre`, `descripcion`, `id_padre`, `id_etiqueta`) VALUES
+(1, 'Catástrofes naturales', 'Eventos como terremotos, incendios forestales, huracanes, etc.', NULL, NULL),
+(2, 'Emergencias de salud pública', 'Pandemias y brotes de enfermedades infecciosas.', NULL, NULL),
+(3, 'Terrorismo', 'Amenazas de bomba, tiroteos y otras actividades terroristas.', NULL, NULL),
+(4, 'Accidentes industriales', 'Explosiones, vertidos de sustancias químicas y fallos estructurales.', NULL, NULL),
+(5, 'Emergencias civiles', 'Órdenes de evacuación, disturbios civiles y otras emergencias.', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `categoria_etiqueta`
+--
+
+CREATE TABLE `categoria_etiqueta` (
+  `id_categoria` int(11) NOT NULL,
+  `id_etiqueta` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
 -- --------------------------------------------------------
 
 --
@@ -170,6 +192,13 @@ ALTER TABLE `categorias`
   ADD KEY `id_etiqueta` (`id_etiqueta`);
 
 --
+-- Indices de la tabla `categoria_etiqueta`
+--
+ALTER TABLE `categoria_etiqueta`
+  ADD PRIMARY KEY (`id_categoria`,`id_etiqueta`),
+  ADD KEY `id_etiqueta` (`id_etiqueta`);
+
+--
 -- Indices de la tabla `etiquetas`
 --
 ALTER TABLE `etiquetas`
@@ -226,6 +255,13 @@ ALTER TABLE `alertas`
 ALTER TABLE `categorias`
   ADD CONSTRAINT `categorias_ibfk_1` FOREIGN KEY (`id_padre`) REFERENCES `categorias` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `categorias_ibfk_2` FOREIGN KEY (`id_etiqueta`) REFERENCES `etiquetas` (`id`) ON DELETE SET NULL;
+
+--
+-- Filtros para la tabla `categoria_etiqueta`
+--
+ALTER TABLE `categoria_etiqueta`
+  ADD CONSTRAINT `categoria_etiqueta_ibfk_1` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `categoria_etiqueta_ibfk_2` FOREIGN KEY (`id_etiqueta`) REFERENCES `etiquetas` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
