@@ -7,6 +7,7 @@ use yii\db\ActiveRecord;
 
 class Comentario extends ActiveRecord
 {
+<<<<<<< HEAD
     /**
      * Define el nombre de la tabla asociada
      */
@@ -31,10 +32,28 @@ class Comentario extends ActiveRecord
     /**
      * Etiquetas para los atributos (usados en formularios)
      */
+=======
+    public static function tableName()
+    {
+        return 'comentario';
+    }
+
+    public function rules()
+    {
+        return [
+            [['texto', 'id_alerta', 'id_usuario'], 'required'],
+            [['texto'], 'string'],
+            [['id_alerta', 'id_usuario', 'estado_cierre', 'num_denuncias'], 'integer'],
+            [['bloqueado'], 'boolean'],
+        ];
+    }
+
+>>>>>>> alba_develop
     public function attributeLabels()
     {
         return [
             'id' => 'ID',
+<<<<<<< HEAD
             'contenido' => 'Contenido del Comentario',
             'numero_denuncias' => 'Número de Denuncias',
             'es_denunciado' => 'Denunciado',
@@ -45,3 +64,24 @@ class Comentario extends ActiveRecord
         ];
     }
 }
+=======
+            'texto' => 'Texto',
+            'id_alerta' => 'ID Alerta',
+            'id_usuario' => 'ID Usuario',
+            'estado_cierre' => 'Estado de Cierre',
+            'num_denuncias' => 'Número de Denuncias',
+            'bloqueado' => 'Bloqueado',
+        ];
+    }
+
+    public function getAlerta()
+    {
+        return $this->hasOne(Alerta::class, ['id' => 'id_alerta']);
+    }
+
+    public function getUsuario()
+    {
+        return $this->hasOne(Usuario::class, ['id' => 'id_usuario']);
+    }
+}
+>>>>>>> alba_develop
