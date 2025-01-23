@@ -2,14 +2,14 @@
 
 namespace app\models;
 
-<<<<<<< HEAD
+use Yii;
 use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
 
 class Etiqueta extends ActiveRecord
 {
     /**
-     * Nombre de la tabla asociada.
+     * Define el nombre de la tabla asociada.
      */
     public static function tableName()
     {
@@ -17,50 +17,34 @@ class Etiqueta extends ActiveRecord
     }
 
     /**
-     * Reglas de validación para los campos del modelo.
+     * Define las reglas de validación para los campos del modelo.
      */
-=======
-use Yii;
-use yii\db\ActiveRecord;
-
-class Etiqueta extends ActiveRecord
-{
-    public static function tableName()
-    {
-        return 'etiqueta';
-    }
-
->>>>>>> alba_develop
     public function rules()
     {
         return [
-            [['nombre'], 'required'],
-            [['nombre'], 'string', 'max' => 255],
-<<<<<<< HEAD
-            [['descripcion'], 'string'],
+            [['nombre'], 'required'], // El campo 'nombre' es obligatorio
+            [['nombre'], 'string', 'max' => 255], // Máximo 255 caracteres para 'nombre'
+            [['descripcion'], 'string'], // 'descripcion' es opcional y de tipo texto
         ];
     }
 
     /**
-     * Etiquetas para los atributos del modelo.
+     * Define las etiquetas para los atributos del modelo.
      */
-=======
-        ];
-    }
-
->>>>>>> alba_develop
     public function attributeLabels()
     {
         return [
             'id' => 'ID',
             'nombre' => 'Nombre',
-<<<<<<< HEAD
             'descripcion' => 'Descripción',
         ];
     }
 
     /**
      * Verifica si la etiqueta puede ser eliminada.
+     * Una etiqueta puede eliminarse si no tiene categorías asociadas.
+     *
+     * @return bool
      */
     public function canBeDeleted()
     {
@@ -74,18 +58,18 @@ class Etiqueta extends ActiveRecord
      */
     public function getCategorias()
     {
-        return $this->hasMany(Categoria::className(), ['id' => 'id_categoria'])
+        return $this->hasMany(Categoria::class, ['id' => 'id_categoria'])
                     ->viaTable('categoria_etiqueta', ['id_etiqueta' => 'id']);
     }
-}
-=======
-        ];
-    }
 
+    /**
+     * Relación con las alertas asociadas a la etiqueta.
+     *
+     * @return ActiveQuery
+     */
     public function getAlertas()
     {
         return $this->hasMany(Alerta::class, ['id' => 'id_alerta'])
-            ->viaTable('alerta_etiqueta', ['id_etiqueta' => 'id']);
+                    ->viaTable('alerta_etiqueta', ['id_etiqueta' => 'id']);
     }
 }
->>>>>>> alba_develop

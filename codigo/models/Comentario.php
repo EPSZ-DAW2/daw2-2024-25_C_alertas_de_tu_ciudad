@@ -4,12 +4,12 @@ namespace app\models;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\db\ActiveQuery;
 
 class Comentario extends ActiveRecord
 {
-<<<<<<< HEAD
     /**
-     * Define el nombre de la tabla asociada
+     * Define el nombre de la tabla asociada.
      */
     public static function tableName()
     {
@@ -17,27 +17,8 @@ class Comentario extends ActiveRecord
     }
 
     /**
-     * Define las reglas de validación
+     * Define las reglas de validación.
      */
-    public function rules()
-    {
-        return [
-            [['contenido'], 'required'], // El campo contenido es obligatorio
-            [['contenido'], 'string'],
-            [['numero_denuncias', 'es_denunciado', 'es_visible', 'es_cerrado'], 'integer'],
-            [['creado_en', 'actualizado_en'], 'safe'],
-        ];
-    }
-
-    /**
-     * Etiquetas para los atributos (usados en formularios)
-     */
-=======
-    public static function tableName()
-    {
-        return 'comentario';
-    }
-
     public function rules()
     {
         return [
@@ -45,43 +26,45 @@ class Comentario extends ActiveRecord
             [['texto'], 'string'],
             [['id_alerta', 'id_usuario', 'estado_cierre', 'num_denuncias'], 'integer'],
             [['bloqueado'], 'boolean'],
+            [['creado_en', 'actualizado_en'], 'safe'], // Fechas aceptadas como valores válidos
         ];
     }
 
->>>>>>> alba_develop
+    /**
+     * Define las etiquetas para los atributos.
+     */
     public function attributeLabels()
     {
         return [
             'id' => 'ID',
-<<<<<<< HEAD
-            'contenido' => 'Contenido del Comentario',
-            'numero_denuncias' => 'Número de Denuncias',
-            'es_denunciado' => 'Denunciado',
-            'es_visible' => 'Visible',
-            'es_cerrado' => 'Cerrado',
+            'texto' => 'Texto del Comentario',
+            'id_alerta' => 'ID de la Alerta',
+            'id_usuario' => 'ID del Usuario',
+            'estado_cierre' => 'Estado de Cierre',
+            'num_denuncias' => 'Número de Denuncias',
+            'bloqueado' => 'Bloqueado',
             'creado_en' => 'Fecha de Creación',
             'actualizado_en' => 'Última Actualización',
         ];
     }
-}
-=======
-            'texto' => 'Texto',
-            'id_alerta' => 'ID Alerta',
-            'id_usuario' => 'ID Usuario',
-            'estado_cierre' => 'Estado de Cierre',
-            'num_denuncias' => 'Número de Denuncias',
-            'bloqueado' => 'Bloqueado',
-        ];
-    }
 
+    /**
+     * Relación con la tabla `alerta`.
+     *
+     * @return ActiveQuery
+     */
     public function getAlerta()
     {
         return $this->hasOne(Alerta::class, ['id' => 'id_alerta']);
     }
 
+    /**
+     * Relación con la tabla `usuario`.
+     *
+     * @return ActiveQuery
+     */
     public function getUsuario()
     {
         return $this->hasOne(Usuario::class, ['id' => 'id_usuario']);
     }
 }
->>>>>>> alba_develop
