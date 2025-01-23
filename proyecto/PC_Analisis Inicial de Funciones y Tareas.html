@@ -1,0 +1,413 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Proyecto en Grupo - Analisis Inicial de Funciones y Tareas</title>
+</head>
+<body class="papel" style="background-color:#F0F0C0;">
+<style>
+table.tabla tbody td { text-align:center;}
+table.tabla tbody td:first-child { text-align:justify}
+</style>
+<div class="bloque" style="font-family:arial;font-size:1.25em;text-align:justify;border:1.5mm solid #508050;margin:0.25em;padding:1em;">
+
+<div class="titulo titulo0" style="margin:5mm;font-size:2.0em;font-weight:bold;color:#4040F0">Publicación de Alertas de tu Ciudad</div>
+<div class="titulo titulo1" style="margin:5mm;font-size:2.0em;font-weight:bold">Proyecto en Grupo</div>
+<div class="titulo titulo2" style="margin:5mm;font-size:1.5em;font-weight:bold">Analisis Inicial de Funciones y Tareas</div>
+
+<br/>
+&nbsp;&nbsp;&nbsp;De los requisitos iniciales planteados, se extraen una serie de funciones básicas a implementar, además de una serie de tareas adicionales a desarrollar dentro del sistema.
+<br/>
+<br/>
+
+<hr/>
+
+<div class="titulo titulo3" style="margin:0.5em 0;padding:0.5em;font-size:1.0em;font-weight:bold;background-color:#F0C060">Roles / Perfiles:</div>
+<div style="text-align:justify;margin:0em">
+<ul>
+  <li>
+  <strong>Usuario Invitado (guest): </strong>Cualquier usuario que navega por las partes públicas del portal, sin necesidad de estar registrado o validado en la aplicación.
+  </li>
+  <li>
+  <strong>Usuario Registrado (normal): </strong>Pensado para los usuarios que quieren utilizar la web a la hora de crear alertas, realizar comentarrios, gestionar su perfil, gestionar sus incidencias y respuestas de los moderadores o administradores, gestionar sus propias alertas y los comentarios asociados a las alertas propias.
+  </li>
+  <li>
+  <strong>Usuario Moderador (moderador): </strong>Pensado para los usuarios que además deseen colaborar con la web a la hora de moderar las alertas y comentarios de una o varias áreas geográficas.
+  </li>
+  <li>
+  <strong>Administrador del Portal (admin): </strong>Pensado para aquellos usuarios que realizan las tareas de mantenimiento de los datos del sistema, pueden gestionar cualquier cosa de la parte privada como usuarios, alertas y datos asociados, categorías, áreas y ubicaciones, configuración, hacer copias de seguridad o restaurarlas.
+  </li>
+  <li>
+  <strong>Administrador del Sistema (sysadmin): </strong>Pensado para los programadores de la aplicación y/o administradores generales del sistema donde se instale, tendrá acceso a todas las funciones de la aplicación sin restricciones, y opcionalmente deberá poder activar el rol que desee para trabajar como un usuario de ese tipo.
+  </li>
+</ul>
+</div>
+
+<hr/>
+
+<div class="titulo titulo3" style="margin:0.5em 0;padding:0.5em;font-size:1.0em;font-weight:bold;background-color:#60B0D0">Funcionalidades de Gestión Interna:</div>
+<div style="text-align:justify;margin:0em">
+
+<table class="tabla" border="1" style="background-color:#C0E0F0;border:4px ridge #70D0F0;border-collapse:collapse;font-size:1.0em;">
+<thead style="background-color:#60B0D0">
+<tr>
+<th style="width:73em;padding-left:2.5em;">Páginas y Partes Privadas</th>
+<th style="width:3em;">G1</th>
+<th style="width:3em;">G2</th>
+<th style="width:3em;">G3</th>
+<th style="width:3em;">G4</th>
+<th style="width:3em;">G5</th>
+<th style="width:3em;">G6</th>
+<th style="width:3em;">G7</th>
+</tr>
+</thead>
+<tbody>
+
+<tr><td style="padding-left:2em;">Paginas: Mantenimiento de Alertas. (CRUD)<br>*** Permitir eliminar si no hay vinculos.</td>
+<td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Cierre, Finalización, Desactivación de Alerta.</td>
+<td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Caducidad de Alerta por Tiempo de Último Uso/Modificación/Cambio.</td>
+<td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:6em;">Bloquear Hilo de Comentarios de la alerta (poner invisible).</td>
+<td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:6em;">Cerrar Hilo de Comentarios de la alerta.</td>
+<td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+
+
+
+<tr><td style="padding-left:2em;">Paginas: Mantenimiento de Etiquetas. (CRUD)<br>*** Permitir eliminar si no hay vinculos.</td>
+<td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Ver Categorias donde aparece.</td>
+<td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Ver Alertas donde aparece.</td>
+<td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+
+
+
+<tr><td style="padding-left:2em;">Paginas: Mantenimiento de Categorias. (CRUD)<br>*** Permitir eliminar si no hay vinculos</td>
+<td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Asociar, Quitar Etiquetas.</td>
+<td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Enlazar Categorias con Subcategorias..</td>
+<td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+
+
+
+<tr><td style="padding-left:2em;">Paginas: Mantenimiento de Ubicaciones. (CRUD)</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Enlazar Ubicaciones dependientes entre sí.</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Revisar Ubicaciones "libres" en Alertas<br>(todas, nuevas, por fechas, no revisadas o similar).</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+
+
+
+<tr><td style="padding-left:2em;">Paginas: Mantenimiento de Imagenes. (CRUD)</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Nueva (subir imagen + crear registro + almacenar fichero).</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Modificar/Sustituir (subir imagen / subir nueva + almacenar fichero).</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Consultar (ver lista de imagenes, nombres de fichero, ocupación en disco, ...).</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Eliminar (eliminar fichero + borrar registro).</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Revisar Imagenes: (todas, nuevas, por fechas, no revisadas o similar)<br>*** Algoritmo de gestión de carpetas/rutas de almacenamiento para evitar almacenar demasiados archivos en la misma carpeta que afecte al rendimiento del sistema de ficheros subyacente. Ej: "Id" clave descomponerlo en el factor de ocupación y tendremos varios "subId" que marcarán la ruta para las carpetas donde almacenar el archivo.</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+
+
+
+<tr><td style="padding-left:2em;">Paginas: Mantenimiento de Comentarios. (CRUD)</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Revisar denuncias de comentarios.</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Bloquear Hilo (invisible?).</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Cerrar Hilo para que no se pueda continuar o responder.</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+
+
+
+<tr><td style="padding-left:2em;">Paginas: Mantenimiento de Incidencias. (CRUD)</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Revisar / Responder Incidencia (todas, nuevas, por fechas, no revisadas o similar).</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+
+
+
+<tr><td style="padding-left:2em;">Paginas: Mantenimiento de Usuarios del Sistema (CRUD): Usuarios, Roles.</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Revisar Registro de Usuarios (todos, nuevos, por fechas, no revisados o similar).</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Bloquear (manual, automatico x N fallos de acceso).</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Revisar / Responder Incidencias.</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Cambiar Perfil.</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+
+
+
+<tr><td style="padding-left:2em;">Procesos Internos del Sistema:</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Mantenimiento de Configuración. (CRUD)</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Copias de Seguridad, Restauración.</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Control de Alertas No terminadas (Caducadas, etc).</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Control de Usuarios No confirmados.</td>
+<td> </td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Control de Usuarios Bloqueados.</td>
+<td> </td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Control de Incidencias No procesadas.</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+
+<!-- tr>
+<td style="padding-left:0em;">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+ 
+&cross;
+&bull;
+&compfn;
+&otimes;
+&omicron;
+
+&#8226;   Bullet
+&#9885;   Outlined White Star 
+&#9733;   Black Star
+
+</tr -->
+
+</tbody>
+</table>
+</div>
+
+<hr/>
+
+<div class="titulo titulo3" style="margin:0.5em 0;padding:0.5em;font-size:1.0em;font-weight:bold;background-color:#60C060">Funcionalidades del Portal Web:</div>
+<div style="text-align:justify;margin:0em">
+
+<table class="tabla" border="1" style="background-color:#C0F0B0;border:4px ridge #70F070;border-collapse:collapse;font-size:1.0em;">
+<thead style="background-color:#60C060">
+<tr>
+<th style="width:73em;padding-left:2.5em;">Páginas y Partes Públicas</th>
+<th style="width:3em;">W1</th>
+<th style="width:3em;">W2</th>
+<th style="width:3em;">W3</th>
+<th style="width:3em;">W4</th>
+<th style="width:3em;">W5</th>
+<th style="width:3em;">W6</th>
+<th style="width:3em;">W7</th>
+</tr>
+</thead>
+<tbody>
+
+<tr><td style="padding-left:2em;">Plantilla Principal:<br/>
+<span style="padding-left:2em;">Composición de la plantilla pública principal del Portal aplicando alguna de las plantillas/temas públicos creados en <a href="https://yii2.themefactory.net" target="_blank">https://yii2.themefactory.net</a>, y usando las piezas necesarias (propias o de otros compañeros) para mostrar en la misma.</span>
+</td>
+<td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td> </td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Menu Principal.</td>
+<td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td> </td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Usuario conectado / Registro.</td>
+<td> </td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Ver Alertas recientes.</td>
+<td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Arbol de categorías. Buscar Alertas x Categorias a través de un menú o similar.</td>
+<td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Nube Etiquetas. Buscar Alertas x Etiquetas de una entrada de texto o similar.</td>
+<td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Buscador Simple. Buscar Alertas x Ubicación a través de una entrada de texto o similar.</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td> </td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Buscador Simple Asistido. Buscar Alertas x Ubicación a través de selecciones encadenadas o similar.</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td> </td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Buscador Avanzado. Buscar Alertas de forma avanzada x diversos campos.</td>
+<td>&check;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td> </td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:2em;">*** Todas las partes que implican algún tipo de búsqueda deben mostrar los resultados utilizando las piezas/vistas:</td>
+  <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Visor de alertas. Ver resultados de busquedas por Fichas / Lista, Paginados, Ordenados.</td>
+<td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td> </td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Visor de alertas. Ver resultados de busquedas por Mapa de Ubicación.</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td> </td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">*** Visor de alertas con acceso a Ficha detalle.</td>
+<td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr>
+
+
+<tr><td style="padding-left:2em;">Pagina: Portada (sin filtro activo)</td>
+<td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Partes: Alertas recientes.<br/>
+<td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+
+<tr><td style="padding-left:2em;">Pagina: Portada (con filtro activo)</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Alertas de la ubicacion filtrada.<br/>
+<td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+
+<tr><td style="padding-left:2em;">Pagina: Vista de la Ficha detalle de la Alerta</td>
+<td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Datos de la alerta.</td>
+<td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Mostrar Imagen o Imágenes asociadas a la Alerta.</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Comentarios vinculados (Poder comentar si eres usuario registrado).</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:5em;">Verlos tras el contenido de la ficha de alerta:</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:6em;">Ver por Fecha/Hora y Paginados, o...</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:6em;">Ver por Arbol hasta 3 ó 4 niveles de profundidad y ampliar bajo petición.
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td>
+</td>
+<tr><td style="padding-left:5em;">Denunciar Comentario (Incidencia para que sea gestionada)</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Denunciar Alerta (Incidencia para que sea gestionada).</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Modificar/Corregir (Usuario registrado puede corregir sus alertas.).</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Cierre, Finalización, Desactivación de Alerta (usuarios propietarios de las alertas, moderadores, administradores)</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+
+<tr><td style="padding-left:2em;">Pagina: Agregar Comentario a Alerta.</td>
+<td>&nbsp;</td><td>&nbsp;</td><td> </td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:2em;">Pagina: Responder Comentario (Agregar Comentario a Comentario).</td>
+ <td>&nbsp;</td><td>&nbsp;</td><td> </td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:2em;">Pagina: Denunciar Comentario (Incidencia para que sea gestionada).</td>
+<td>&nbsp;</td><td>&nbsp;</td><td> </td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td>
+</tr>
+
+<tr><td style="padding-left:2em;">Pagina: Crear nueva alerta (Un usuario registrado puede crear una nueva alerta).</td>
+<td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td> </td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Proponer nuevas etiquetas o cambios a las existentes (Incidencia...) ?.</td>
+<td>&nbsp;</td><td>&check;</td><td> </td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td>
+</tr>
+
+
+<tr><td style="padding-left:2em;">Pagina: Acceso de Usuario.<br/>
+<span style="padding-left:2em;">Acciones y vistas del <strong>Formulario de Acceso</strong> (login, logout)</span></td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:2em;">Parte: Login (Acceder a la aplicación).<br/>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:2em;">Parte:Logout (Salir de la aplicación).<br/>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+
+<tr><td style="padding-left:2em;">Pagina: Registro de Usuario.<br/>
+<span style="padding-left:2em;">Acciones y vistas del <strong>Formulario de Registro</strong> de Usuarios.</span></td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:2em;">Pagina: Confirmar (Modificar estado de confirmación de uno Nuevo).<br/>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:2em;">Pagina: Gestión de Usuario .</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Mi perfil - Mantenimiento de datos del usuario.</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Mi perfil - Cambio de Contraseña.</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte: Mi perfil - Solicitar Baja / Eliminación (Solicitarlo como incidencia).</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte o Página: Mant. Avisos y Notificaciones.</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr><td style="padding-left:4em;">Parte o Página: Mant. Alertas Creados.</td>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&check;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+
+
+</tbody>
+</table>
+</div>
+
+<hr/>
+
+<div style="text-align:justify;margin:0em;background-color:#F0F080">
+<hr/>
+
+<div style="padding:0 0.5em;">
+<span style="padding-left:2em;">*** Los grupos que se formen deberán diseñar, implementar y documentar al menos dos de los bloques trabajo, uno de tareas privadas o &quot;Funcionalidades de Gestión Interna&quot; de código &quot;Gx&quot; y otro de tareas públicas o &quot;Funcionalidades del Portal Web&quot; de código &quot;Wx&quot;, de entre las indicadas anteriormente.</span>
+<br/>
+<span style="padding-left:2em;">*** Una combinación de bloques de trabajo más o menos apropiada para esta aplicación es:</span>
+<br/>
+<span style="padding-left:4em;">(G1,W1), (G2,W2), (G3,W3), (G4,W4), (G5,W5), (G6,W6), (G7,W7)</span>
+<br/>
+</div>
+
+<hr/>
+</div>
+
+</body>
+</html>
