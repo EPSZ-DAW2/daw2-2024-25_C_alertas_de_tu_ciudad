@@ -6,22 +6,34 @@ use Yii;
 use yii\web\Controller;
 use app\models\Incidencia;
 use app\models\IncidenciaSearch;
+use yii\web\NotFoundHttpException;
+
 class IncidenciaController extends Controller
 {
     public function actionIndex()
-{
-    if (!class_exists(IncidenciaSearch::class)) {
-        throw new \Exception('Class IncidenciaSearch not found');
+    {
+        $searchModel = new IncidenciaSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
-    $searchModel = new IncidenciaSearch();
-    $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    public function actionResponder($id)
+    {
+        $model = $this->findModel($id);
 
-    return $this->render('index', [
-        'searchModel' => $searchModel,
-        'dataProvider' => $dataProvider,
-    ]);
-}
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Respuesta guardada exitosamente.');
+            return $this->redirect(['index']);
+        }
+
+        return $this->render('responder', [
+            'model' => $model,
+        ]);
+    }
 
     public function actionCreate()
     {
@@ -51,6 +63,6 @@ class IncidenciaController extends Controller
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('La incidencia no existe.');
     }
 }

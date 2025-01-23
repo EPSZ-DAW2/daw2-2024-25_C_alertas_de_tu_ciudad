@@ -64,11 +64,10 @@ echo Html::textInput('search', '', ['class' => 'form-control me-2', 'placeholder
 echo Html::submitButton('Search', ['class' => 'btn btn-outline-light']);
 echo Html::endForm();
 
-// 用户信息圆形按钮
 if (!Yii::$app->user->isGuest) {
     echo '<div class="ms-auto d-flex align-items-center">';
     echo '<a href="' . \yii\helpers\Url::to(['/user/profile']) . '" class="btn btn-light rounded-circle d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; text-decoration: none; font-size: 12px; font-weight: bold;">'
-        . Html::encode(Yii::$app->user->identity->username) // 将用户名放入圆形按钮中
+        . Html::encode(Yii::$app->user->identity->username) 
         . '</a>';
     echo '</div>';
 }

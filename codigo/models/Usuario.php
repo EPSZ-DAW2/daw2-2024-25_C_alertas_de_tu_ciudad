@@ -7,7 +7,7 @@ use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 class Usuario extends ActiveRecord implements IdentityInterface
-{
+{   
     public $password1;
     public $password2;
     public $nick; 
@@ -15,6 +15,8 @@ class Usuario extends ActiveRecord implements IdentityInterface
     public $currentPassword; 
     public $newPassword; 
     public $confirmPassword; 
+    
+
 
     /**
      * {@inheritdoc}
@@ -39,6 +41,14 @@ class Usuario extends ActiveRecord implements IdentityInterface
             [['role'], 'default', 'value' => 'usuario'], 
             [['role'], 'in', 'range' => ['usuario', 'moderador', 'administrador', 'sysadmin']],
             [['nick', 'surname'], 'string', 'max' => 255], 
+            [['username', 'email'], 'required'],
+            [['username', 'email'], 'string', 'max' => 255],
+            [['password'], 'string', 'max' => 255],
+            [['username', 'email', 'password'], 'required'], // 保持已有的规则
+            [['created_at', 'updated_at'], 'safe'], // 添加对时间戳字段的验证规则
+            [['failed_attempts', 'is_locked'], 'safe'], // 确保字段可保存
+            [['failed_attempts'], 'integer'], // 必须是整数
+            [['is_locked'], 'boolean'], // 布尔值
 
          
             [['currentPassword', 'newPassword', 'confirmPassword'], 'required', 'on' => 'changePassword'],
@@ -74,19 +84,30 @@ class Usuario extends ActiveRecord implements IdentityInterface
             'currentPassword' => 'Contraseña Actual', 
             'newPassword' => 'Nueva Contraseña', 
             'confirmPassword' => 'Confirmar Contraseña', 
+            'created_at' => 'Fecha de Creación',
+            'updated_at' => 'Fecha de Actualización',
+            'status' => 'Estado',
+            'failed_attempts' => 'Intentos Fallidos',
+            'is_locked' => 'Bloqueado',
         ];
     }
 
-    public function beforeSave($insert)
-    {
-        if (parent::beforeSave($insert)) {
-            if ($this->isNewRecord) {
-                $this->auth_key = Yii::$app->security->generateRandomString();
-            }
-            return true;
+public function beforeSave($insert)
+{
+    if (parent::beforeSave($insert)) {
+        if ($insert) {
+            $this->created_at = date('Y-m-d H:i:s'); // 设置创建时间
         }
-        return false;
+        $this->updated_at = date('Y-m-d H:i:s'); // 每次保存时更新更新时间
+
+        if ($this->isNewRecord) {
+            $this->auth_key = Yii::$app->security->generateRandomString();
+        }
+        return true;
     }
+    return false;
+}
+
 
     public static function findIdentity($id)
     {
@@ -172,5 +193,23 @@ class Usuario extends ActiveRecord implements IdentityInterface
     {
         return $this->role === 'guest';
     }
-    
+    /**
+ * 锁定用户
+ */
+public function lock()
+{
+    $this->is_locked = 1; // 设置锁定状态为1
+    $this->failed_attempts = 0; // 清除失败尝试次数
+    return $this->save(false); // 跳过验证直接保存
+}
+
+/**
+ * 解锁用户
+ */
+public function unlock()
+{
+    $this->is_locked = 0; // 设置锁定状态为0
+    return $this->save(false); // 跳过验证直接保存
+}
+
 }

@@ -6,11 +6,14 @@ use yii\data\ActiveDataProvider;
 
 class IncidenciaSearch extends Incidencia
 {
+    public $fecha_inicio;
+    public $fecha_fin;
+
     public function rules()
     {
         return [
             [['id', 'creado_por', 'revisado_por'], 'integer'],
-            [['descripcion', 'estado', 'fecha_creacion', 'fecha_revision'], 'safe'],
+            [['descripcion', 'estado', 'fecha_creacion', 'fecha_revision', 'fecha_inicio', 'fecha_fin'], 'safe'],
         ];
     }
 
@@ -33,6 +36,16 @@ class IncidenciaSearch extends Incidencia
             ->andFilterWhere(['like', 'descripcion', $this->descripcion])
             ->andFilterWhere(['estado' => $this->estado])
             ->andFilterWhere(['creado_por' => $this->creado_por]);
+
+        // Fecha de creación entre fecha_inicio y fecha_fin
+        if ($this->fecha_inicio && $this->fecha_fin) {
+            $query->andFilterWhere(['between', 'fecha_creacion', $this->fecha_inicio, $this->fecha_fin]);
+        }
+
+        // Filtro para no revisadas
+        if ($this->estado == 'no revisada') {
+            $query->andFilterWhere(['estado' => 'no revisada']);
+        }
 
         return $dataProvider;
     }
