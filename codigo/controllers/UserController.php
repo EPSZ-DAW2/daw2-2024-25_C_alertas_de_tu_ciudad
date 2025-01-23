@@ -55,36 +55,63 @@ class UserController extends Controller
      */
     public function actionEdit()
     {
-        // 获取当前登录用户
         $user = Yii::$app->user->identity;
-    
-        // 确保用户存在
-        if ($user === null) {
-            throw new NotFoundHttpException('User not found.');
+
+        if (!$user) {
+            throw new NotFoundHttpException('Usuario no encontrado.');
         }
-    
-        // 如果是 POST 请求，加载数据并验证
-        if ($user->load(Yii::$app->request->post())) {
-            if ($user->validate() && $user->save()) {
-                // 保存成功，设置成功消息并重定向
-                Yii::$app->session->setFlash('success', 'Profile updated successfully.');
+
+        if ($user->load(Yii::$app->request->post()) && $user->validate()) {
+            if ($user->save()) {
+                Yii::$app->session->setFlash('success', 'Perfil actualizado correctamente.');
                 return $this->redirect(['profile']);
             } else {
-                // 验证失败，设置错误消息
-                Yii::$app->session->setFlash('error', 'Failed to update profile. Please check your inputs.');
+                Yii::$app->session->setFlash('error', 'No se pudo guardar los cambios. Inténtalo de nuevo.');
             }
         }
-    
-        // 渲染编辑视图
+
         return $this->render('edit', [
             'user' => $user,
         ]);
     }
-    
+
+    /**
+     * Change user password
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException if the user is not logged in
+     */
+    public function actionChangePassword()
+    {
+        $user = Yii::$app->user->identity;
+
+        if (!$user) {
+            throw new NotFoundHttpException('El usuario no está autenticado.');
+        }
+
+       
+        $user->scenario = 'changePassword';
+
+       
+        if ($user->load(Yii::$app->request->post()) && $user->validate()) {
+       
+            $user->setPassword($user->newPassword);
+            if ($user->save(false)) { 
+                Yii::$app->session->setFlash('success', 'Contraseña cambiada con éxito.');
+                return $this->redirect(['profile']);
+            } else {
+                Yii::$app->session->setFlash('error', 'No se pudo guardar la nueva contraseña. Inténtalo de nuevo.');
+            }
+        }
+
+        return $this->render('change-password', [
+            'user' => $user,
+        ]);
+    }
+
     /**
      * Handles not found users
      * This helper function ensures we handle missing users cleanly.
-     * @return void
+     * @param mixed $user
      * @throws NotFoundHttpException
      */
     protected function ensureUserExists($user)

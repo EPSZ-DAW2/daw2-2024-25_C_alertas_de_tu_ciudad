@@ -12,198 +12,72 @@ $this->title = 'Información del Perfil';
     <div class="row">
         <!-- Panel izquierdo: avatar y estadísticas -->
         <div class="col-md-4 text-center">
-            <!-- Avatar -->
             <img 
                 src="/path/to/avatar.png" 
                 alt="Avatar del Usuario" 
                 class="rounded-circle mb-3" 
                 style="width: 120px; height: 120px; object-fit: cover;"
             >
-
-            <!-- Nombre de usuario -->
             <h3 class="fw-bold"><?= Html::encode($user->username) ?></h3>
-
-            <!-- Apodo -->
             <p class="text-muted"><?= Html::encode($user->nick) ?></p>
-
-            <!-- Botón para editar perfil -->
+            <button type="button" class="btn btn-outline-primary btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#editProfileModal">Editar Perfil</button>
             <div class="mt-3">
-                <button 
-                    type="button" 
-                    class="btn btn-outline-primary btn-sm" 
-                    data-bs-toggle="modal" 
-                    data-bs-target="#editProfileModal"
-                >
-                    Editar Perfil
-                </button>
-            </div>
-
-            <!-- Estadísticas -->
-            <div class="row mt-4">
-                <div class="col-6 text-center border-end border-bottom">
-                    <a href="/user/followed" class="text-decoration-none text-dark">
-                        <p class="text-muted">Personas que sigo</p>
-                        <h4>0</h4>
-                    </a>
-                </div>
-                <div class="col-6 text-center border-bottom">
-                    <a href="/user/followers" class="text-decoration-none text-dark">
-                        <p class="text-muted">Personas que me siguen</p>
-                        <h4>0</h4>
-                    </a>
-                </div>
-                <div class="col-6 text-center border-end">
-                    <a href="/user/likes" class="text-decoration-none text-dark">
-                        <p class="text-muted">Me gusta recibidos</p>
-                        <h4>0</h4>
-                    </a>
-                </div>
-                <div class="col-6 text-center">
-                    <a href="/user/recommendations" class="text-decoration-none text-dark">
-                        <p class="text-muted">Recomendaciones</p>
-                        <h4>0</h4>
-                    </a>
-                </div>
+                <?= Html::a('Cambio de Contraseña', ['user/change-password'], ['class' => 'btn btn-outline-secondary btn-sm']) ?>
             </div>
         </div>
 
         <!-- Panel derecho: contenido -->
         <div class="col-md-8">
-            <!-- Navegación de pestañas -->
             <ul class="nav nav-tabs mb-3" id="profileTabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a 
-                        class="nav-link active text-danger" 
-                        id="posts-tab" 
-                        data-bs-toggle="tab" 
-                        href="#posts" 
-                        role="tab" 
-                        aria-controls="posts" 
-                        aria-selected="true"
-                    >
-                        Publicaciones
-                    </a>
+                    <a class="nav-link active text-danger" id="posts-tab" data-bs-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="true">Publicaciones</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a 
-                        class="nav-link text-primary" 
-                        id="replies-tab" 
-                        data-bs-toggle="tab" 
-                        href="#replies" 
-                        role="tab" 
-                        aria-controls="replies" 
-                        aria-selected="false"
-                    >
-                        Respuestas
-                    </a>
+                    <a class="nav-link text-primary" id="eliminacion-tab" data-bs-toggle="tab" href="#eliminacion" role="tab" aria-controls="eliminacion" aria-selected="false">Eliminación</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a 
-                        class="nav-link text-success" 
-                        id="recommendations-tab" 
-                        data-bs-toggle="tab" 
-                        href="#recommendations" 
-                        role="tab" 
-                        aria-controls="recommendations" 
-                        aria-selected="false"
-                    >
-                        Recomendaciones
-                    </a>
+                    <a class="nav-link text-success" id="notificaciones-tab" data-bs-toggle="tab" href="#notificaciones" role="tab" aria-controls="notificaciones" aria-selected="false">Notificaciones</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a 
-                        class="nav-link text-warning" 
-                        id="favorites-tab" 
-                        data-bs-toggle="tab" 
-                        href="#favorites" 
-                        role="tab" 
-                        aria-controls="favorites" 
-                        aria-selected="false"
-                    >
-                        Favoritos
-                    </a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a 
-                        class="nav-link text-info" 
-                        id="follows-tab" 
-                        data-bs-toggle="tab" 
-                        href="#follows" 
-                        role="tab" 
-                        aria-controls="follows" 
-                        aria-selected="false"
-                    >
-                        Seguimientos
-                    </a>
+                    <a class="nav-link text-warning" id="alertas-tab" data-bs-toggle="tab" href="#alertas" role="tab" aria-controls="alertas" aria-selected="false">Alertas Creados</a>
                 </li>
             </ul>
 
-            <!-- Contenido de las pestañas -->
             <div class="tab-content" id="profileTabsContent">
                 <!-- Publicaciones -->
-                <div 
-                    class="tab-pane fade show active" 
-                    id="posts" 
-                    role="tabpanel" 
-                    aria-labelledby="posts-tab"
-                >
-                    <div class="text-center">
-                        <img 
-                            src="/path/to/placeholder.png" 
-                            alt="Sin datos" 
-                            class="mb-3" 
-                            style="width: 150px;"
-                        >
-                        <p class="text-muted">No hay datos. ¡Explora otras secciones!</p>
-                    </div>
+                <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+                    <textarea id="postContent" class="form-control mb-3" rows="3" placeholder="Escribe tu publicación..."></textarea>
+                    <button id="publishBtn" class="btn btn-primary">Publicar</button>
                 </div>
 
-                <!-- Respuestas -->
-                <div 
-                    class="tab-pane fade" 
-                    id="replies" 
-                    role="tabpanel" 
-                    aria-labelledby="replies-tab"
-                >
-                    <div class="text-center">
-                        <p class="text-muted">Aquí estarán tus respuestas. Estamos trabajando en ello.</p>
-                    </div>
+                <!-- Eliminación -->
+                <div class="tab-pane fade" id="eliminacion" role="tabpanel" aria-labelledby="eliminacion-tab">
+                    <ul id="eliminarList" class="list-group"></ul>
                 </div>
 
-                <!-- Recomendaciones -->
-                <div 
-                    class="tab-pane fade" 
-                    id="recommendations" 
-                    role="tabpanel" 
-                    aria-labelledby="recommendations-tab"
-                >
-                    <div class="text-center">
-                        <p class="text-muted">Aquí estarán tus recomendaciones. Estamos trabajando en ello.</p>
-                    </div>
+                <!-- Notificaciones -->
+                <div class="tab-pane fade" id="notificaciones" role="tabpanel" aria-labelledby="notificaciones-tab">
+                    <ul id="notificationList" class="list-group"></ul>
                 </div>
 
-                <!-- Favoritos -->
-                <div 
-                    class="tab-pane fade" 
-                    id="favorites" 
-                    role="tabpanel" 
-                    aria-labelledby="favorites-tab"
-                >
-                    <div class="text-center">
-                        <p class="text-muted">Aquí estarán tus favoritos. Estamos trabajando en ello.</p>
-                    </div>
-                </div>
-
-                <!-- Seguimientos -->
-                <div 
-                    class="tab-pane fade" 
-                    id="follows" 
-                    role="tabpanel" 
-                    aria-labelledby="follows-tab"
-                >
-                    <div class="text-center">
-                        <p class="text-muted">Aquí estará tu lista de seguimientos. Estamos trabajando en ello.</p>
-                    </div>
+                <!-- Alertas Creados -->
+                <div class="tab-pane fade" id="alertas" role="tabpanel" aria-labelledby="alertas-tab">
+                    <ul id="alertList" class="list-group">
+                        <!-- 示例事件 -->
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Evento 1
+                            <input type="checkbox" class="form-check-input me-2 alert-checkbox">
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Evento 2
+                            <input type="checkbox" class="form-check-input me-2 alert-checkbox">
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Evento 3
+                            <input type="checkbox" class="form-check-input me-2 alert-checkbox">
+                        </li>
+                    </ul>
+                    <button id="createAlertBtn" class="btn btn-warning mt-3">Crear Alertas</button>
                 </div>
             </div>
         </div>
@@ -216,30 +90,125 @@ $this->title = 'Información del Perfil';
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editProfileModalLabel">Editar Perfil</h5>
-                <button 
-                    type="button" 
-                    class="btn-close" 
-                    data-bs-dismiss="modal" 
-                    aria-label="Cerrar"
-                ></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
-                <!-- Formulario de edición -->
-                <?php $form = ActiveForm::begin([
-                    'action' => ['user/edit'], // Asegúrate de que apunta a UserController::actionEdit
-                    'method' => 'post',
-                ]); ?>
-
+                <?php $form = ActiveForm::begin(['action' => ['user/edit'], 'method' => 'post']); ?>
                 <?= $form->field($user, 'username')->textInput(['maxlength' => true]) ?>
                 <?= $form->field($user, 'email')->textInput(['maxlength' => true]) ?>
                 <?= $form->field($user, 'nick')->textInput(['maxlength' => true]) ?>
-
+                <?= $form->field($user, 'surname')->textInput(['maxlength' => true]) ?>
                 <div class="form-group mt-3">
                     <?= Html::submitButton('Guardar Cambios', ['class' => 'btn btn-primary']) ?>
                 </div>
-
                 <?php ActiveForm::end(); ?>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    const publishBtn = document.getElementById('publishBtn');
+    const postContent = document.getElementById('postContent');
+    const eliminarList = document.getElementById('eliminarList');
+    const notificationList = document.getElementById('notificationList');
+    const alertList = document.getElementById('alertList');
+    const createAlertBtn = document.getElementById('createAlertBtn');
+
+
+    publishBtn.addEventListener('click', () => {
+        const content = postContent.value.trim(); 
+        if (content) {
+            const li = document.createElement('li');
+            li.className = 'list-group-item d-flex justify-content-between align-items-center';
+            li.innerHTML = `
+                ${content}
+                <div>
+                    <button class="btn btn-danger btn-sm deleteBtn">Eliminar</button>
+                    <button class="btn btn-secondary btn-sm requestBtn">Solicitar</button>
+                </div>
+            `;
+            eliminarList.appendChild(li);
+            postContent.value = ''; 
+        }
+    });
+
+
+    eliminarList.addEventListener('click', (e) => {
+        if (e.target.classList.contains('deleteBtn')) {
+            e.target.closest('li').remove();
+        }
+
+        if (e.target.classList.contains('requestBtn')) {
+            const li = e.target.closest('li');
+            const content = li.firstChild.textContent.trim();
+
+            
+            const notification = document.createElement('li');
+            notification.className = 'list-group-item d-flex justify-content-between align-items-center';
+            notification.innerHTML = `
+                ${content}
+                <button class="btn btn-info btn-sm addToAlertsBtn">Agregar a Alertas</button>
+            `;
+            notificationList.appendChild(notification);
+
+            
+            updateAlerts();
+
+            li.remove(); 
+        }
+    });
+
+
+    notificationList.addEventListener('click', (e) => {
+        if (e.target.classList.contains('addToAlertsBtn')) {
+            const li = e.target.closest('li');
+            const content = li.firstChild.textContent.trim();
+
+        
+            const alertItem = document.createElement('li');
+            alertItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+            alertItem.innerHTML = `
+                ${content}
+                <input type="checkbox" class="form-check-input me-2 alert-checkbox">
+            `;
+            alertList.appendChild(alertItem);
+
+         
+            li.remove();
+        }
+    });
+
+
+    createAlertBtn.addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('.alert-checkbox');
+        checkboxes.forEach((checkbox) => {
+            if (checkbox.checked) {
+                const parentLi = checkbox.closest('li');
+                if (!parentLi.querySelector('.alert-icon')) {
+                    const alertIcon = document.createElement('span');
+                    alertIcon.className = 'badge bg-danger ms-2 alert-icon';
+                    alertIcon.textContent = '⚠️'; 
+                    parentLi.appendChild(alertIcon);
+                }
+                checkbox.checked = false; 
+            }
+        });
+    });
+
+
+    function updateAlerts() {
+        const notifications = notificationList.querySelectorAll('.list-group-item');
+        alertList.innerHTML = ''; 
+        notifications.forEach((notification) => {
+            const content = notification.firstChild.textContent.trim();
+            const alertItem = document.createElement('li');
+            alertItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+            alertItem.innerHTML = `
+                ${content}
+                <input type="checkbox" class="form-check-input me-2 alert-checkbox">
+            `;
+            alertList.appendChild(alertItem);
+        });
+    }
+</script>

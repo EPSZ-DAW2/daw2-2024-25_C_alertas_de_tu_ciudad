@@ -10,14 +10,18 @@ class Usuario extends ActiveRecord implements IdentityInterface
 {
     public $password1;
     public $password2;
-    public $nick; // 添加 nick 属性，确保可以被访问
+    public $nick; 
+    public $surname; 
+    public $currentPassword; 
+    public $newPassword; 
+    public $confirmPassword; 
 
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return '{{%usuario}}'; // 确保表名正确
+        return '{{%usuario}}'; 
     }
 
     /**
@@ -26,18 +30,33 @@ class Usuario extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['email', 'username', 'password'], 'required'], // ✅ 移除 role 作为必填项
+            [['email', 'username', 'password', 'nick', 'surname'], 'required'], // 
             [['email'], 'email'],
             [['email'], 'unique'],
             [['password'], 'string', 'min' => 6],
             [['password1', 'password2'], 'string', 'min' => 6],
             [['password2'], 'compare', 'compareAttribute' => 'password1', 'message' => 'Las contraseñas no coinciden'],
-            [['role'], 'default', 'value' => 'usuario'], // ✅ 让 role 默认值为 "usuario"
+            [['role'], 'default', 'value' => 'usuario'], 
             [['role'], 'in', 'range' => ['usuario', 'moderador', 'administrador', 'sysadmin']],
-            [['nick', 'surname'], 'string', 'max' => 255], // Validación para 'nick' y 'surname'
+            [['nick', 'surname'], 'string', 'max' => 255], 
+
+         
+            [['currentPassword', 'newPassword', 'confirmPassword'], 'required', 'on' => 'changePassword'],
+            ['currentPassword', 'validateCurrentPassword', 'on' => 'changePassword'],
+            ['newPassword', 'string', 'min' => 6, 'on' => 'changePassword'],
+            ['confirmPassword', 'compare', 'compareAttribute' => 'newPassword', 'message' => 'Las contraseñas no coinciden.', 'on' => 'changePassword'],
         ];
     }
 
+    /**
+     * 
+     */
+    public function validateCurrentPassword($attribute, $params)
+    {
+        if (!Yii::$app->security->validatePassword($this->$attribute, $this->password)) {
+            $this->addError($attribute, 'La contraseña actual es incorrecta.');
+        }
+    }
 
     /**
      * {@inheritdoc}
@@ -45,13 +64,16 @@ class Usuario extends ActiveRecord implements IdentityInterface
     public function attributeLabels()
     {
         return [
-            'email' => 'Correo Electrónico', // 邮件
-            'username' => 'Nombre de Usuario', // 用户名
-            'password' => 'Contraseña', // 密码
-            'nick' => 'Apodo', // 昵称
-            'surname' => 'Apellido', // 姓氏
-            'role' => 'Rol de Usuario', // 用户角色
-            'auth_key' => 'Clave de Autenticación', // 认证密钥
+            'email' => 'Correo Electrónico', 
+            'username' => 'Nombre de Usuario', 
+            'password' => 'Contraseña', 
+            'nick' => 'Apodo', 
+            'surname' => 'Apellido', 
+            'role' => 'Rol de Usuario', 
+            'auth_key' => 'Clave de Autenticación', 
+            'currentPassword' => 'Contraseña Actual', 
+            'newPassword' => 'Nueva Contraseña', 
+            'confirmPassword' => 'Confirmar Contraseña', 
         ];
     }
 
@@ -73,7 +95,7 @@ class Usuario extends ActiveRecord implements IdentityInterface
 
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        return static::findOne(['auth_key' => $token]); // 确保 `usuario` 表中有 `auth_key` 字段
+        return static::findOne(['auth_key' => $token]); 
     }
 
     public function getId()
@@ -101,14 +123,12 @@ class Usuario extends ActiveRecord implements IdentityInterface
         return Yii::$app->security->validatePassword($password, $this->password);
     }
 
-
     public function setPassword($password)
     {
-        $this->password = $password;
+        $this->password = Yii::$app->security->generatePasswordHash($password);
     }
 
-
-     /**
+    /**
      * Verifica si el usuario es administrador del portal
      * @return bool
      */
@@ -123,7 +143,7 @@ class Usuario extends ActiveRecord implements IdentityInterface
      */
     public function isModerator()
     {
-        return $this->role === 'moderator';
+        return $this->role === 'moderador';
     }
 
     /**
@@ -152,5 +172,5 @@ class Usuario extends ActiveRecord implements IdentityInterface
     {
         return $this->role === 'guest';
     }
+    
 }
-

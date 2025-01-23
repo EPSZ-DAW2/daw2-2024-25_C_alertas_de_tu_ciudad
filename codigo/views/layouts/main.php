@@ -43,7 +43,7 @@ echo Nav::widget([
         ['label' => 'About', 'url' => ['/site/about']],
         ['label' => 'Contact', 'url' => ['/site/contact']],
         ['label' => 'Test', 'url' => ['/test/index']],
-        ['label' => 'Publicar', 'url' => ['/publicar/index']], // Add "Publicar" menu item
+        ['label' => 'Incidencias', 'url' => ['/incidencia/index']],
         Yii::$app->user->isGuest
             ? ['label' => 'Login', 'url' => ['/site/login']]
             : '<li class="nav-item">'
@@ -56,6 +56,7 @@ echo Nav::widget([
                 . '</li>'
     ]
 ]);
+
 
 // Add a text search bar to the navigation bar
 echo Html::beginForm(['/site/search'], 'get', ['class' => 'd-flex']);
