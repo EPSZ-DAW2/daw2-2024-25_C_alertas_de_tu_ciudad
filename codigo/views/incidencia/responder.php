@@ -1,29 +1,20 @@
 <?php
-
-use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\Html;
 
 $this->title = 'Responder Incidencia';
 ?>
+
+<h1><?= Html::encode($this->title) ?></h1>
+
 <div class="incidencia-responder">
+    <?php $form = ActiveForm::begin(); ?>
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?= $form->field($model, 'respuesta')->textarea(['rows' => 6]) ?>
 
-    <div class="incidencia-form">
-        <?php $form = ActiveForm::begin(); ?>
-
-        <?= $form->field($model, 'descripcion')->textarea(['readonly' => true]) ?>
-        <?= $form->field($model, 'respuesta')->textarea(['rows' => 6]) ?>
-        <?= $form->field($model, 'estado')->dropDownList([
-            'revisada' => 'Revisada',
-            'no revisada' => 'No Revisada',
-        ]) ?>
-
-        <div class="form-group">
-            <?= Html::submitButton('Guardar Respuesta', ['class' => 'btn btn-success']) ?>
-        </div>
-
-        <?php ActiveForm::end(); ?>
+    <div class="form-group">
+        <?= Html::submitButton('Guardar Respuesta', ['class' => 'btn btn-success']) ?>
     </div>
 
+    <?php ActiveForm::end(); ?>
 </div>

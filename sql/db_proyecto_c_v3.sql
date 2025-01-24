@@ -77,6 +77,16 @@ INSERT INTO `usuario` (`id`, `email`, `password`, `auth_key`, `username`, `regis
 -- Índices para tablas volcadas
 --
 
+
+INSERT INTO `incidencias` (`descripcion`, `estado`, `fecha_creacion`, `fecha_revision`) VALUES
+('Primera incidencia', 'revisada', '2025-01-01', '2025-01-02'),
+('Segunda incidencia', 'no revisada', '2025-01-05', NULL),
+('Tercera incidencia', 'revisada', '2025-01-10', '2025-01-11'),
+('Cuarta incidencia', 'no revisada', '2025-01-12', NULL),
+('Quinta incidencia', 'revisada', '2025-01-15', '2025-01-16'),
+('Sexta incidencia', 'no revisada', '2025-01-18', NULL),
+('Séptima incidencia', 'revisada', '2025-01-20', '2025-01-21');
+
 --
 -- Indices de la tabla `alerta`
 --
@@ -127,3 +137,17 @@ COMMIT;
 ALTER TABLE usuario
 ADD COLUMN failed_attempts INT DEFAULT 0, 
 ADD COLUMN is_locked TINYINT(1) DEFAULT 0; 
+
+ALTER TABLE usuario
+ADD COLUMN created_at DATETIME NULL;
+
+
+ALTER TABLE usuario
+MODIFY COLUMN failed_attempts INT DEFAULT 0;
+
+ALTER TABLE usuario
+ADD COLUMN updated_at DATETIME NULL;
+
+
+ALTER TABLE usuario
+ADD COLUMN is_locked TINYINT(1) DEFAULT 0;

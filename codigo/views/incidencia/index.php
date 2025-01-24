@@ -44,27 +44,27 @@ $this->title = 'Revisar / Responder Incidencias';
             'fecha_revision',
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {update} {delete} {responder}',
+                'template' => '{view} {update} {revisar} {responder}', // 将 {delete} 替换为 {revisar}
                 'buttons' => [
                     'update' => function ($url, $model, $key) {
                         return Html::a('Editar', ['update', 'id' => $model->id], [
                             'class' => 'btn btn-primary btn-sm',
                         ]);
                     },
-                    'delete' => function ($url, $model, $key) {
-                        return Html::a('Eliminar', ['delete', 'id' => $model->id], [
-                            'class' => 'btn btn-danger btn-sm',
+                    'revisar' => function ($url, $model, $key) {
+                        return Html::a('Revisar', ['revisar', 'id' => $model->id], [
+                            'class' => 'btn btn-warning btn-sm',
                             'data' => [
-                                'confirm' => '¿Estás seguro de eliminar este registro?',
+                                'confirm' => '¿Estás seguro de marcar esta incidencia como revisada?',
                                 'method' => 'post',
                             ],
                         ]);
                     },
                     'responder' => function ($url, $model, $key) {
-                        return Html::a('Responder', ['responder', 'id' => $model->id], [
-                            'class' => 'btn btn-success btn-sm',
-                        ]);
-                    },
+    return Html::a('Responder', ['responder', 'id' => $model->id], [
+        'class' => 'btn btn-success btn-sm',
+    ]);
+},
                 ],
             ],
         ],
