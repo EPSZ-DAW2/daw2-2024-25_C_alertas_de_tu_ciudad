@@ -22,23 +22,24 @@ class IncidenciaController extends Controller
     }
 
     public function actionResponder($id)
-{
-    $model = $this->findModel($id);
-
-    if ($model->load(Yii::$app->request->post())) {
-        $model->fecha_revision = date('Y-m-d H:i:s');
-        if ($model->save()) {
-            Yii::$app->session->setFlash('success', 'La respuesta se guardó correctamente.');
-            return $this->redirect(['index']);
-        } else {
-           // Yii::$app->session->setFlash('error', 'No se pudo guardar la respuesta.');
+    {
+        $model = $this->findModel($id); // 加载指定 ID 的记录
+    
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', 'La respuesta se guardó correctamente.');
+                return $this->redirect(['index']);
+            } else {
+                Yii::$app->session->setFlash('error', 'No se pudo guardar la respuesta.');
+            }
         }
+    
+        return $this->render('responder', [
+            'model' => $model,
+        ]);
     }
+    
 
-    return $this->render('responder', [
-        'model' => $model,
-    ]);
-}
 
 
 

@@ -15,6 +15,7 @@ class UsuarioSearch extends Usuario
         return [
             [['id'], 'integer'],
             [['username', 'email', 'fecha_inicio', 'fecha_fin'], 'safe'],
+            [['username', 'email', 'role'], 'safe'], // role 必须在这里
         ];
     }
 

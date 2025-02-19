@@ -70,33 +70,7 @@ class SiteController extends Controller
      * @return Response|string
      */
     public function actionLogin()
-    { 
-        $model = new LoginForm();
-
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            // 登录成功
-            $user = Yii::$app->user->identity;
-            $user->failed_attempts = 0; // 清除失败记录
-            $user->save(false); // 保存失败次数
-            return $this->goBack();
-        }
-    
-        // 登录失败处理
-        if ($model->hasErrors()) {
-            $user = Usuario::findByUsername($model->username);
-            if ($user) {
-                $user->failed_attempts += 1; // 增加失败次数
-    
-                if ($user->failed_attempts >= 5) { // 如果达到失败限制，锁定用户
-                    $user->is_locked = 1;
-                    Yii::$app->session->setFlash('error', 'Tu cuenta ha sido bloqueada por múltiples intentos fallidos.');
-                }
-    
-                $user->save(false); // 保存失败记录
-            }
-        }
-    
-        return $this->render('login', ['model' => $model]);
+    {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -151,4 +125,16 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
+    public function validatePassword($attribute, $params)
+{
+    if (!$this->hasErrors()) {
+        $user = $this->getUser();
+
+        if (!$user || !Yii::$app->security->validatePassword($this->password, $user->password)) {
+            $this->addError($attribute, 'Correo o contraseña incorrectos.');
+        }
+    }
+}
+
 }

@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = 'Actualizar';
         </div>
 
         <?php ActiveForm::end(); ?>
-
+        
     </div>
 
 </div>

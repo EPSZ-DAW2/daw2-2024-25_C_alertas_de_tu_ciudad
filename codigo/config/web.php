@@ -55,6 +55,7 @@ $config = [
                 'profile' => 'user/profile', 
                 'incidencias' => 'incidencia/index',
                 
+                
             ],
         ],
 

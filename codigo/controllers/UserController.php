@@ -120,4 +120,27 @@ class UserController extends Controller
             throw new NotFoundHttpException('User not found.');
         }
     }
+
+
+    public function actionEliminar()
+{
+    $user = Yii::$app->user->identity;
+
+    if ($user && Yii::$app->request->isPost) {
+        $postData = Yii::$app->request->post('Usuario'); // 获取完整的 `Usuario` 表单数据
+        
+        if ($postData && isset($postData['eliminar_razon'])) {
+            $user->eliminar_razon = $postData['eliminar_razon']; // 赋值删除原因
+            if ($user->save(false)) { // 保存不进行验证
+                Yii::$app->user->logout(); // 退出登录
+                return $this->redirect(['/site/login']); // 重定向到登录页面
+            }
+        } else {
+            Yii::$app->session->setFlash('error', 'Debe proporcionar una razón para eliminar la cuenta.');
+        }
+    }
+
+    return $this->render('eliminar', ['user' => $user]);
+}
+
 }

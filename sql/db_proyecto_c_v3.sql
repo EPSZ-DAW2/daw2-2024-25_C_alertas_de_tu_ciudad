@@ -151,3 +151,65 @@ ADD COLUMN updated_at DATETIME NULL;
 
 ALTER TABLE usuario
 ADD COLUMN is_locked TINYINT(1) DEFAULT 0;
+
+ALTER TABLE usuario ADD COLUMN nick VARCHAR(255) DEFAULT NULL;
+
+
+ALTER TABLE incidencias MODIFY COLUMN respuesta TEXT NULL;
+
+ALTER TABLE incidencias
+ADD COLUMN respuesta TEXT NULL;
+
+
+CREATE TABLE `incidencia` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,       -- 主键
+    `descripcion` TEXT NOT NULL,               -- 事件描述
+    `estado` VARCHAR(50) NOT NULL,             -- 状态字段，例如 'nueva', 'revisada'
+    `fecha_creacion` DATETIME NOT NULL,        -- 创建时间
+    `fecha_revision` DATETIME DEFAULT NULL,    -- 审核时间（可为空）
+    `creado_por` INT DEFAULT NULL,             -- 创建者ID
+    `revisado_por` INT DEFAULT NULL            -- 审核者ID
+);
+CREATE TABLE notificacion (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    mensaje TEXT NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+INSERT INTO notificacion (usuario_id, mensaje, fecha) VALUES
+(1, 'Alerta: El servidor principal ha superado el límite de uso de CPU.', '2025-02-09 09:00:00'),
+(1, 'Alerta crítica: Fallo en la conexión con el servicio de base de datos.', '2025-02-08 18:30:00'),
+(2, 'Advertencia: Espacio de almacenamiento disponible al 90%.', '2025-02-07 15:45:00'),
+(2, 'Alerta: Se detectó un acceso no autorizado en el sistema.', '2025-02-06 12:20:00'),
+(3, 'Aviso: Reinicio programado del servidor para mantenimiento.', '2025-02-05 08:10:00'),
+(1, 'Notificación: Los backups automáticos se completaron exitosamente.', '2025-02-04 14:50:00');
+
+
+CREATE TABLE Alertas_Creados (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Titulo VARCHAR(255) NOT NULL,
+    Descripcion TEXT,
+    Fecha_de_Vencimiento DATE,
+    Acciones VARCHAR(255)
+);
+
+
+INSERT INTO Alertas_Creados (Titulo, Descripcion, Fecha_de_Vencimiento, Acciones)
+VALUES 
+('Alerta 1', 'Primera descripción de alerta', '2025-03-01', 'Eliminar'),
+('Alerta 2', 'Segunda descripción de alerta', '2025-03-05', 'Eliminar'),
+('Alerta 3', 'Tercera descripción de alerta', '2025-02-20', 'Eliminar'),
+('Alerta 4', 'Cuarta descripción de alerta', '2025-04-10', 'Eliminar'),
+('Alerta 5', 'Quinta descripción de alerta', '2025-05-15', 'Eliminar');
+
+
+
+ALTER TABLE usuario ADD COLUMN estado_revisar VARCHAR(20) DEFAULT 'no revisada';
+
+ALTER TABLE usuario ADD COLUMN respuesta VARCHAR(255) DEFAULT NULL;
+
+ALTER TABLE usuario ADD COLUMN eliminarrazon TEXT NULL;
+
+

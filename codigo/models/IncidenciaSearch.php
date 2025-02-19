@@ -8,6 +8,8 @@ class IncidenciaSearch extends Incidencia
 {
     public $fecha_inicio;
     public $fecha_fin;
+    
+   
 
     public function rules()
     {
