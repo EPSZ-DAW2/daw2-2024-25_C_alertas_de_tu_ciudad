@@ -2,14 +2,19 @@
 
 namespace app\models;
 
-use Yii;
 use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
 
 class Etiqueta extends ActiveRecord
 {
     /**
-     * Define el nombre de la tabla asociada.
+     * Propiedad para manejar las categorías seleccionadas.
+     */
+    public $categoriasSeleccionadas;
+
+    /**
+     * Nombre de la tabla asociada.
      */
     public static function tableName()
     {
@@ -17,19 +22,20 @@ class Etiqueta extends ActiveRecord
     }
 
     /**
-     * Define las reglas de validación para los campos del modelo.
+     * Reglas de validación para los campos del modelo.
      */
     public function rules()
     {
         return [
-            [['nombre'], 'required'], // El campo 'nombre' es obligatorio
-            [['nombre'], 'string', 'max' => 255], // Máximo 255 caracteres para 'nombre'
-            [['descripcion'], 'string'], // 'descripcion' es opcional y de tipo texto
+            [['nombre'], 'required'],
+            [['nombre'], 'string', 'max' => 255],
+            [['descripcion'], 'string'],
+            [['categoriasSeleccionadas'], 'safe'],
         ];
     }
 
     /**
-     * Define las etiquetas para los atributos del modelo.
+     * Etiquetas para los atributos del modelo.
      */
     public function attributeLabels()
     {
@@ -37,14 +43,23 @@ class Etiqueta extends ActiveRecord
             'id' => 'ID',
             'nombre' => 'Nombre',
             'descripcion' => 'Descripción',
+            'categoriasSeleccionadas' => 'Categorías',
         ];
     }
 
     /**
-     * Verifica si la etiqueta puede ser eliminada.
-     * Una etiqueta puede eliminarse si no tiene categorías asociadas.
+     * Relación con la tabla de categorías.
      *
-     * @return bool
+     * @return ActiveQuery
+     */
+    public function getCategorias()
+    {
+        return $this->hasMany(Categoria::className(), ['id' => 'id_categoria'])
+                    ->viaTable('categoria_etiqueta', ['id_etiqueta' => 'id']);
+    }
+
+    /**
+     * Verifica si la etiqueta puede ser eliminada.
      */
     public function canBeDeleted()
     {
@@ -52,24 +67,35 @@ class Etiqueta extends ActiveRecord
     }
 
     /**
-     * Relación con las categorías asociadas a la etiqueta.
-     *
-     * @return ActiveQuery
+     * Cargar categorías seleccionadas al obtener el modelo.
      */
-    public function getCategorias()
+    public function afterFind()
     {
-        return $this->hasMany(Categoria::class, ['id' => 'id_categoria'])
-                    ->viaTable('categoria_etiqueta', ['id_etiqueta' => 'id']);
+        parent::afterFind();
+        $this->categoriasSeleccionadas = ArrayHelper::getColumn($this->getCategorias()->asArray()->all(), 'id');
     }
 
     /**
-     * Relación con las alertas asociadas a la etiqueta.
-     *
-     * @return ActiveQuery
+     * Guardar las relaciones con categorías después de guardar la etiqueta.
      */
-    public function getAlertas()
+    public function afterSave($insert, $changedAttributes)
     {
-        return $this->hasMany(Alerta::class, ['id' => 'id_alerta'])
-                    ->viaTable('alerta_etiqueta', ['id_etiqueta' => 'id']);
+        parent::afterSave($insert, $changedAttributes);
+
+        // Eliminar relaciones existentes
+        \Yii::$app->db->createCommand()
+            ->delete('categoria_etiqueta', ['id_etiqueta' => $this->id])
+            ->execute();
+
+        // Insertar nuevas relaciones
+        if (!empty($this->categoriasSeleccionadas)) {
+            foreach ($this->categoriasSeleccionadas as $idCategoria) {
+                \Yii::$app->db->createCommand()
+                    ->insert('categoria_etiqueta', [
+                        'id_etiqueta' => $this->id,
+                        'id_categoria' => $idCategoria,
+                    ])->execute();
+            }
+        }
     }
 }
