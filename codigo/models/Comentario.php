@@ -4,11 +4,12 @@ namespace app\models;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\db\ActiveQuery;
 
 class Comentario extends ActiveRecord
 {
     /**
-     * Define el nombre de la tabla asociada
+     * Define el nombre de la tabla asociada.
      */
     public static function tableName()
     {
@@ -16,32 +17,54 @@ class Comentario extends ActiveRecord
     }
 
     /**
-     * Define las reglas de validación
+     * Define las reglas de validación.
      */
     public function rules()
     {
         return [
-            [['contenido'], 'required'], // El campo contenido es obligatorio
-            [['contenido'], 'string'],
-            [['numero_denuncias', 'es_denunciado', 'es_visible', 'es_cerrado'], 'integer'],
-            [['creado_en', 'actualizado_en'], 'safe'],
+            [['texto', 'id_alerta', 'id_usuario'], 'required'],
+            [['texto'], 'string'],
+            [['id_alerta', 'id_usuario', 'estado_cierre', 'num_denuncias'], 'integer'],
+            [['bloqueado'], 'boolean'],
+            [['creado_en', 'actualizado_en'], 'safe'], // Fechas aceptadas como valores válidos
         ];
     }
 
     /**
-     * Etiquetas para los atributos (usados en formularios)
+     * Define las etiquetas para los atributos.
      */
     public function attributeLabels()
     {
         return [
             'id' => 'ID',
-            'contenido' => 'Contenido del Comentario',
-            'numero_denuncias' => 'Número de Denuncias',
-            'es_denunciado' => 'Denunciado',
-            'es_visible' => 'Visible',
-            'es_cerrado' => 'Cerrado',
+            'texto' => 'Texto del Comentario',
+            'id_alerta' => 'ID de la Alerta',
+            'id_usuario' => 'ID del Usuario',
+            'estado_cierre' => 'Estado de Cierre',
+            'num_denuncias' => 'Número de Denuncias',
+            'bloqueado' => 'Bloqueado',
             'creado_en' => 'Fecha de Creación',
             'actualizado_en' => 'Última Actualización',
         ];
+    }
+
+    /**
+     * Relación con la tabla `alerta`.
+     *
+     * @return ActiveQuery
+     */
+    public function getAlerta()
+    {
+        return $this->hasOne(Alerta::class, ['id' => 'id_alerta']);
+    }
+
+    /**
+     * Relación con la tabla `usuario`.
+     *
+     * @return ActiveQuery
+     */
+    public function getUsuario()
+    {
+        return $this->hasOne(Usuario::class, ['id' => 'id_usuario']);
     }
 }
