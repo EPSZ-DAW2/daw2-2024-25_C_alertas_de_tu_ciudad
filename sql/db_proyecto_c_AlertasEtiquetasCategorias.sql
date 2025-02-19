@@ -51,7 +51,7 @@ CREATE TABLE `alertas` (
   `id` int(11) NOT NULL COMMENT 'ID único para cada alerta',
   `titulo` varchar(255) NOT NULL COMMENT 'Título de la alerta',
   `descripcion` text NOT NULL COMMENT 'Descripción de la alerta',
-  `id_etiqueta` int(11) DEFAULT NULL COMMENT 'ID de la etiqueta relacionada'
+  `id_categoria` int(11) DEFAULT NULL COMMENT 'ID de la categoria relacionada'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
@@ -181,7 +181,7 @@ VALUES
 --
 ALTER TABLE `alertas`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `id_etiqueta` (`id_etiqueta`);
+  ADD KEY `id_categoria` (`id_categoria`);
 
 --
 -- Indices de la tabla `categorias`
@@ -247,7 +247,7 @@ ALTER TABLE `usuario`
 -- Filtros para la tabla `alertas`
 --
 ALTER TABLE `alertas`
-  ADD CONSTRAINT `alertas_ibfk_1` FOREIGN KEY (`id_etiqueta`) REFERENCES `etiquetas` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `alertas_ibfk_1` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id`) ON DELETE SET NULL;
 
 --
 -- Filtros para la tabla `categorias`
