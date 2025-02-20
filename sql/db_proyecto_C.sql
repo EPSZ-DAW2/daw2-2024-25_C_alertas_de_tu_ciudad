@@ -1,22 +1,21 @@
 -- --------------------------------------------------------------------------
--- Esquema de la Base de Datos para un sistema de gestión de usuarios
+-- Script de base de datos de Alertas de tu ciudad
+-- Yii Framework - Proyecto C
+-- (c) DAW2 - EPSZ - Universidad de Salamanca
 -- --------------------------------------------------------------------------
-SET
-  FOREIGN_KEY_CHECKS = 0;
 
-SET
-  SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 
-SET
-  time_zone = "+00:00";
-
-SET
-  AUTOCOMMIT = 0;
-
+SET FOREIGN_KEY_CHECKS = 0;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
+SET time_zone = "+00:00";
 
--- --------------------------------------------------------
--- Base de datos: `daw_proyecto_C`
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
 -- --------------------------------------------------------
 DROP DATABASE IF EXISTS `proyecto_C`;
 
@@ -25,28 +24,32 @@ CREATE DATABASE IF NOT EXISTS `proyecto_C` CHARACTER SET 'utf8' COLLATE 'utf8_ge
 USE `proyecto_C`;
 
 -- --------------------------------------------------------
--- Tabla: `usuario`
+-- TABLA: USUARIO
 -- --------------------------------------------------------
 DROP TABLE IF EXISTS `usuario`;
-
 CREATE TABLE IF NOT EXISTS `usuario` (
-  `id` INT AUTO_INCREMENT COMMENT 'ID único para cada usuario',
-  `email` VARCHAR(255) NOT NULL UNIQUE COMMENT 'Correo electrónico único del usuario',
-  `password` VARCHAR(255) NOT NULL COMMENT 'Contraseña encriptada del usuario',
-  `nick` VARCHAR(100) NOT NULL COMMENT 'Apodo o nombre de usuario',
-  `register_date` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de registro del usuario',
-  `confirmed` BOOLEAN DEFAULT FALSE COMMENT 'Indica si el usuario ha confirmado su registro',
-  `role` ENUM(
-    'guest',
-    'normal',
-    'moderator',
-    'admin',
-    'sysadmin'
-  ) DEFAULT 'normal' COMMENT 'Rol del usuario en el sistema',
-  `attempts` INT DEFAULT 0 COMMENT 'Intentos fallidos de acceso',
-  `locked` BOOLEAN DEFAULT FALSE COMMENT 'Indica si el usuario está bloqueado',
-  PRIMARY KEY (`id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
+    `id` int(11) NOT NULL COMMENT 'ID único para cada usuario',
+    `email` varchar(255) NOT NULL COMMENT 'Correo electrónico único del usuario',
+    `password` varchar(255) NOT NULL COMMENT 'Contraseña encriptada del usuario',
+    `auth_key` varchar(255) DEFAULT NULL,
+    `nick` varchar(100) NOT NULL COMMENT 'Apodo o nombre de usuario',
+    `username` varchar(100) NOT NULL,
+    `register_date` datetime DEFAULT current_timestamp() COMMENT 'Fecha de registro del usuario',
+    `confirmed` tinyint(1) DEFAULT 0 COMMENT 'Indica si el usuario ha confirmado su registro',
+    `role` enum('guest','normal','moderator','admin','sysadmin') DEFAULT 'normal' COMMENT 'Rol del usuario en el sistema',
+    `attempts` int(11) DEFAULT 0 COMMENT 'Intentos fallidos de acceso',
+    `locked` tinyint(1) DEFAULT 0 COMMENT 'Indica si el usuario está bloqueado'
+    phone VARCHAR(15) DEFAULT NULL COMMENT 'Número de teléfono del usuario'
+    status TINYINT(1) DEFAULT 0 COMMENT 'Estado del usuario'
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `email` (`email`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- --------------------------------------------------------
+-- VOLCADO DE DATOS DE TABLA: USUARIO
+-- --------------------------------------------------------
+INSERT INTO `usuario` (`id`, `email`, `password`, `auth_key`, `nick`, `username`, `register_date`, `confirmed`, `role`, `attempts`, `locked`) VALUES
+    (3, 'dj@usal.es', '$2y$13$IXRmKNxfNNMSd7DGQkFo3.aOUovcBEKYby3qojNLF761o4xXfX2.2', 'h5uq58uxdPNhFEmtStMDYoD2a8V60ebT', 'djPiri', 'djPiri', '2025-01-14 12:37:44', 1, '', 0, 0);
 
 -- --------------------------------------------------------
 -- Tabla: `area`
