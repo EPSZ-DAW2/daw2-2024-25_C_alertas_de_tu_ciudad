@@ -1,23 +1,19 @@
 <?php
-use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-
-$this->title = '创建警报';
+use yii\widgets\ActiveForm;
 ?>
 
-<h1><?= Html::encode($this->title) ?></h1>
+<div class="container mt-4">
+    <?php $form = ActiveForm::begin(); ?>
 
-<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+    <?= $form->field($model, 'titulo')->textInput() ?>
+    <?= $form->field($model, 'descripcion')->textarea() ?>
+    <?= $form->field($model, 'fecha_inicio')->input('datetime-local') ?>
+    <?= $form->field($model, 'duracion_estimada')->textInput() ?>
 
-<?= $form->field($model, 'titulo')->textInput(['maxlength' => true]) ?>
-<?= $form->field($model, 'descripcion')->textarea(['rows' => 6]) ?>
-<?= $form->field($model, 'ubicacion')->textInput(['maxlength' => true]) ?>
-<?= $form->field($model, 'start_time')->input('datetime-local') ?>
-<?= $form->field($model, 'end_time')->input('datetime-local') ?>
-<?= $form->field($model, 'image_url')->fileInput() ?>
+    <div class="form-group">
+        <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
+    </div>
 
-<div class="form-group">
-    <?= Html::submitButton('保存', ['class' => 'btn btn-success']) ?>
+    <?php ActiveForm::end(); ?>
 </div>
-
-<?php ActiveForm::end(); ?>

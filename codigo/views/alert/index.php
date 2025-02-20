@@ -1,16 +1,19 @@
 <?php
 use yii\helpers\Html;
-
-$this->title = '警报列表';
+use yii\helpers\Url;
 ?>
 
-<h1><?= Html::encode($this->title) ?></h1>
+<div class="container mt-4">
+    <h2 class="text-center">Últimas Alertas</h2>
+    <p><?= Html::a('Crear Alerta', ['create'], ['class' => 'btn btn-success']) ?></p>
 
-<ul>
-    <?php foreach ($alerts as $alert): ?>
-        <li>
-            <?= Html::a(Html::encode($alert->titulo), ['view', 'id' => $alert->id]) ?>
-            (<?= Html::encode($alert->ubicacion) ?>, <?= Html::encode($alert->start_time) ?>)
-        </li>
-    <?php endforeach; ?>
-</ul>
+    <div class="list-group">
+        <?php foreach ($alertas as $alerta): ?>
+            <a href="<?= Url::to(['view', 'id' => $alerta->id]) ?>" class="list-group-item list-group-item-action">
+                <h5>⚠ <?= Html::encode($alerta->titulo) ?></h5>
+                <p><?= Html::encode($alerta->descripcion) ?></p>
+                <small>Publicado el <?= date('d/m/Y H:i', strtotime($alerta->fecha_inicio)) ?></small>
+            </a>
+        <?php endforeach; ?>
+    </div>
+</div>

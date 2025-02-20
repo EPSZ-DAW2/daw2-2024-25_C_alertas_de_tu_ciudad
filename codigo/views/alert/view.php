@@ -1,15 +1,19 @@
 <?php
 use yii\helpers\Html;
-
-$this->title = $model->titulo;
 ?>
 
-<h1><?= Html::encode($this->title) ?></h1>
+<div class="container mt-4">
+    <h2 class="text-center"><?= Html::encode($alerta->titulo) ?></h2>
+    <p><strong>Descripción:</strong> <?= Html::encode($alerta->descripcion) ?></p>
+    <p><strong>Fecha de Inicio:</strong> <?= date('d/m/Y H:i', strtotime($alerta->fecha_inicio)) ?></p>
+    <p><strong>Duración Estimada:</strong> <?= $alerta->duracion_estimada ? $alerta->duracion_estimada . ' minutos' : 'N/A' ?></p>
+    <p><strong>Ubicación:</strong> <?= $alerta->lugar ? Html::encode($alerta->lugar->nombre) : 'No especificado' ?></p>
 
-<p><strong>描述:</strong> <?= Html::encode($model->descripcion) ?></p>
-<p><strong>地点:</strong> <?= Html::encode($model->ubicacion) ?></p>
-<p><strong>时间:</strong> <?= Html::encode($model->start_time) ?> - <?= Html::encode($model->end_time) ?></p>
-
-<?php if ($model->image_url): ?>
-    <p><img src="/<?= Html::encode($model->image_url) ?>" alt="警报图片" style="max-width: 100%;"></p>
-<?php endif; ?>
+    <p>
+        <?= Html::a('Editar', ['update', 'id' => $alerta->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Eliminar', ['delete', 'id' => $alerta->id], [
+            'class' => 'btn btn-danger',
+            'data' => ['confirm' => '¿Estás seguro?', 'method' => 'post'],
+        ]) ?>
+    </p>
+</div>
