@@ -10,7 +10,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <ul>
         <?php foreach ($categorias as $categoria): ?>
             <li>
-                <?= Html::a(Html::encode($categoria->nombre), Url::to(['alerta/index', 'id_categoria' => $categoria->id])) ?>
+                <?= Html::a(Html::encode($categoria->nombre), Url::to(['categoria/view', 'id' => $categoria->id])) ?>
             </li>
         <?php endforeach; ?>
     </ul>
