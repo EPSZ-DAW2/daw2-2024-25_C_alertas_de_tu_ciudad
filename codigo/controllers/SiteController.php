@@ -9,6 +9,8 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\Categoria;
+use app\models\Alerta;
 
 class SiteController extends Controller
 {
@@ -62,6 +64,17 @@ class SiteController extends Controller
     public function actionIndex()
     {
         return $this->render('index');
+    }
+
+    /**
+     * Muestra el árbol de categorías y sus alertas.
+     *
+     * @return string
+     */
+    public function actionCategorias()
+    {
+        $categorias = Categoria::find()->all();
+        return $this->render('categorias', ['categorias' => $categorias]);
     }
 
     /**
