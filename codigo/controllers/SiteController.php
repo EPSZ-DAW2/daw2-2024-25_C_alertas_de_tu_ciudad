@@ -61,9 +61,20 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex($ciudad = null)
     {
-        return $this->render('index');
+        $query = Alerta::find();
+
+        if ($ciudad) {
+            $query->where(['ubicacion' => $ciudad]);
+        }
+
+        $alertas = $query->all();
+
+        return $this->render('index', [
+            'alertas' => $alertas,
+            'ciudad' => $ciudad
+        ]);
     }
 
     /**

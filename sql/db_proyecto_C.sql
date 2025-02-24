@@ -1,170 +1,393 @@
 -- --------------------------------------------------------------------------
--- Esquema de la Base de Datos para un sistema de gestión de usuarios
+-- Script de base de datos de Alertas de tu ciudad
+-- Yii Framework - Proyecto C
+-- (c) DAW2 - EPSZ - Universidad de Salamanca
 -- --------------------------------------------------------------------------
-SET
-  FOREIGN_KEY_CHECKS = 0;
 
-SET
-  SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-
-SET
-  time_zone = "+00:00";
-
-SET
-  AUTOCOMMIT = 0;
-
+SET FOREIGN_KEY_CHECKS = 0;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
+SET time_zone = "+00:00";
 
--- --------------------------------------------------------
--- Base de datos: `daw_proyecto_C`
--- --------------------------------------------------------
+-- --------------------------------------------------------------------------
+-- CREACIÓN DE LA BASE DE DATOS "proyecto_C"
+-- --------------------------------------------------------------------------
 DROP DATABASE IF EXISTS `proyecto_C`;
-
-CREATE DATABASE IF NOT EXISTS `proyecto_C` CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';
-
+CREATE DATABASE IF NOT EXISTS `proyecto_C` CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_general_ci';
 USE `proyecto_C`;
 
--- --------------------------------------------------------
--- Tabla: `usuario`
--- --------------------------------------------------------
+-- --------------------------------------------------------------------------
+-- Tabla: ETIQUETAS - Creación y volcado de datos
+-- --------------------------------------------------------------------------
+DROP TABLE IF EXISTS `etiquetas`;
+CREATE TABLE IF NOT EXISTS `etiquetas` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada etiqueta',
+    `nombre` VARCHAR(255) NOT NULL COMMENT 'Nombre de la etiqueta',
+    `descripcion` TEXT DEFAULT NULL COMMENT 'Descripción de la etiqueta',
+    `creado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de creación',
+    `actualizado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Fecha y hora de la última actualización',
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `etiquetas` (`id`, `nombre`, `descripcion`, `creado_en`, `actualizado_en`) VALUES
+    (1, 'Etiqueta 1', 'Etiqueta genérica 1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (2, 'Etiqueta 2', 'Etiqueta genérica 2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (3, 'Tsunami', 'Gran ola acompañada de aumento de nivel del mar que llega a la costa a gran velocidad.', '2025-01-23 09:31:56', '2025-02-18 17:24:09'),
+    (4, 'Maremoto', 'Aguas peligrosas acompañadas de vientos de gran magnitud en las costas.', '2025-02-18 17:23:09', '2025-02-18 17:23:09'),
+    (5, 'Secuestro', 'Personas retenidas contra su voluntad mediante el uso de la fuerza.', '2025-02-18 18:38:34', '2025-02-18 18:38:34'),
+    (6, 'Etiqueta 6', 'Etiqueta genérica 6', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (7, 'Etiqueta 7', 'Etiqueta genérica 7', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (8, 'Etiqueta 8', 'Etiqueta genérica 8', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (9, 'Etiqueta 9', 'Etiqueta genérica 9', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (10, 'Etiqueta 10', 'Etiqueta genérica 10', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (11, 'Etiqueta 11', 'Etiqueta genérica 11', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (12, 'Etiqueta 12', 'Etiqueta genérica 12', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (13, 'Etiqueta 13', 'Etiqueta genérica 13', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (14, 'Etiqueta 14', 'Etiqueta genérica 14', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (15, 'Etiqueta 15', 'Etiqueta genérica 15', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (16, 'Etiqueta 16', 'Etiqueta genérica 16', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (17, 'Etiqueta 17', 'Etiqueta genérica 17', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (18, 'Etiqueta 18', 'Etiqueta genérica 18', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (19, 'Etiqueta 19', 'Etiqueta genérica 19', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (20, 'Etiqueta 20', 'Etiqueta genérica 20', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (21, 'Etiqueta 21', 'Etiqueta genérica 21', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (22, 'Etiqueta 22', 'Etiqueta genérica 22', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (23, 'Etiqueta 23', 'Etiqueta genérica 23', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (24, 'Etiqueta 24', 'Etiqueta genérica 24', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (25, 'Etiqueta 25', 'Etiqueta genérica 25', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    ON DUPLICATE KEY UPDATE
+        nombre = VALUES(nombre),
+        descripcion = VALUES(descripcion),
+        creado_en = VALUES(creado_en),
+        actualizado_en = VALUES(actualizado_en);
+
+
+
+-- --------------------------------------------------------------------------
+-- Tabla: USUARIO - Creación y volcado de datos
+-- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `usuario`;
-
 CREATE TABLE IF NOT EXISTS `usuario` (
-  `id` INT AUTO_INCREMENT COMMENT 'ID único para cada usuario',
-  `email` VARCHAR(255) NOT NULL UNIQUE COMMENT 'Correo electrónico único del usuario',
-  `password` VARCHAR(255) NOT NULL COMMENT 'Contraseña encriptada del usuario',
-  `nick` VARCHAR(100) NOT NULL COMMENT 'Apodo o nombre de usuario',
-  `register_date` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de registro del usuario',
-  `confirmed` BOOLEAN DEFAULT FALSE COMMENT 'Indica si el usuario ha confirmado su registro',
-  `role` ENUM(
-    'guest',
-    'normal',
-    'moderator',
-    'admin',
-    'sysadmin'
-  ) DEFAULT 'normal' COMMENT 'Rol del usuario en el sistema',
-  `attempts` INT DEFAULT 0 COMMENT 'Intentos fallidos de acceso',
-  `locked` BOOLEAN DEFAULT FALSE COMMENT 'Indica si el usuario está bloqueado',
-  PRIMARY KEY (`id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada usuario',
+    `email` VARCHAR(255) NOT NULL UNIQUE COMMENT 'Correo electrónico único del usuario',
+    `password` VARCHAR(255) NOT NULL COMMENT 'Contraseña encriptada del usuario',
+    `auth_key` VARCHAR(255) DEFAULT NULL COMMENT 'Clave de autenticación',
+    `nick` VARCHAR(100) NOT NULL COMMENT 'Apodo o nombre de usuario',
+    `username` VARCHAR(100) NOT NULL COMMENT 'Nombre de usuario',
+    `register_date` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de registro del usuario',
+    `confirmed` TINYINT(1) DEFAULT 0 COMMENT 'Indica si el usuario ha confirmado su registro',
+    `role` ENUM('guest','usuario','moderator','admin','sysadmin') DEFAULT 'usuario' COMMENT 'Rol del usuario en el sistema',
+    `attempts` INT(11) DEFAULT 0 COMMENT 'Intentos fallidos de acceso',
+    `locked` TINYINT(1) DEFAULT 0 COMMENT 'Indica si el usuario está bloqueado',
+    `phone` VARCHAR(15) DEFAULT NULL COMMENT 'Número de teléfono del usuario',
+    `status` TINYINT(1) DEFAULT 0 COMMENT 'Estado del usuario',
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
--- Tabla: `area`
--- --------------------------------------------------------
-DROP TABLE IF EXISTS `area`;
+INSERT INTO `usuario` (`id`, `email`, `password`, `auth_key`, `nick`, `username`, `register_date`, `confirmed`, `role`, `attempts`, `locked`) VALUES
+    (3, 'dj@usal.es', '$2y$13$IXRmKNxfNNMSd7DGQkFo3.aOUovcBEKYby3qojNLF761o4xXfX2.2', 'h5uq58uxdPNhFEmtStMDYoD2a8V60ebT', 'djPiri', 'djPiri', '2025-01-14 12:37:44', 1, 'usuario', 0, 0),
+    (2, 'admin@domain.com', '$2y$13$Y3wzjJgRH5GqtpR3uN1qru0nmMEhDJ.8aE5Xoi0BvZQe7G5uBxM3G', NULL, 'admin', 'admin', '2025-02-20 08:00:00', 1, 'admin', 0, 0);
 
-CREATE TABLE `area` (
-  `id` INT AUTO_INCREMENT,
-  `nombre` VARCHAR(255) NOT NULL,
-  `parent_id` INT,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`parent_id`) REFERENCES `area`(`id`) ON DELETE
-  SET
-    NULL
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
--- --------------------------------------------------------
--- Tabla: `lugar`
--- --------------------------------------------------------
-DROP TABLE IF EXISTS `lugar`;
 
-CREATE TABLE `lugar` (
-  `id` INT AUTO_INCREMENT,
-  `direccion` VARCHAR(255) NOT NULL,
-  `notas` TEXT,
-  `area_id` INT,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`area_id`) REFERENCES `area`(`id`) ON DELETE
-  SET
-    NULL
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- --------------------------------------------------------------------------
+-- Tabla: COMENTARIOS - Creación y volcado de datos
+-- --------------------------------------------------------------------------
+DROP TABLE IF EXISTS `comentarios`;
+CREATE TABLE IF NOT EXISTS `comentarios` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único del comentario',
+    `contenido` TEXT NOT NULL COMMENT 'Contenido del comentario',
+    `numero_denuncias` INT(11) DEFAULT 0 COMMENT 'Número de veces que el comentario ha sido denunciado',
+    `es_denunciado` TINYINT(1) DEFAULT 0 COMMENT 'Indica si el comentario ha sido marcado como denunciado',
+    `es_visible` TINYINT(1) DEFAULT 1 COMMENT 'Indica si el comentario es visible para los usuarios',
+    `es_cerrado` TINYINT(1) DEFAULT 0 COMMENT 'Indica si el comentario ha sido cerrado por un moderador',
+    `creado_en` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de creación del comentario',
+    `actualizado_en` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Fecha y hora de la última actualización',
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
--- --------------------------------------------------------
--- Tabla: `alerta`
--- --------------------------------------------------------
-DROP TABLE IF EXISTS `alerta`;
+INSERT INTO `comentarios` (`contenido`, `numero_denuncias`, `es_denunciado`, `es_visible`, `es_cerrado`) VALUES
+    ('Primer comentario de prueba', 0, 0, 1, 0),
+    ('Segundo comentario denunciado', 2, 1, 1, 0),
+    ('Tercer comentario bloqueado', 0, 0, 0, 0),
+    ('Cuarto comentario cerrado', 0, 0, 1, 1),
+    ('Quinto comentario activo', 1, 0, 1, 0);
 
-CREATE TABLE `alerta` (
-  `id` INT AUTO_INCREMENT,
-  `titulo` VARCHAR(255) NOT NULL,
-  `descripcion` TEXT NOT NULL,
-  `fecha_inicio` DATETIME NOT NULL,
-  `duracion_estimada` INT,
-  `id_lugar` INT,
-  `detalles` TEXT,
-  `notas` TEXT,
-  `url_externa` TEXT,
-  `estado` VARCHAR(50) NOT NULL,
-  `id_usuario` INT,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`id_lugar`) REFERENCES `lugar`(`id`) ON DELETE
-  SET
-    NULL,
-    FOREIGN KEY (`id_usuario`) REFERENCES `usuario`(`id`) ON DELETE CASCADE
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
--- --------------------------------------------------------
--- Tabla: `comentario`
--- --------------------------------------------------------
-DROP TABLE IF EXISTS `comentario`;
 
-CREATE TABLE `comentario` (
-  `id` INT AUTO_INCREMENT,
-  `texto` TEXT NOT NULL,
-  `id_alerta` INT NOT NULL,
-  `id_usuario` INT NOT NULL,
-  `estado_cierre` TINYINT DEFAULT 0,
-  `num_denuncias` INT DEFAULT 0,
-  `bloqueado` BOOLEAN DEFAULT FALSE,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`id_alerta`) REFERENCES `alerta`(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`id_usuario`) REFERENCES `usuario`(`id`) ON DELETE CASCADE
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
--- --------------------------------------------------------
--- Tabla: `etiqueta`
--- --------------------------------------------------------
-DROP TABLE IF EXISTS `etiqueta`;
-
-CREATE TABLE `etiqueta` (
-  `id` INT AUTO_INCREMENT,
-  `nombre` VARCHAR(255) NOT NULL UNIQUE,
-  PRIMARY KEY (`id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
--- --------------------------------------------------------
--- Tabla: `alerta_etiqueta`
--- --------------------------------------------------------
-DROP TABLE IF EXISTS `alerta_etiqueta`;
-
-CREATE TABLE `alerta_etiqueta` (
-  `id_alerta` INT,
-  `id_etiqueta` INT,
-  PRIMARY KEY (`id_alerta`, `id_etiqueta`),
-  FOREIGN KEY (`id_alerta`) REFERENCES `alerta`(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`id_etiqueta`) REFERENCES `etiqueta`(`id`) ON DELETE CASCADE
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
--- --------------------------------------------------------
--- Tabla: `incidencia`
--- --------------------------------------------------------
+-- --------------------------------------------------------------------------
+-- Tabla: INCIDENCIA - Creación y volcado de datos
+-- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `incidencia`;
+CREATE TABLE IF NOT EXISTS `incidencia` (
+                                            `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'Identificador único de la incidencia',
+    `titulo` VARCHAR(255) NOT NULL COMMENT 'Título de la incidencia',
+    `descripcion` TEXT DEFAULT NULL COMMENT 'Descripción detallada de la incidencia',
+    `fecha_creacion` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de creación de la incidencia',
+    `fecha_revision` DATETIME DEFAULT NULL COMMENT 'Fecha y hora de la revisión de la incidencia',
+    `estado` ENUM('pendiente', 'procesada') DEFAULT 'pendiente' COMMENT 'Estado actual de la incidencia',
+    `prioridad` ENUM('alta', 'media', 'baja') DEFAULT 'media' COMMENT 'Nivel de prioridad de la incidencia',
+    `respuesta` TEXT DEFAULT NULL COMMENT 'Respuesta dada a la incidencia una vez revisada',
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE `incidencia` (
-  `id` INT AUTO_INCREMENT,
-  `texto` TEXT NOT NULL,
-  `id_usuario` INT NOT NULL,
-  `id_alerta` INT,
-  `id_comentario` INT,
-  `fecha_lectura` DATETIME,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`id_usuario`) REFERENCES `usuario`(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`id_alerta`) REFERENCES `alerta`(`id`) ON DELETE
-  SET
-    NULL,
-    FOREIGN KEY (`id_comentario`) REFERENCES `comentario`(`id`) ON DELETE
-  SET
-    NULL
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+INSERT INTO `incidencia` (`titulo`, `descripcion`, `fecha_creacion`, `fecha_revision`, `estado`, `prioridad`, `respuesta`) VALUES
+    ('Error de conexión', 'No se puede conectar al servidor de la base de datos.', '2025-01-23 10:00:00', NULL, 'pendiente', 'alta', NULL),
+    ('API no responde', 'La API devuelve un error 500 al intentar obtener datos.', '2025-01-23 11:00:00', NULL, 'pendiente', 'media', NULL),
+    ('Problema de inicio de sesión', 'Usuarios reportan que no pueden iniciar sesión.', '2025-01-23 12:00:00', NULL, 'pendiente', 'media', NULL),
+    ('Carga lenta del sistema', 'El sistema tarda más de lo esperado en cargar datos.', '2025-01-23 13:00:00', NULL, 'pendiente', 'baja', NULL),
+    ('Error desconocido en el servidor', 'Se produjo un error inesperado en el servidor.', '2025-01-23 14:00:00', NULL, 'pendiente', 'alta', NULL);
 
+
+
+-- --------------------------------------------------------------------------
+-- Tabla: UBICACION - Creación y volcado de datos
+-- --------------------------------------------------------------------------
+DROP TABLE IF EXISTS `ubicacion`;
+CREATE TABLE `ubicacion` (
+    `id` INT(12) NOT NULL AUTO_INCREMENT COMMENT 'Identificador único de la ubicación',
+    `ub_code` TINYINT(2) NOT NULL COMMENT 'Código de clase de ubicación: 1=Continente, 2=País, 3=Comunidad Autónoma, 4=Provincia, 6=Localidad, 7=Barrio/Zona',
+    `nombre` VARCHAR(50) NOT NULL COMMENT 'Nombre de la ubicación',
+    `code_iso` VARCHAR(10) DEFAULT NULL COMMENT 'Código internacional de país/estado si aplica',
+    `ub_code_padre` INT(12) DEFAULT NULL COMMENT 'ID de la ubicación padre en la jerarquía',
+    PRIMARY KEY (`id`),
+    KEY `ub_code_padre` (`ub_code_padre`),
+    CONSTRAINT `fk_ubicacion_padre` FOREIGN KEY (`ub_code_padre`) REFERENCES `ubicacion` (`id`) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `ubicacion` (`ub_code`, `nombre`, `code_iso`, `ub_code_padre`) VALUES
+    (2, 'España', 'ES', NULL),
+    (3, 'Andalucía', 'ES-AN', 1),
+    (3, 'Aragón', 'ES-AR', 1),
+    (3, 'Asturias', 'ES-AS', 1),
+    (3, 'Islas Baleares', 'ES-IB', 1),
+    (3, 'Canarias', 'ES-CN', 1),
+    (3, 'Cantabria', 'ES-CB', 1),
+    (3, 'Castilla-La Mancha', 'ES-CM', 1),
+    (3, 'Castilla y León', 'ES-CL', 1),
+    (3, 'Cataluña', 'ES-CT', 1),
+    (3, 'Extremadura', 'ES-EX', 1),
+    (3, 'Galicia', 'ES-GA', 1),
+    (3, 'Madrid', 'ES-MD', 1),
+    (3, 'Murcia', 'ES-MC', 1),
+    (3, 'Navarra', 'ES-NC', 1),
+    (3, 'La Rioja', 'ES-RI', 1),
+    (3, 'País Vasco', 'ES-PV', 1),
+    (3, 'Comunidad Valenciana', 'ES-VC', 1),
+    (3, 'Ceuta', 'ES-CE', 1),
+    (3, 'Melilla', 'ES-ML', 1),
+    (4, 'Ávila', 'ES-AV', 8),
+    (4, 'Burgos', 'ES-BU', 8),
+    (4, 'León', 'ES-LE', 8),
+    (4, 'Palencia', 'ES-P', 8),
+    (4, 'Salamanca', 'ES-SA', 8),
+    (4, 'Segovia', 'ES-SG', 8),
+    (4, 'Soria', 'ES-SO', 8),
+    (4, 'Valladolid', 'ES-VA', 8),
+    (4, 'Zamora', 'ES-ZA', 8),
+    (6, 'Salamanca', 'ES-SA-SAL', 13),
+    (6, 'Béjar', 'ES-SA-BEJ', 13),
+    (6, 'Ciudad Rodrigo', 'ES-SA-CRO', 13),
+    (6, 'Vitigudino', 'ES-SA-VIT', 13),
+    (6, 'Peñaranda de Bracamonte', 'ES-SA-PEN', 13),
+    (6, 'Zamora', 'ES-ZA-ZAM', 17),
+    (6, 'Benavente', 'ES-ZA-BEN', 17),
+    (6, 'Toro', 'ES-ZA-TOR', 17),
+    (6, 'Fuentesaúco', 'ES-ZA-FUE', 17),
+    (6, 'Alcañices', 'ES-ZA-ALC', 17),
+    (7, 'Plaza Mayor', NULL, 22),
+    (7, 'Garrido', NULL, 22),
+    (7, 'Cementerio', NULL, 22),
+    (7, 'Pizarrales', NULL, 22),
+    (7, 'San José', NULL, 22),
+    (7, 'Casco Antiguo', NULL, 27),
+    (7, 'San Lázaro', NULL, 27),
+    (7, 'San José Obrero', NULL, 27),
+    (7, 'Pinilla', NULL, 27),
+    (7, 'Los Bloques', NULL, 27),
+    (7, 'La Candelaria', NULL, 27),
+    (7, 'Cabañales', NULL, 27),
+    (7, 'Pantoja', NULL, 27),
+    (7, 'San Frontis', NULL, 27),
+    (7, 'Las Viñas', NULL, 27),
+    (7, 'San Isidro', NULL, 27),
+    (7, 'Vista Alegre', NULL, 27),
+    (7, 'Otero', NULL, 27),
+    (7, 'Siglo XXI', NULL, 27),
+    (7, 'Tres Cruces', NULL, 27),
+    (7, 'Alto de los Curas', NULL, 27),
+    (7, 'Peña Trevinca', NULL, 27),
+    (7, 'La Vaguada', NULL, 27),
+    (7, 'Los Almendros', NULL, 27),
+    (7, 'Candelaria', NULL, 27),
+    (7, 'San Blas', NULL, 27),
+    (7, 'San José', NULL, 27),
+    (7, 'Villagodio', NULL, 27),
+    (7, 'Rabiche', NULL, 27);
+
+
+
+-- --------------------------------------------------------------------------
+-- Tabla: CATEGORIAS - Creación y volcado de datos
+-- --------------------------------------------------------------------------
+DROP TABLE IF EXISTS `categorias`;
+CREATE TABLE IF NOT EXISTS `categorias` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada categoría',
+    `nombre` VARCHAR(255) NOT NULL COMMENT 'Nombre de la categoría',
+    `descripcion` TEXT DEFAULT NULL COMMENT 'Descripción de la categoría',
+    `id_padre` INT(11) DEFAULT NULL COMMENT 'ID de la categoría padre (opcional)',
+    `id_etiqueta` INT(11) DEFAULT NULL COMMENT 'ID de la etiqueta relacionada',
+    PRIMARY KEY (`id`),
+    KEY `id_padre` (`id_padre`),
+    KEY `id_etiqueta` (`id_etiqueta`),
+    CONSTRAINT `categorias_ibfk_1` FOREIGN KEY (`id_padre`) REFERENCES `categorias` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `categorias_ibfk_2` FOREIGN KEY (`id_etiqueta`) REFERENCES `etiquetas` (`id`) ON DELETE SET NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+INSERT INTO `categorias` (`id`, `nombre`, `descripcion`, `id_padre`, `id_etiqueta`) VALUES
+    (1, 'Catástrofes naturales', 'Eventos como terremotos, incendios forestales, huracanes, etc.', NULL, NULL),
+    (2, 'Emergencias de salud pública', 'Pandemias y brotes de enfermedades infecciosas.', NULL, NULL),
+    (3, 'Terrorismo', 'Amenazas de bomba, tiroteos y otras actividades terroristas.', NULL, NULL),
+    (4, 'Accidentes industriales', 'Explosiones, vertidos de sustancias químicas y fallos estructurales.', NULL, NULL),
+    (5, 'Emergencias civiles', 'Órdenes de evacuación, disturbios civiles y otras emergencias.', NULL, NULL)
+    ON DUPLICATE KEY UPDATE
+    nombre = VALUES(nombre),
+    descripcion = VALUES(descripcion),
+    id_padre = VALUES(id_padre),
+    id_etiqueta = VALUES(id_etiqueta);
+
+
+-- --------------------------------------------------------------------------
+-- Tabla: ALERTAS - Creación y volcado de datos
+-- --------------------------------------------------------------------------
+DROP TABLE IF EXISTS `alertas`;
+CREATE TABLE IF NOT EXISTS `alertas` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada alerta',
+    `titulo` VARCHAR(255) NOT NULL COMMENT 'Título de la alerta',
+    `descripcion` TEXT NOT NULL COMMENT 'Descripción detallada de la alerta',
+    `id_etiqueta` INT(11) DEFAULT NULL COMMENT 'ID de la etiqueta relacionada con la alerta',
+    `id_categoria` INT(11) DEFAULT NULL COMMENT 'ID de la categoria relacionada',
+    `estado` ENUM('pendiente', 'completado') DEFAULT 'pendiente' COMMENT 'Estado actual de la alerta',
+    `fecha_creacion` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de creación de la alerta',
+    `fecha_expiracion` TIMESTAMP NULL DEFAULT NULL COMMENT 'Fecha y hora de expiración de la alerta',
+    `completado_en` TIMESTAMP NULL DEFAULT NULL COMMENT 'Fecha y hora en la que se completó la alerta',
+    `usuario_id` INT(11) DEFAULT NULL COMMENT 'ID del usuario que publicó la alerta',
+    `id_ubicacion` INT(11) NULL COMMENT 'Referencia a la tabla ubicacion',
+    PRIMARY KEY (`id`),
+    KEY `id_etiqueta` (`id_etiqueta`),
+    KEY `id_ubicacion` (`id_ubicacion`),
+    CONSTRAINT `alertas_fk_categoria` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `alertas_ibfk_1` FOREIGN KEY (`id_etiqueta`) REFERENCES `etiquetas` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `alertas_ibfk_2` FOREIGN KEY (`id_ubicacion`) REFERENCES `ubicacion` (`id`) ON DELETE SET NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `alertas` (`titulo`, `descripcion`, `id_etiqueta`, `estado`, `fecha_expiracion`, `usuario_id`, `id_ubicacion`) VALUES
+    ('Accidente de tráfico en la M-30', 'Colisión múltiple en la M-30 sentido norte, se recomienda tomar rutas alternativas.', 1, 'pendiente', '2025-02-01 12:00:00', 13, 3),
+    ('Manifestación en Plaza Sol', 'Concentración de manifestantes en el centro de Madrid. Posibles cortes de tráfico.', 2, 'pendiente', '2025-02-02 14:00:00', 13, 3),
+    ('Incendio en edificio residencial', 'Bomberos trabajando en la extinción de un incendio en el barrio de Arganzuela.', 3, 'pendiente', '2025-02-03 16:00:00', 13, 3),
+    ('Fallo en la red eléctrica', 'Varias zonas de la ciudad sin suministro eléctrico debido a una sobrecarga.', 4, 'pendiente', '2025-02-04 18:00:00', 13, 5),
+    ('Torrencial de lluvias', 'Se prevén lluvias intensas y posibilidad de inundaciones en la zona del Besòs.', 5, 'pendiente', '2025-02-05 20:00:00', 13, 5),
+    ('Alta contaminación del aire', 'Los niveles de contaminación superan los límites permitidos. Se recomienda evitar esfuerzos al aire libre.', 6, 'pendiente', '2025-02-06 09:00:00', 7, 6),
+    ('Feria de abril', 'El tráfico estará restringido en la zona de la feria hasta el final del evento.', 7, 'pendiente', '2025-02-07 22:00:00', 7, 6),
+    ('Oleaje extremo en la Malvarrosa', 'Precaución en la costa debido a fuertes vientos y oleaje elevado.', 8, 'pendiente', '2025-02-08 11:00:00', 7, 7),
+    ('Cortes de agua en el centro', 'Trabajos de mantenimiento dejarán sin suministro algunas zonas del casco histórico.', 9, 'pendiente', '2025-02-09 15:00:00', NULL, 7),
+    ('Nevada intensa en Burgos', 'Carreteras cubiertas de nieve. Se recomienda el uso de cadenas.', 10, 'pendiente', '2025-02-10 08:00:00', NULL, 8),
+    ('Cierre del puerto de Pajares', 'El puerto se encuentra intransitable debido a la acumulación de nieve.', 11, 'pendiente', '2025-02-11 10:00:00', NULL, 9),
+    ('Viento fuerte en Salamanca', 'Rachas de viento de hasta 100 km/h. Se recomienda precaución en la vía pública.', 12, 'pendiente', '2025-02-12 12:00:00', NULL, 10),
+    ('Accidente ferroviario en Segovia', 'Retrasos en la línea Madrid-Segovia debido a un incidente en las vías.', 13, 'pendiente', '2025-02-13 13:00:00', NULL, 11),
+    ('Cierre del casco histórico de Valladolid', 'Zona peatonalizada por evento cultural. Acceso restringido a vehículos.', 14, 'pendiente', '2025-02-14 16:00:00', NULL, 12),
+    ('Rotura de tubería en Zamora', 'Inundaciones en la calle principal por una tubería rota. Equipos de emergencia en la zona.', 15, 'pendiente', '2025-02-15 19:00:00', NULL, 13),
+    ('Cierre de colegios en Ávila', 'Clases suspendidas debido a alerta por nevadas.', 16, 'pendiente', '2025-02-16 08:00:00', NULL, 14),
+    ('Aviso de frío extremo en Soria', 'Temperaturas bajo cero. Se recomienda precaución en las carreteras.', 17, 'pendiente', '2025-02-17 07:00:00', NULL, 15),
+    ('Caída de árboles en Palencia', 'Varios árboles caídos tras fuertes vientos. Servicios de emergencia trabajan en la zona.', 18, 'pendiente', '2025-02-18 09:00:00', NULL, 16),
+    ('Manifestación en Burgos', 'Cortes de tráfico en la Plaza Mayor debido a una protesta.', 2, 'pendiente', '2025-02-19 17:00:00', NULL, 8),
+    ('Incendio forestal en León', 'Equipos de emergencia trabajan en la extinción de un fuego en la sierra.', 3, 'pendiente', '2025-02-20 14:00:00', NULL, 9),
+    ('Fuga de gas en Salamanca', 'Se ha evacuado un edificio en el centro de la ciudad por precaución.', 19, 'pendiente', '2025-02-21 12:00:00', NULL, 10),
+    ('Derrumbe de edificio en Segovia', 'Bomberos han evacuado a los residentes tras un derrumbe parcial.', 20, 'pendiente', '2025-02-22 18:00:00', NULL, 11),
+    ('Alerta por heladas en Valladolid', 'Carreteras con placas de hielo. Se recomienda circular con precaución.', 21, 'pendiente', '2025-02-23 06:00:00', NULL, 12),
+    ('Cierre de túnel en Zamora', 'Mantenimiento en el túnel principal. Se habilitan rutas alternativas.', 22, 'pendiente', '2025-02-24 13:00:00', NULL, 13),
+    ('Feria de ganado en Ávila', 'Desvíos de tráfico por la feria anual en las afueras de la ciudad.', 23, 'pendiente', '2025-02-25 15:00:00', NULL, 14),
+    ('Corte de electricidad en Soria', 'Corte programado por trabajos en la red eléctrica.', 24, 'pendiente', '2025-02-26 09:00:00', NULL, 15),
+    ('Aumento de caudal del río en Palencia', 'Precaución en las zonas ribereñas por riesgo de desbordamiento.', 25, 'pendiente', '2025-02-27 11:00:00', NULL, 16),
+    ('Fuga de gas en el casco antiguo', 'Se ha detectado una fuga de gas en un edificio histórico. Precaución en la zona.', 19, 'pendiente', '2025-03-01 10:00:00', NULL, 13),
+    ('Accidente en el Puente de Piedra', 'Un choque múltiple ha bloqueado el tráfico en el puente principal.', 1, 'pendiente', '2025-03-02 12:30:00', NULL, 13),
+    ('Corte de agua en el centro', 'Trabajos de reparación dejarán sin agua varias calles del casco antiguo.', 9, 'pendiente', '2025-03-03 08:00:00', NULL, 13),
+    ('Manifestación en la Plaza Mayor', 'Concentración ciudadana en protesta por la subida del precio de la luz.', 2, 'pendiente', '2025-03-04 18:00:00', NULL, 13),
+    ('Inundaciones en la zona del río Duero', 'Aumento del caudal ha provocado desbordamientos en algunas calles cercanas.', 25, 'pendiente', '2025-03-05 14:00:00', NULL, 13),
+    ('Incendio en una nave industrial', 'Bomberos trabajan en la extinción de un fuego en el polígono industrial.', 3, 'pendiente', '2025-03-06 21:00:00', NULL, 13),
+    ('Viento fuerte en Zamora', 'Rachas de viento de hasta 90 km/h pueden provocar caídas de árboles.', 12, 'pendiente', '2025-03-07 11:00:00', NULL, 13),
+    ('Cierre de parques por temporal', 'El ayuntamiento ha decidido cerrar parques y jardines por riesgo de caída de ramas.', 17, 'pendiente', '2025-03-08 16:00:00', NULL, 13),
+    ('Obras en la Calle San Torcuato', 'Desvíos de tráfico debido a trabajos de asfaltado.', 14, 'pendiente', '2025-03-09 09:00:00', NULL, 13),
+    ('Desperfectos en la Muralla de Zamora', 'Parte de la muralla ha sufrido desprendimientos tras las lluvias.', 15, 'pendiente', '2025-03-10 13:30:00', NULL, 13),
+    ('Rotura de tubería en San José Obrero', 'Se ha reportado una gran fuga de agua en la calle principal.', 9, 'pendiente', '2025-03-11 07:00:00', NULL, 17),
+    ('Corte de electricidad en Pinilla', 'Vecinos sin suministro eléctrico debido a un fallo en la subestación.', 24, 'pendiente', '2025-03-12 12:00:00', NULL, 18),
+    ('Robos en la zona de Los Bloques', 'Aumento de denuncias por robos en viviendas en el barrio.', 19, 'pendiente', '2025-03-13 20:00:00', NULL, 19),
+    ('Asfaltado en Candelaria', 'Trabajos en la avenida principal, acceso restringido.', 14, 'pendiente', '2025-03-14 10:00:00', NULL, 20),
+    ('Feria en La Horta', 'Actividades programadas para el fin de semana, cortes de tráfico previstos.', 7, 'pendiente', '2025-03-15 15:00:00', NULL, 21),
+    ('Ola de calor en Olivares', 'Temperaturas superiores a los 40°C, se recomienda hidratarse.', 5, 'pendiente', '2025-03-16 14:00:00', NULL, 22),
+    ('Desperfectos por tormenta en San Lázaro', 'Varias calles han quedado anegadas tras una intensa tormenta.', 25, 'pendiente', '2025-03-17 22:00:00', NULL, 23),
+    ('Accidente en Cabañales', 'Moto colisiona con un turismo, hay un herido.', 1, 'pendiente', '2025-03-18 09:00:00', NULL, 24),
+    ('Avería en el alumbrado público en San Frontis', 'Calles sin iluminación por una avería en el tendido eléctrico.', 24, 'pendiente', '2025-03-19 21:30:00', NULL, 25),
+    ('Acto cultural en Peña Trevinca', 'Evento musical al aire libre este fin de semana.', 7, 'pendiente', '2025-03-20 19:00:00', NULL, 26),
+    ('Atraco en Garrido', 'Se reporta un asalto en un establecimiento comercial.', 19, 'pendiente', '2025-03-21 12:30:00', NULL, 27),
+    ('Fuga de gas en el barrio del Oeste', 'Varios edificios evacuados por precaución.', 19, 'pendiente', '2025-03-22 08:00:00', NULL, 28),
+    ('Manifestación en el barrio de San José', 'Vecinos protestan contra la subida del IBI.', 2, 'pendiente', '2025-03-23 17:00:00', NULL, 29),
+    ('Incendio en un edificio de Capuchinos', 'Los bomberos han logrado controlar el fuego sin víctimas.', 3, 'pendiente', '2025-03-24 06:00:00', NULL, 30),
+    ('Cierre de calles en Pizarrales', 'Obras de mantenimiento afectarán el tráfico durante toda la semana.', 14, 'pendiente', '2025-03-25 15:00:00', NULL, 31);
+
+
+
+-- --------------------------------------------------------------------------
+-- Tabla: CONFIGURATIONS - Creación y volcado de datos
+-- --------------------------------------------------------------------------
+DROP TABLE IF EXISTS `configurations`;
+CREATE TABLE IF NOT EXISTS `configurations` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada configuración',
+    `key_name` VARCHAR(100) NOT NULL COMMENT 'Clave única de la configuración (ejemplo: "site_title")',
+    `value` TEXT NOT NULL COMMENT 'Valor de la configuración (ejemplo: "Mi Aplicación")',
+    `description` TEXT DEFAULT NULL COMMENT 'Descripción de la configuración',
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de creación',
+    `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Fecha y hora de la última actualización',
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+INSERT INTO `configurations` (`key_name`, `value`, `description`) VALUES
+    ('pagination_size', '10', 'Número de elementos por página');
+
+
+
+-- --------------------------------------------------------------------------
+-- Tabla: BACKUPS - Creación y volcado de datos
+-- --------------------------------------------------------------------------
+DROP TABLE IF EXISTS `backups`;
+CREATE TABLE IF NOT EXISTS `backups` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada archivo de respaldo',
+    `file_name` VARCHAR(255) NOT NULL COMMENT 'Nombre del archivo de respaldo',
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de creación del respaldo',
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+
+
+-- --------------------------------------------------------------------------
+-- Tabla: CATEGORIA_ETIQUETA - Creación y volcado de datos
+-- --------------------------------------------------------------------------
+DROP TABLE IF EXISTS `categoria_etiqueta`;
+CREATE TABLE `categoria_etiqueta` (
+    `id_categoria` INT(11) NOT NULL,
+    `id_etiqueta` INT(11) NOT NULL,
+    PRIMARY KEY (`id_categoria`,`id_etiqueta`),
+    KEY `id_etiqueta` (`id_etiqueta`),
+    CONSTRAINT `categoria_etiqueta_fk1` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `categoria_etiqueta_fk2` FOREIGN KEY (`id_etiqueta`) REFERENCES `etiquetas` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `categoria_etiqueta` (`id_categoria`, `id_etiqueta`) VALUES
+    (1, 3),
+    (1, 4),
+    (3, 5)
+    ON DUPLICATE KEY UPDATE
+    id_categoria = VALUES(id_categoria);
+
+SET FOREIGN_KEY_CHECKS = 1;
 COMMIT;

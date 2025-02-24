@@ -5,8 +5,9 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
+    'name' => 'Inicio',
     'basePath' => dirname(__DIR__),
-    'vendorPath' => implode( DIRECTORY_SEPARATOR, [ dirname( dirname( __DIR__)), 'librerias', 'vendor']),
+    'vendorPath' => implode(DIRECTORY_SEPARATOR, [dirname(dirname(__DIR__)), 'librerias', 'vendor']),
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -44,13 +45,14 @@ $config = [
         ],
         'db' => $db,
 
-
-        'urlManager' => [  // 配置 URL 管理器
-            'enablePrettyUrl' => false,  // 启用简洁 URL
-            'showScriptName' => false,  // 隐藏入口脚本 `index.php`
-            'rules' => [  // 定义自定义路由规则
-                'comentarios' => 'comentarios/index',  // 将 `comentarios` 映射到 `ComentariosController` 的 `actionIndex`
-                'comentarios/revisar-denuncias' => 'comentarios/revisar-denuncias',  // 将 `comentarios/revisar-denuncias` 映射到 `ComentariosController` 的 `actionRevisarDenuncias`
+        'urlManager' => [
+            // Configure URL Manager
+            'enablePrettyUrl' => false,  // Enable clean URLs
+            'showScriptName' => false,   // Hide the entry script `index.php`
+            'rules' => [
+                // Define custom URL rules
+                'comentarios' => 'comentarios/index',  // Map `comentarios` to `ComentariosController`'s `actionIndex`
+                'comentarios/revisar-denuncias' => 'comentarios/revisar-denuncias',  // Map `comentarios/revisar-denuncias` to `ComentariosController`'s `actionRevisarDenuncias`
             ],
         ],
 
