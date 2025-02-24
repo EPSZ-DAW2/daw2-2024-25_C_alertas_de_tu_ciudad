@@ -12,12 +12,39 @@ use yii\bootstrap5\NavBar;
 
 AppAsset::register($this);
 
-$this->registerCsrfMetaTags();
+// Registra meta etiquetas comunes y de seguridad
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
-$this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no']);
-$this->registerMetaTag(['name' => 'description', 'content' => $this->params['meta_description'] ?? '']);
-$this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
-$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
+$this->registerMetaTag([
+    'name' => 'viewport',
+    'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no'
+], 'viewport');
+$this->registerCsrfMetaTags();
+
+// Registra meta etiquetas SEO
+$this->registerMetaTag([
+    'name' => 'description',
+    'content' => $this->params['meta_description'] ?? 'Portal Web sobre la Publicación y Gestión de Alertas, Avisos, Sucesos, Eventos que ocurren en tu Ciudad o cercanías'
+]);
+$this->registerMetaTag([
+    'name' => 'keywords',
+    'content' => $this->params['meta_keywords'] ?? 'alertas, ciudad, eventos, incidencias'
+]);
+
+// Registra el favicon usando un SVG
+$this->registerLinkTag([
+    'rel' => 'icon',
+    'type' => 'image/svg+xml',
+    'href' => Yii::getAlias('@web/images/alertas_favicon.svg')
+]);
+
+
+// Registra etiquetas Open Graph (opcional, para compartir en redes sociales)
+$this->registerMetaTag(['property' => 'og:title', 'content' => Html::encode($this->title)]);
+$this->registerMetaTag(['property' => 'og:description', 'content' => Html::encode($this->params['meta_description'] ?? 'Descripción predeterminada de la página')]);
+$this->registerMetaTag(['property' => 'og:type', 'content' => 'website']);
+$this->registerMetaTag(['property' => 'og:url', 'content' => Yii::$app->request->absoluteUrl]);
+$this->registerMetaTag(['property' => 'og:image', 'content' => Yii::getAlias('@web/path/to/og-image.jpg')]);
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -32,30 +59,50 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <header id="header">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
+        'brandLabel' =>
+            Html::img('@web/images/inicio.svg', [
+                'alt' => 'inicio icon',
+                'style' => 'height:50px;'
+            ]) .
+            '<span style="margin-left:20px;">' . Html::encode(Yii::$app->name) . '</span>',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top']
     ]);
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            ['label' => 'Test', 'url' => ['/test/index']],
-            Yii::$app->user->isGuest
-                ? ['label' => 'Login', 'url' => ['/site/login']]
-                : '<li class="nav-item">'
-                    . Html::beginForm(['/site/logout'])
-                    . Html::submitButton(
-                        'Logout (' . Yii::$app->user->identity->username . ')',
-                        ['class' => 'nav-link btn btn-link logout']
-                    )
-                    . Html::endForm()
-                    . '</li>'
-        ]
-    ]);
+
+    //USER OR GUEST -- must add if statements to filter by roles
+    //if (Yii::$app->user->isGuest || Yii::$app->user->identity->role === 'usuario') {
+
+        // Left menu items
+        echo Nav::widget([
+            'options' => ['class' => 'navbar-nav'],
+            'items' => [
+                ['label' => 'Búsqueda', 'url' => ['/site/buscarPorUbicacion']],
+                ['label' => 'Incidencias', 'url' => ['/site/incidencias']],
+                ['label' => 'Áreas', 'url' => ['/site/areas']],
+                ['label' => 'Alertas', 'url' => ['/site/alertas']],
+            ],
+        ]);
+
+        // Right menu items
+        echo Nav::widget([
+            'options' => ['class' => 'navbar-nav ms-auto'],
+            'items' => array_merge(
+                [
+                    ['label' => 'Contacto', 'url' => ['/site/contact']],
+                    ['label' => 'Sobre Nosotros', 'url' => ['/site/about']]
+                ],
+                Yii::$app->user->isGuest
+                    ? [['label' => 'Iniciar Sesión', 'url' => ['/site/login']]]
+                    : [
+                    ['label' => 'Perfil', 'url' => ['/site/perfil']],
+                    ['label' => 'Cerrar Sesión', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post']]
+                ]
+            ),
+        ]);
+
+
     NavBar::end();
+    //}
     ?>
 </header>
 
@@ -68,20 +115,6 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         <?= $content ?>
     </div>
 </main>
-
-
-<!--
-<footer id="footer" class="mt-auto py-3 bg-light">
-    <div class="container">
-        <div class="row text-muted">
-            <div class="col-md-6 text-center text-md-start">&copy; My Company <?= date('Y') ?></div>
-            <div class="col-md-6 text-center text-md-end"><?= Yii::powered() ?></div>
-        </div>
-    </div>
-</footer>
-
--->
-
 
 <?php $this->endBody() ?>
 </body>

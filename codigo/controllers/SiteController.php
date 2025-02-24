@@ -9,6 +9,8 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\Alerta;
+
 
 class SiteController extends Controller
 {
@@ -59,10 +61,22 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex($ciudad = null)
     {
-        return $this->render('index');
+        $query = Alerta::find();
+
+        if ($ciudad) {
+            $query->where(['ubicacion' => $ciudad]);
+        }
+
+        $alertas = $query->all();
+
+        return $this->render('index', [
+            'alertas' => $alertas,
+            'ciudad' => $ciudad
+        ]);
     }
+
 
     /**
      * Login action.
