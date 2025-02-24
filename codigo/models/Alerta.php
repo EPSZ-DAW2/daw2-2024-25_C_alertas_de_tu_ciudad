@@ -33,7 +33,7 @@ class Alerta extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'alerta';
+        return 'alertas';
     }
 
     /**

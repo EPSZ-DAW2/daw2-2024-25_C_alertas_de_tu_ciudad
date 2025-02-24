@@ -1,34 +1,16 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alertas de la Ciudad - My Application</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body>
+<?php
+use yii\helpers\Html;
+use yii\helpers\Url;
 
+$this->title = 'Alertas de tu Ciudad';
+?>
 <div class="container mt-4">
-    <h2 class="text-center">Últimas Alertas de la Ciudad</h2>
+    <h1 class="text-center"><?= Html::encode($this->title) ?></h1>
 
     <div class="row">
         <div class="col-md-8">
-            <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action">
-                    <h5 class="mb-1">⚠ Accidente de Tráfico - Centro de la Ciudad</h5>
-                    <p class="mb-1">Se ha producido un accidente de tráfico, se recomienda desviar la ruta.</p>
-                    <small>Publicado hace 2 horas</small>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">
-                    <h5 class="mb-1">🌧 Alerta Meteorológica - Lluvias Intensas</h5>
-                    <p class="mb-1">Alerta de lluvias intensas, se espera que continúe hasta las 22:00 horas.</p>
-                    <small>Publicado hace 3 horas</small>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">
-                    <h5 class="mb-1">🚨 Incidente de Seguridad - Robo</h5>
-                    <p class="mb-1">La policía está investigando un caso de robo, por favor tenga precaución.</p>
-                    <small>Publicado hace 5 horas</small>
-                </a>
+            <div id="alertas-container">
+                <p class="text-center">Cargando alertas...</p>
             </div>
         </div>
 
@@ -40,18 +22,66 @@
                 <li class="list-group-item"><a href="#">Seguridad</a></li>
                 <li class="list-group-item"><a href="#">Eventos de Emergencia</a></li>
             </ul>
-
-            <h4 class="mt-4">Mapa de Alertas</h4>
-            <div id="map" style="height: 200px; background-color: #eee;"></div>
         </div>
     </div>
 </div>
 
 <footer class="text-center mt-5 py-3 bg-dark text-light">
-    <p>&copy; 2025 My Application. Todos los derechos reservados.</p>
+    <p>&copy; <?= date('Y') ?> Alertas de tu Ciudad. Todos los derechos reservados.</p>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<!-- Modal de Ubicación -->
+<div id="modalUbicacion" class="modal fade" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Filtrar alertas por ubicación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Quieres ver alertas solo de una ciudad específica?</p>
+                <input type="text" id="inputCiudad" class="form-control" placeholder="Escribe tu ciudad..." list="ciudadesList">
+                <datalist id="ciudadesList"></datalist>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelarFiltro">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="aceptarFiltro">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- Bootstrap Modal Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        setTimeout(() => {
+            let modal = new bootstrap.Modal(document.getElementById('modalUbicacion'));
+            modal.show();
+        }, 5000);
+
+        // Obtener lista de ciudades de España desde API externa
+        fetch('https://raw.githubusercontent.com/IagoLast/pselect/master/data/ES/cities.json')
+            .then(response => response.json())
+            .then(data => {
+                let ciudadList = document.getElementById("ciudadesList");
+                data.forEach(ciudad => {
+                    let option = document.createElement("option");
+                    option.value = ciudad;
+                    ciudadList.appendChild(option);
+                });
+            });
+
+        document.getElementById("aceptarFiltro").addEventListener("click", function() {
+            let ciudadSeleccionada = document.getElementById("inputCiudad").value;
+            if (ciudadSeleccionada) {
+                window.location.href = '<?= Url::to(['site/index']) ?>' + '?ciudad=' + encodeURIComponent(ciudadSeleccionada);
+            } else {
+                alert("Por favor, selecciona una ciudad.");
+            }
+        });
+
+        document.getElementById("cancelarFiltro").addEventListener("click", function() {
+            window.close(); // Cierra la pestaña
+        });
+    });
+</script>
