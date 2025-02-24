@@ -17,7 +17,7 @@ CREATE DATABASE IF NOT EXISTS `proyecto_C` CHARACTER SET 'utf8mb4' COLLATE 'utf8
 USE `proyecto_C`;
 
 -- --------------------------------------------------------------------------
--- TABLA: ETIQUETAS
+-- Tabla: ETIQUETAS - Creación y volcado de datos
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `etiquetas`;
 CREATE TABLE IF NOT EXISTS `etiquetas` (
@@ -29,8 +29,42 @@ CREATE TABLE IF NOT EXISTS `etiquetas` (
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+INSERT INTO `etiquetas` (`id`, `nombre`, `descripcion`, `creado_en`, `actualizado_en`) VALUES
+    (1, 'Etiqueta 1', 'Etiqueta genérica 1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (2, 'Etiqueta 2', 'Etiqueta genérica 2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (3, 'Tsunami', 'Gran ola acompañada de aumento de nivel del mar que llega a la costa a gran velocidad.', '2025-01-23 09:31:56', '2025-02-18 17:24:09'),
+    (4, 'Maremoto', 'Aguas peligrosas acompañadas de vientos de gran magnitud en las costas.', '2025-02-18 17:23:09', '2025-02-18 17:23:09'),
+    (5, 'Secuestro', 'Personas retenidas contra su voluntad mediante el uso de la fuerza.', '2025-02-18 18:38:34', '2025-02-18 18:38:34'),
+    (6, 'Etiqueta 6', 'Etiqueta genérica 6', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (7, 'Etiqueta 7', 'Etiqueta genérica 7', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (8, 'Etiqueta 8', 'Etiqueta genérica 8', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (9, 'Etiqueta 9', 'Etiqueta genérica 9', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (10, 'Etiqueta 10', 'Etiqueta genérica 10', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (11, 'Etiqueta 11', 'Etiqueta genérica 11', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (12, 'Etiqueta 12', 'Etiqueta genérica 12', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (13, 'Etiqueta 13', 'Etiqueta genérica 13', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (14, 'Etiqueta 14', 'Etiqueta genérica 14', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (15, 'Etiqueta 15', 'Etiqueta genérica 15', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (16, 'Etiqueta 16', 'Etiqueta genérica 16', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (17, 'Etiqueta 17', 'Etiqueta genérica 17', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (18, 'Etiqueta 18', 'Etiqueta genérica 18', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (19, 'Etiqueta 19', 'Etiqueta genérica 19', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (20, 'Etiqueta 20', 'Etiqueta genérica 20', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (21, 'Etiqueta 21', 'Etiqueta genérica 21', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (22, 'Etiqueta 22', 'Etiqueta genérica 22', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (23, 'Etiqueta 23', 'Etiqueta genérica 23', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (24, 'Etiqueta 24', 'Etiqueta genérica 24', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (25, 'Etiqueta 25', 'Etiqueta genérica 25', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    ON DUPLICATE KEY UPDATE
+        nombre = VALUES(nombre),
+        descripcion = VALUES(descripcion),
+        creado_en = VALUES(creado_en),
+        actualizado_en = VALUES(actualizado_en);
+
+
+
 -- --------------------------------------------------------------------------
--- TABLA: USUARIO
+-- Tabla: USUARIO - Creación y volcado de datos
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `usuario`;
 CREATE TABLE IF NOT EXISTS `usuario` (
@@ -50,15 +84,14 @@ CREATE TABLE IF NOT EXISTS `usuario` (
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------------------------
--- VOLCADO DE DATOS DE TABLA: USUARIO
--- --------------------------------------------------------------------------
 INSERT INTO `usuario` (`id`, `email`, `password`, `auth_key`, `nick`, `username`, `register_date`, `confirmed`, `role`, `attempts`, `locked`) VALUES
     (3, 'dj@usal.es', '$2y$13$IXRmKNxfNNMSd7DGQkFo3.aOUovcBEKYby3qojNLF761o4xXfX2.2', 'h5uq58uxdPNhFEmtStMDYoD2a8V60ebT', 'djPiri', 'djPiri', '2025-01-14 12:37:44', 1, 'usuario', 0, 0),
     (2, 'admin@domain.com', '$2y$13$Y3wzjJgRH5GqtpR3uN1qru0nmMEhDJ.8aE5Xoi0BvZQe7G5uBxM3G', NULL, 'admin', 'admin', '2025-02-20 08:00:00', 1, 'admin', 0, 0);
 
+
+
 -- --------------------------------------------------------------------------
--- TABLA: COMENTARIOS
+-- Tabla: COMENTARIOS - Creación y volcado de datos
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `comentarios`;
 CREATE TABLE IF NOT EXISTS `comentarios` (
@@ -73,9 +106,6 @@ CREATE TABLE IF NOT EXISTS `comentarios` (
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
--- --------------------------------------------------------------------------
--- VOLCADO DE DATOS DE TABLA: COMENTARIOS
--- --------------------------------------------------------------------------
 INSERT INTO `comentarios` (`contenido`, `numero_denuncias`, `es_denunciado`, `es_visible`, `es_cerrado`) VALUES
     ('Primer comentario de prueba', 0, 0, 1, 0),
     ('Segundo comentario denunciado', 2, 1, 1, 0),
@@ -83,12 +113,14 @@ INSERT INTO `comentarios` (`contenido`, `numero_denuncias`, `es_denunciado`, `es
     ('Cuarto comentario cerrado', 0, 0, 1, 1),
     ('Quinto comentario activo', 1, 0, 1, 0);
 
+
+
 -- --------------------------------------------------------------------------
--- TABLA: INCIDENCIA
+-- Tabla: INCIDENCIA - Creación y volcado de datos
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `incidencia`;
 CREATE TABLE IF NOT EXISTS `incidencia` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'Identificador único de la incidencia',
+                                            `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'Identificador único de la incidencia',
     `titulo` VARCHAR(255) NOT NULL COMMENT 'Título de la incidencia',
     `descripcion` TEXT DEFAULT NULL COMMENT 'Descripción detallada de la incidencia',
     `fecha_creacion` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de creación de la incidencia',
@@ -99,9 +131,6 @@ CREATE TABLE IF NOT EXISTS `incidencia` (
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------------------------
--- VOLCADO DE DATOS DE TABLA: INCIDENCIA
--- --------------------------------------------------------------------------
 INSERT INTO `incidencia` (`titulo`, `descripcion`, `fecha_creacion`, `fecha_revision`, `estado`, `prioridad`, `respuesta`) VALUES
     ('Error de conexión', 'No se puede conectar al servidor de la base de datos.', '2025-01-23 10:00:00', NULL, 'pendiente', 'alta', NULL),
     ('API no responde', 'La API devuelve un error 500 al intentar obtener datos.', '2025-01-23 11:00:00', NULL, 'pendiente', 'media', NULL),
@@ -109,8 +138,10 @@ INSERT INTO `incidencia` (`titulo`, `descripcion`, `fecha_creacion`, `fecha_revi
     ('Carga lenta del sistema', 'El sistema tarda más de lo esperado en cargar datos.', '2025-01-23 13:00:00', NULL, 'pendiente', 'baja', NULL),
     ('Error desconocido en el servidor', 'Se produjo un error inesperado en el servidor.', '2025-01-23 14:00:00', NULL, 'pendiente', 'alta', NULL);
 
+
+
 -- --------------------------------------------------------------------------
--- TABLA: UBICACION
+-- Tabla: UBICACION - Creación y volcado de datos
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `ubicacion`;
 CREATE TABLE `ubicacion` (
@@ -123,11 +154,6 @@ CREATE TABLE `ubicacion` (
     KEY `ub_code_padre` (`ub_code_padre`),
     CONSTRAINT `fk_ubicacion_padre` FOREIGN KEY (`ub_code_padre`) REFERENCES `ubicacion` (`id`) ON DELETE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
--- --------------------------------------------------------------------------
--- VOLCADO DE DATOS DE TABLA: UBICACION
--- --------------------------------------------------------------------------
 
 INSERT INTO `ubicacion` (`ub_code`, `nombre`, `code_iso`, `ub_code_padre`) VALUES
     (2, 'España', 'ES', NULL),
@@ -201,10 +227,38 @@ INSERT INTO `ubicacion` (`ub_code`, `nombre`, `code_iso`, `ub_code_padre`) VALUE
 
 
 
+-- --------------------------------------------------------------------------
+-- Tabla: CATEGORIAS - Creación y volcado de datos
+-- --------------------------------------------------------------------------
+DROP TABLE IF EXISTS `categorias`;
+CREATE TABLE IF NOT EXISTS `categorias` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada categoría',
+    `nombre` VARCHAR(255) NOT NULL COMMENT 'Nombre de la categoría',
+    `descripcion` TEXT DEFAULT NULL COMMENT 'Descripción de la categoría',
+    `id_padre` INT(11) DEFAULT NULL COMMENT 'ID de la categoría padre (opcional)',
+    `id_etiqueta` INT(11) DEFAULT NULL COMMENT 'ID de la etiqueta relacionada',
+    PRIMARY KEY (`id`),
+    KEY `id_padre` (`id_padre`),
+    KEY `id_etiqueta` (`id_etiqueta`),
+    CONSTRAINT `categorias_ibfk_1` FOREIGN KEY (`id_padre`) REFERENCES `categorias` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `categorias_ibfk_2` FOREIGN KEY (`id_etiqueta`) REFERENCES `etiquetas` (`id`) ON DELETE SET NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+INSERT INTO `categorias` (`id`, `nombre`, `descripcion`, `id_padre`, `id_etiqueta`) VALUES
+    (1, 'Catástrofes naturales', 'Eventos como terremotos, incendios forestales, huracanes, etc.', NULL, NULL),
+    (2, 'Emergencias de salud pública', 'Pandemias y brotes de enfermedades infecciosas.', NULL, NULL),
+    (3, 'Terrorismo', 'Amenazas de bomba, tiroteos y otras actividades terroristas.', NULL, NULL),
+    (4, 'Accidentes industriales', 'Explosiones, vertidos de sustancias químicas y fallos estructurales.', NULL, NULL),
+    (5, 'Emergencias civiles', 'Órdenes de evacuación, disturbios civiles y otras emergencias.', NULL, NULL)
+    ON DUPLICATE KEY UPDATE
+    nombre = VALUES(nombre),
+    descripcion = VALUES(descripcion),
+    id_padre = VALUES(id_padre),
+    id_etiqueta = VALUES(id_etiqueta);
 
 
 -- --------------------------------------------------------------------------
--- TABLA: ALERTAS
+-- Tabla: ALERTAS - Creación y volcado de datos
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `alertas`;
 CREATE TABLE IF NOT EXISTS `alertas` (
@@ -212,23 +266,21 @@ CREATE TABLE IF NOT EXISTS `alertas` (
     `titulo` VARCHAR(255) NOT NULL COMMENT 'Título de la alerta',
     `descripcion` TEXT NOT NULL COMMENT 'Descripción detallada de la alerta',
     `id_etiqueta` INT(11) DEFAULT NULL COMMENT 'ID de la etiqueta relacionada con la alerta',
+    `id_categoria` INT(11) DEFAULT NULL COMMENT 'ID de la categoria relacionada',
     `estado` ENUM('pendiente', 'completado') DEFAULT 'pendiente' COMMENT 'Estado actual de la alerta',
     `fecha_creacion` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de creación de la alerta',
     `fecha_expiracion` TIMESTAMP NULL DEFAULT NULL COMMENT 'Fecha y hora de expiración de la alerta',
     `completado_en` TIMESTAMP NULL DEFAULT NULL COMMENT 'Fecha y hora en la que se completó la alerta',
-    `usuario_id` INT(11) NOT NULL COMMENT 'ID del usuario que publicó la alerta',
-    `id_ubicacion` INT(11) NULL COMMENT 'Referencia a la tabla ubicaciones',
+    `usuario_id` INT(11) DEFAULT NULL COMMENT 'ID del usuario que publicó la alerta',
+    `id_ubicacion` INT(11) NULL COMMENT 'Referencia a la tabla ubicacion',
     PRIMARY KEY (`id`),
     KEY `id_etiqueta` (`id_etiqueta`),
     KEY `id_ubicacion` (`id_ubicacion`),
+    CONSTRAINT `alertas_fk_categoria` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id`) ON DELETE SET NULL,
     CONSTRAINT `alertas_ibfk_1` FOREIGN KEY (`id_etiqueta`) REFERENCES `etiquetas` (`id`) ON DELETE SET NULL,
-    CONSTRAINT `alertas_ibfk_2` FOREIGN KEY (`id_ubicacion`) REFERENCES `ubicaciones` (`id`) ON DELETE SET NULL
+    CONSTRAINT `alertas_ibfk_2` FOREIGN KEY (`id_ubicacion`) REFERENCES `ubicacion` (`id`) ON DELETE SET NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-
--- --------------------------------------------------------------------------
--- VOLCADO DE DATOS DE TABLA: ALERTAS
--- --------------------------------------------------------------------------
 INSERT INTO `alertas` (`titulo`, `descripcion`, `id_etiqueta`, `estado`, `fecha_expiracion`, `usuario_id`, `id_ubicacion`) VALUES
     ('Accidente de tráfico en la M-30', 'Colisión múltiple en la M-30 sentido norte, se recomienda tomar rutas alternativas.', 1, 'pendiente', '2025-02-01 12:00:00', 13, 3),
     ('Manifestación en Plaza Sol', 'Concentración de manifestantes en el centro de Madrid. Posibles cortes de tráfico.', 2, 'pendiente', '2025-02-02 14:00:00', 13, 3),
@@ -283,25 +335,10 @@ INSERT INTO `alertas` (`titulo`, `descripcion`, `id_etiqueta`, `estado`, `fecha_
     ('Incendio en un edificio de Capuchinos', 'Los bomberos han logrado controlar el fuego sin víctimas.', 3, 'pendiente', '2025-03-24 06:00:00', NULL, 30),
     ('Cierre de calles en Pizarrales', 'Obras de mantenimiento afectarán el tráfico durante toda la semana.', 14, 'pendiente', '2025-03-25 15:00:00', NULL, 31);
 
--- --------------------------------------------------------------------------
--- TABLA: CATEGORÍAS
--- --------------------------------------------------------------------------
-DROP TABLE IF EXISTS `categorias`;
-CREATE TABLE IF NOT EXISTS `categorias` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada categoría',
-    `nombre` VARCHAR(255) NOT NULL COMMENT 'Nombre de la categoría',
-    `descripcion` TEXT DEFAULT NULL COMMENT 'Descripción de la categoría',
-    `id_padre` INT(11) DEFAULT NULL COMMENT 'ID de la categoría padre (opcional)',
-    `id_etiqueta` INT(11) DEFAULT NULL COMMENT 'ID de la etiqueta relacionada',
-    PRIMARY KEY (`id`),
-    KEY `id_padre` (`id_padre`),
-    KEY `id_etiqueta` (`id_etiqueta`),
-    CONSTRAINT `categorias_ibfk_1` FOREIGN KEY (`id_padre`) REFERENCES `categorias` (`id`) ON DELETE SET NULL,
-    CONSTRAINT `categorias_ibfk_2` FOREIGN KEY (`id_etiqueta`) REFERENCES `etiquetas` (`id`) ON DELETE SET NULL
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
 
 -- --------------------------------------------------------------------------
--- TABLA: CONFIGURATIONS
+-- Tabla: CONFIGURATIONS - Creación y volcado de datos
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `configurations`;
 CREATE TABLE IF NOT EXISTS `configurations` (
@@ -314,14 +351,13 @@ CREATE TABLE IF NOT EXISTS `configurations` (
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
--- --------------------------------------------------------------------------
--- VOLCADO DE DATOS DE TABLA: CONFIGURATIONS
--- --------------------------------------------------------------------------
 INSERT INTO `configurations` (`key_name`, `value`, `description`) VALUES
     ('pagination_size', '10', 'Número de elementos por página');
 
+
+
 -- --------------------------------------------------------------------------
--- TABLA: BACKUPS
+-- Tabla: BACKUPS - Creación y volcado de datos
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `backups`;
 CREATE TABLE IF NOT EXISTS `backups` (
@@ -332,4 +368,26 @@ CREATE TABLE IF NOT EXISTS `backups` (
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
+
+-- --------------------------------------------------------------------------
+-- Tabla: CATEGORIA_ETIQUETA - Creación y volcado de datos
+-- --------------------------------------------------------------------------
+DROP TABLE IF EXISTS `categoria_etiqueta`;
+CREATE TABLE `categoria_etiqueta` (
+    `id_categoria` INT(11) NOT NULL,
+    `id_etiqueta` INT(11) NOT NULL,
+    PRIMARY KEY (`id_categoria`,`id_etiqueta`),
+    KEY `id_etiqueta` (`id_etiqueta`),
+    CONSTRAINT `categoria_etiqueta_fk1` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `categoria_etiqueta_fk2` FOREIGN KEY (`id_etiqueta`) REFERENCES `etiquetas` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `categoria_etiqueta` (`id_categoria`, `id_etiqueta`) VALUES
+    (1, 3),
+    (1, 4),
+    (3, 5)
+    ON DUPLICATE KEY UPDATE
+    id_categoria = VALUES(id_categoria);
+
 SET FOREIGN_KEY_CHECKS = 1;
+COMMIT;
