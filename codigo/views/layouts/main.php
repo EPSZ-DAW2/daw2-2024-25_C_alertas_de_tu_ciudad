@@ -9,6 +9,7 @@ use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 
@@ -37,13 +38,16 @@ $this->registerLinkTag([
     'href' => Yii::getAlias('@web/images/alertas_favicon.svg')
 ]);
 
-
 // Registra etiquetas Open Graph (opcional, para compartir en redes sociales)
 $this->registerMetaTag(['property' => 'og:title', 'content' => Html::encode($this->title)]);
 $this->registerMetaTag(['property' => 'og:description', 'content' => Html::encode($this->params['meta_description'] ?? 'Descripción predeterminada de la página')]);
 $this->registerMetaTag(['property' => 'og:type', 'content' => 'website']);
 $this->registerMetaTag(['property' => 'og:url', 'content' => Yii::$app->request->absoluteUrl]);
 $this->registerMetaTag(['property' => 'og:image', 'content' => Yii::getAlias('@web/path/to/og-image.jpg')]);
+
+// Obtener el parámetro "ciudad" (si existe) y definir el URL de inicio en consecuencia
+$ciudad = Yii::$app->request->get('ciudad');
+$homeUrl = $ciudad ? Url::to(['site/index', 'ciudad' => $ciudad]) : Yii::$app->homeUrl;
 
 ?>
 <?php $this->beginPage() ?>
@@ -65,44 +69,39 @@ $this->registerMetaTag(['property' => 'og:image', 'content' => Yii::getAlias('@w
                 'style' => 'height:50px;'
             ]) .
             '<span style="margin-left:20px;">' . Html::encode(Yii::$app->name) . '</span>',
-        'brandUrl' => Yii::$app->homeUrl,
+        'brandUrl' => $homeUrl,
         'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top']
     ]);
 
-    //USER OR GUEST -- must add if statements to filter by roles
-    //if (Yii::$app->user->isGuest || Yii::$app->user->identity->role === 'usuario') {
+    // Left menu items
+    echo Nav::widget([
+        'options' => ['class' => 'navbar-nav'],
+        'items' => [
+            ['label' => 'Búsqueda', 'url' => ['/site/buscarPorUbicacion']],
+            ['label' => 'Incidencias', 'url' => ['/site/incidencias']],
+            ['label' => 'Áreas', 'url' => ['/site/areas']],
+            ['label' => 'Alertas', 'url' => ['/site/alertas']],
+        ],
+    ]);
 
-        // Left menu items
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav'],
-            'items' => [
-                ['label' => 'Búsqueda', 'url' => ['/site/buscarPorUbicacion']],
-                ['label' => 'Incidencias', 'url' => ['/site/incidencias']],
-                ['label' => 'Áreas', 'url' => ['/site/areas']],
-                ['label' => 'Alertas', 'url' => ['/site/alertas']],
+    // Right menu items
+    echo Nav::widget([
+        'options' => ['class' => 'navbar-nav ms-auto'],
+        'items' => array_merge(
+            [
+                ['label' => 'Contacto', 'url' => ['/site/contact']],
+                ['label' => 'Sobre Nosotros', 'url' => ['/site/about']]
             ],
-        ]);
-
-        // Right menu items
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav ms-auto'],
-            'items' => array_merge(
-                [
-                    ['label' => 'Contacto', 'url' => ['/site/contact']],
-                    ['label' => 'Sobre Nosotros', 'url' => ['/site/about']]
-                ],
-                Yii::$app->user->isGuest
-                    ? [['label' => 'Iniciar Sesión', 'url' => ['/site/login']]]
-                    : [
-                    ['label' => 'Perfil', 'url' => ['/site/perfil']],
-                    ['label' => 'Cerrar Sesión', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post']]
-                ]
-            ),
-        ]);
-
+            Yii::$app->user->isGuest
+                ? [['label' => 'Iniciar Sesión', 'url' => ['/site/login']]]
+                : [
+                ['label' => 'Perfil', 'url' => ['/site/perfil']],
+                ['label' => 'Cerrar Sesión', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post']]
+            ]
+        ),
+    ]);
 
     NavBar::end();
-    //}
     ?>
 </header>
 

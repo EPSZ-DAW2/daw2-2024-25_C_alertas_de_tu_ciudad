@@ -111,72 +111,98 @@
         <p>
           Desde aquí se lleva un seguimiento de las modificaciones realizadas por cada integrante del grupo.
         </p>
-        <table>
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>Integrante</th>
-              <th>Descripción de los cambios</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>10/01/25</td>
-              <td>Wang Jingyuan</td>
-              <td>Creación de la página index.html, inicio y registro</td>
-            </tr>
-            <tr>
-              <td>12/01/25</td>
-              <td>Alba Martínez</td>
-              <td>Creación de los documentos requisitos_iniciales.html y diario_cambios.html<br>Explicación del diccionario de datos en requisitos_iniciales.html</td>
-            </tr>
-            <tr>
-              <td>14/01/25</td>
-              <td>Alba Martínez</td>
-              <td>Creación de los modelos Alerta, Area, Comentario, Configuracion, Etiqueta, Lugar, Incidencia, modificación sql<br>Explicación del diccionario de datos en requisitos_iniciales.html</td>
-            </tr>
-            <tr>
-              <td>14/01/25</td>
-              <td>Miguel Lucas</td>
-              <td>Modificacion de los archivos "AuthController, Usuario.php y db_proyecto_c_v2.sql". Se han ajustado los archivos para corregir el problema de registro.</br> Además se ha creado un nuevo archivo de BD para almacenar mas campos de usuario y cifrar contraseñas.
-                También se ha añadido un hash para la autenticación de usuarios permitiendo el login</td>
-            </tr>
-            <tr>
-              <td>16/01/25</td>
-              <td>Miguel Lucas</td>
-              <td>Implementación/actualización de gestión de usuarios, autenticación y sesiones:
-                Implementación de la funcionalidad de gestión de alertas para usuarios registrados.
-                <br>· Cambios:<br>
-                
-                -Acción gestionar-alertas en el controlador AuthController.<br>
-                -Modelo Alerta con métodos CRUD básicos.<br>
-                -Vista para listar y crear alertas.<br>
-                -Tabla alertas añadida BD<br>
-                -Modificación de la tabla usuarios para añadir un rol por defecto (normal)</td>
-            </tr>
-            <tr>
-              <td>20/02/25</td>
-              <td>Alba Martínez</td>
-              <td>Modificación de la base de datos en su estructura global
-              <br>Merge de todas las ramas en el main
-              <br>Creación de la rama alba_dev en local - aún no sé si hacer push</td>
-            </tr>
-            <tr>
-              <td>22/02/25</td>
-              <td>Alba Martínez</td>
-              <td>Creación de la rama develop para subir los cambios antes de llevarlos a main
-              <br>Modificación de la tabla Usuario para cambiar el rol "normal" a "usuario"
-              <br>Modificación de la tabla Alertas para añadir el campo "id_ubicacion"
-              <br>Modificación del volcado de la tabla Alertas
-              <br>Creación de la tabla Ubicacion
-              <br>Creación del volcado de la tabla Ubicacion
-              <br>Modificación del views/layouts/main.php para visualizarse desde usuario o guest (sin terminar)
-              <br>Modificación del controllers/SiteController.php para añadir el filtro por ubicación (sin terminar)
-              <br>Modificación del views/site/index.php para hacer la portada sin filtro activo (sin terminar)</td>
-            </tr>
-            <tr>
-          </tbody>
-        </table>
+    <table>
+      <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Integrante</th>
+        <th>Descripción de los cambios</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>10/01/25</td>
+        <td>Wang Jingyuan</td>
+        <td>
+          <br>· Cambios:<br>
+          - Creación de la página index.php.<br>
+          - Implementación de las secciones de inicio y registro.</td>
+      </tr>
+      <tr>
+        <td>12/01/25</td>
+        <td>Alba Martínez</td>
+        <td>
+          <br>· Cambios:<br>
+          - Creación de los documentos requisitos_iniciales.html y diario_cambios.html.<br>
+          - Explicación del diccionario de datos en requisitos_iniciales.html.</td>
+      </tr>
+      <tr>
+        <td>14/01/25</td>
+        <td>Alba Martínez</td>
+        <td>
+          <br>· Cambios:<br>
+          - Creación de los modelos Alerta, Area, Comentario, Configuracion, Etiqueta, Lugar e Incidencia.<br>
+          - Modificación de la estructura SQL.<br>
+          - Explicación del diccionario de datos en requisitos_iniciales.html.</td>
+      </tr>
+      <tr>
+        <td>14/01/25</td>
+        <td>Miguel Lucas</td>
+        <td>
+          <br>· Cambios:<br>
+          - Modificación de los archivos "AuthController, Usuario.php y db_proyecto_c_v2.sql".<br>
+          - Ajuste de archivos para corregir el problema de registro.<br>
+          - Creación de un nuevo archivo de BD para almacenar más campos de usuario y cifrar contraseñas.<br>
+          - Implementación de hash para autenticación de usuarios, permitiendo el login.</td>
+      </tr>
+      <tr>
+        <td>16/01/25</td>
+        <td>Miguel Lucas</td>
+        <td>
+          <br>· Cambios:<br>
+          - Implementación/actualización de gestión de usuarios, autenticación y sesiones.<br>
+          - Implementación de la funcionalidad de gestión de alertas para usuarios registrados.<br>
+          - Acción gestionar-alertas en el controlador AuthController.<br>
+          - Modelo Alerta con métodos CRUD básicos.<br>
+          - Vista para listar y crear alertas.<br>
+          - Tabla alertas añadida en BD.<br>
+          - Modificación de la tabla usuarios para añadir un rol por defecto (normal).</td>
+      </tr>
+      <tr>
+        <td>20/02/25</td>
+        <td>Alba Martínez</td>
+        <td>
+          <br>· Cambios:<br>
+          - Modificación de la base de datos en su estructura global.<br>
+          - Merge de todas las ramas en el main.<br>
+          - Creación de la rama alba_dev en local (pendiente de push).</td>
+      </tr>
+      <tr>
+        <td>22/02/25</td>
+        <td>Alba Martínez</td>
+        <td>
+          <br>· Cambios:<br>
+          - Creación de la rama develop para subir los cambios antes de llevarlos a main.<br>
+          - Modificación de la tabla Usuario para cambiar el rol "normal" a "usuario".<br>
+          - Modificación de la tabla Alertas para añadir el campo "id_ubicacion".<br>
+          - Modificación del volcado de la tabla Alertas.<br>
+          - Creación de la tabla Ubicacion.<br>
+          - Creación del volcado de la tabla Ubicacion.<br>
+          - Modificación del views/layouts/main.php para visualizarse desde usuario o guest (sin terminar).<br>
+          - Modificación del controllers/SiteController.php para añadir el filtro por ubicación (sin terminar).<br>
+          - Modificación del views/site/index.php para hacer la portada sin filtro activo (sin terminar).</td>
+      </tr>
+      <tr>
+        <td>25/02/25</td>
+        <td>Alba Martínez</td>
+        <td>
+          <br>· Cambios:<br>
+          - Modificación del volcado de la base de datos.<br>
+          - Ajuste del filtro de ubicaciones en la página inicial.</td>
+      </tr>
+      </tbody>
+    </table>
+
   </div>
   <footer>
     Proyecto en Grupo - Requisitos Iniciales - Grupo C - 2024/2025

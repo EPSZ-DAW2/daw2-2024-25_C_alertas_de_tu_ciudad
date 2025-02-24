@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "alerta".
+ * This is the model class for table "alertas".
  *
  * @property int $id
  * @property string $titulo
@@ -13,6 +13,7 @@ use Yii;
  * @property string $fecha_inicio
  * @property int|null $duracion_estimada
  * @property int|null $id_lugar
+ * @property int|null $id_ubicacion
  * @property string|null $detalles
  * @property string|null $notas
  * @property string|null $url_externa
@@ -25,6 +26,7 @@ use Yii;
  * @property Incidencia[] $incidencias
  * @property Lugar $lugar
  * @property Usuario $usuario
+ * @property Ubicacion $ubicacion
  */
 class Alerta extends \yii\db\ActiveRecord
 {
@@ -45,11 +47,12 @@ class Alerta extends \yii\db\ActiveRecord
             [['titulo', 'descripcion', 'fecha_inicio', 'estado'], 'required'],
             [['descripcion', 'detalles', 'notas', 'url_externa'], 'string'],
             [['fecha_inicio'], 'safe'],
-            [['duracion_estimada', 'id_lugar', 'id_usuario'], 'integer'],
+            [['duracion_estimada', 'id_lugar', 'id_usuario', 'id_ubicacion'], 'integer'],
             [['titulo'], 'string', 'max' => 255],
             [['estado'], 'string', 'max' => 50],
             [['id_lugar'], 'exist', 'skipOnError' => true, 'targetClass' => Lugar::class, 'targetAttribute' => ['id_lugar' => 'id']],
             [['id_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::class, 'targetAttribute' => ['id_usuario' => 'id']],
+            [['id_ubicacion'], 'exist', 'skipOnError' => true, 'targetClass' => Ubicacion::class, 'targetAttribute' => ['id_ubicacion' => 'id']],
         ];
     }
 
@@ -65,6 +68,7 @@ class Alerta extends \yii\db\ActiveRecord
             'fecha_inicio' => 'Fecha Inicio',
             'duracion_estimada' => 'Duracion Estimada',
             'id_lugar' => 'Id Lugar',
+            'id_ubicacion' => 'Id Ubicacion',
             'detalles' => 'Detalles',
             'notas' => 'Notas',
             'url_externa' => 'Url Externa',
@@ -74,63 +78,45 @@ class Alerta extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[AlertaEtiquetas]].
+     * Gets query for [[Ubicacion]].
      *
-     * @return \yii\db\ActiveQuery|AlertaEtiquetaQuery
+     * @return \yii\db\ActiveQuery
      */
-    public function getAlertaEtiquetas()
+    public function getUbicacion()
     {
-        return $this->hasMany(AlertaEtiqueta::class, ['id_alerta' => 'id']);
+        return $this->hasOne(Ubicacion::class, ['id' => 'id_ubicacion']);
     }
 
-    /**
-     * Gets query for [[Comentarios]].
-     *
-     * @return \yii\db\ActiveQuery|yii\db\ActiveQuery
-     */
-    public function getComentarios()
-    {
-        return $this->hasMany(Comentario::class, ['id_alerta' => 'id']);
-    }
+    // Existing relations below
 
-    /**
-     * Gets query for [[Etiquetas]].
-     *
-     * @return \yii\db\ActiveQuery|yii\db\ActiveQuery
-     */
-    public function getEtiquetas()
-    {
-        return $this->hasMany(Etiqueta::class, ['id' => 'id_etiqueta'])->viaTable('alerta_etiqueta', ['id_alerta' => 'id']);
-    }
-
-    /**
-     * Gets query for [[Incidencias]].
-     *
-     * @return \yii\db\ActiveQuery|yii\db\ActiveQuery
-     */
-    public function getIncidencias()
-    {
-        return $this->hasMany(Incidencia::class, ['id_alerta' => 'id']);
-    }
-
-    /**
-     * Gets query for [[Lugar]].
-     *
-     * @return \yii\db\ActiveQuery|yii\db\ActiveQuery
-     */
     public function getLugar()
     {
         return $this->hasOne(Lugar::class, ['id' => 'id_lugar']);
     }
 
-    /**
-     * Gets query for [[Usuario]].
-     *
-     * @return \yii\db\ActiveQuery|yii\db\ActiveQuery
-     */
     public function getUsuario()
     {
         return $this->hasOne(Usuario::class, ['id' => 'id_usuario']);
+    }
+
+    public function getIncidencias()
+    {
+        return $this->hasMany(Incidencia::class, ['id_alerta' => 'id']);
+    }
+
+    public function getComentarios()
+    {
+        return $this->hasMany(Comentario::class, ['id_alerta' => 'id']);
+    }
+
+    public function getEtiquetas()
+    {
+        return $this->hasMany(Etiqueta::class, ['id' => 'id_etiqueta'])->viaTable('alerta_etiqueta', ['id_alerta' => 'id']);
+    }
+
+    public function getAlertaEtiquetas()
+    {
+        return $this->hasMany(AlertaEtiqueta::class, ['id_alerta' => 'id']);
     }
 
     /**
