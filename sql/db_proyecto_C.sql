@@ -16,51 +16,70 @@ DROP DATABASE IF EXISTS `proyecto_C`;
 CREATE DATABASE IF NOT EXISTS `proyecto_C` CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_general_ci';
 USE `proyecto_C`;
 
+
+
 -- --------------------------------------------------------------------------
 -- Tabla: ETIQUETAS - Creación y volcado de datos
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `etiquetas`;
 CREATE TABLE IF NOT EXISTS `etiquetas` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `nombre` VARCHAR(255) NOT NULL,
-    `descripcion` TEXT DEFAULT NULL,
-    `creado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `actualizado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único de la etiqueta',
+    `nombre` VARCHAR(255) NOT NULL COMMENT 'Nombre de la etiqueta',
+    `descripcion` TEXT DEFAULT NULL COMMENT 'Descripción detallada de la etiqueta',
+    `creado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de creación de la etiqueta',
+    `actualizado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Fecha y hora de la última actualización de la etiqueta',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `etiquetas` (`nombre`, `descripcion`) VALUES
-    ('Accidente de tráfico', 'Colisiones y siniestros en la vía pública.'),
-    ('Manifestación', 'Concentraciones de personas que pueden alterar la circulación.'),
-    ('Incendio', 'Incendios en zonas urbanas o rurales.'),
-    ('Fallo eléctrico', 'Cortes de luz o problemas en la red eléctrica.'),
-    ('Inundación', 'Desbordamientos de ríos o acumulaciones de agua tras lluvias intensas.'),
-    ('Niebla densa', 'Reducción de visibilidad en carreteras y zonas urbanas.'),
-    ('Derrumbe', 'Colapso de estructuras o deslizamientos de tierra.'),
-    ('Hielo en calzadas', 'Peligro en la circulación debido a capas de hielo.'),
-    ('Fuerte granizo', 'Tormentas de granizo que pueden causar daños materiales.'),
-    ('Fuga de gas', 'Escapes de gas en infraestructuras o domicilios.'),
-    ('Corte de agua', 'Interrupción del suministro de agua potable.'),
-    ('Ola de calor', 'Temperaturas extremadamente altas con riesgo para la salud.'),
-    ('Tormenta eléctrica', 'Riesgo de rayos y cortes eléctricos.'),
-    ('Contaminación del aire', 'Alta concentración de contaminantes en el aire.'),
-    ('Emergencia sanitaria', 'Alertas sobre brotes de enfermedades o pandemias.'),
-    ('Viento extremo', 'Rachas de viento muy fuertes que pueden causar daños.'),
-    ('Deslizamiento de tierra', 'Derrumbes o movimientos del suelo en zonas de riesgo.'),
-    ('Cierre de túnel', 'Túneles cerrados por mantenimiento o incidentes.'),
-    ('Accidente ferroviario', 'Incidentes en redes de tren o metro.'),
-    ('Alerta nuclear', 'Incidente o fuga en instalaciones nucleares.'),
-    ('Desabastecimiento', 'Escasez de bienes esenciales como alimentos o combustible.'),
-    ('Crisis energética', 'Riesgos de apagones prolongados o racionamiento de energía.'),
-    ('Robo masivo', 'Olas de saqueos o delitos organizados en ciudades.'),
+    -- Etiquetas asociadas a la categoría "Clima y Medio Ambiente"
+    ('Alerta meteorológica', 'Situaciones relacionadas con fenómenos meteorológicos extremos.'),
+    ('Desastre natural', 'Eventos naturales que causan daños significativos, como terremotos o inundaciones.'),
+    ('Inundación', 'Acumulación de agua en zonas que normalmente están secas.'),
     ('Tsunami', 'Olas gigantes generadas por terremotos o erupciones volcánicas.'),
-    ('Explosión urbana', 'Explosiones en entornos urbanos por gas o materiales peligrosos.'),
-    ('Corte de comunicaciones', 'Interrupción de redes móviles o de internet.'),
-    ('Emergencia química', 'Derrames o contaminación por sustancias químicas peligrosas.'),
-    ('Riesgo volcánico', 'Actividad sísmica que indica posible erupción volcánica.'),
-    ('Cierre de aeropuerto', 'Interrupción de vuelos debido a emergencias climáticas o técnicas.'),
-    ('Tormenta de nieve', 'Nieve intensa que afecta infraestructuras y transporte.'),
-    ('Emergencia en presa', 'Riesgo de colapso o desbordamiento de una presa.');
+    ('Crecida de cauce', 'Aumento del nivel de agua en ríos o arroyos que puede causar inundaciones.'),
+    ('Sequía', 'Falta prolongada de lluvia que afecta el suministro de agua y la agricultura.'),
+    ('Incendio forestal', 'Fuego que se propaga sin control en zonas boscosas o de vegetación.'),
+    ('Ola de calor', 'Período prolongado de temperaturas extremadamente altas.'),
+    ('Tormenta eléctrica', 'Tormentas acompañadas de rayos y truenos que pueden causar cortes de energía.'),
+    ('Nevada intensa', 'Acumulación de nieve que puede afectar el transporte y las infraestructuras.'),
+    -- Etiquetas asociadas a la categoría "Emergencias y Seguridad"
+    ('Incendio', 'Fuego que se propaga y puede causar daños a propiedades o personas.'),
+    ('Terremoto', 'Movimiento sísmico que puede causar daños estructurales.'),
+    ('Robo', 'Actos delictivos que implican el hurto de bienes.'),
+    ('Atentado', 'Ataque intencional que pone en riesgo la seguridad pública.'),
+    ('Fuga de gas', 'Escape de gas que puede provocar explosiones o intoxicaciones.'),
+    -- Etiquetas asociadas a la categoría "Tráfico y Transporte"
+    ('Accidente de tráfico', 'Colisión o siniestro en la vía pública.'),
+    ('Cierre de carretera', 'Bloqueo de una vía debido a obras, accidentes o eventos.'),
+    ('Retraso en transporte', 'Demoras en el servicio de transporte público.'),
+    ('Manifestación', 'Concentración de personas que puede afectar la circulación.'),
+    -- Etiquetas asociadas a la categoría "Infraestructura y Servicios"
+    ('Corte de agua', 'Interrupción del suministro de agua potable.'),
+    ('Corte de luz', 'Interrupción del suministro eléctrico.'),
+    ('Corte de gas', 'Interrupción del suministro de gas.'),
+    ('Cierre de aeropuerto', 'Suspensión de operaciones en un aeropuerto.'),
+    ('Fallo en carreteras', 'Problemas en la infraestructura vial que afectan la circulación.'),
+    -- Etiquetas asociadas a la categoría "Salud y Bienestar"
+    ('Brote de enfermedad', 'Aparición de casos de una enfermedad en una zona específica.'),
+    ('Emergencia sanitaria', 'Situación crítica que requiere atención médica inmediata.'),
+    ('Campaña de vacunación', 'Iniciativa para vacunar a la población contra una enfermedad.'),
+    ('Contaminación del aire', 'Alta concentración de contaminantes en el aire que afecta la salud.'),
+    -- Etiquetas asociadas a la categoría "Tecnología y Comunicaciones"
+    ('Corte de internet', 'Interrupción del servicio de internet.'),
+    ('Corte de telefonía', 'Interrupción del servicio de telefonía móvil o fija.'),
+    ('Ciberataque', 'Ataque informático que afecta sistemas o servicios digitales.'),
+    ('Fallo tecnológico', 'Problema técnico que interrumpe servicios o sistemas.'),
+    -- Etiquetas asociadas a la categoría "Eventos y Cultura"
+    ('Concierto', 'Evento musical en vivo.'),
+    ('Festival', 'Celebración cultural o artística que puede incluir música, comida y actividades.'),
+    ('Evento deportivo', 'Competición o partido de interés público.'),
+    ('Feria', 'Evento comercial o cultural con stands y actividades.'),
+    -- Etiquetas asociadas a la categoría "Economía y Sociedad"
+    ('Crisis económica', 'Situación de inestabilidad financiera o recesión.'),
+    ('Desabastecimiento', 'Escasez de productos esenciales como alimentos o medicinas.'),
+    ('Subida de precios', 'Aumento significativo en el costo de bienes o servicios.'),
+    ('Huelga', 'Paro laboral organizado que puede afectar servicios o empresas.');
 
 
 
@@ -237,18 +256,21 @@ INSERT INTO `ubicacion` (`id`, `ub_code`, `nombre`, `code_iso`, `ub_code_padre`)
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `categorias`;
 CREATE TABLE IF NOT EXISTS `categorias` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `nombre` VARCHAR(255) NOT NULL,
-    `descripcion` TEXT DEFAULT NULL,
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único de la categoría',
+    `nombre` VARCHAR(255) NOT NULL COMMENT 'Nombre de la categoría',
+    `descripcion` TEXT DEFAULT NULL COMMENT 'Descripción detallada de la categoría',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `categorias` (`nombre`, `descripcion`) VALUES
-('Tráfico', 'Eventos relacionados con accidentes, manifestaciones y condiciones viales.'),
-('Clima', 'Alertas meteorológicas como tormentas, temperaturas extremas y desastres naturales.'),
-('Emergencias', 'Situaciones de crisis como incendios, terremotos y fallos en servicios esenciales.'),
-('Seguridad', 'Incidentes de seguridad pública como robos, atentados o fugas de gas.'),
-('Infraestructura', 'Eventos que afectan infraestructuras críticas como cortes de agua, luz o aeropuertos.');
+    ('Tráfico y Transporte', 'Eventos relacionados con accidentes, cierres de vías, retrasos en transporte público y condiciones viales.'),
+    ('Clima y Medio Ambiente', 'Alertas meteorológicas, desastres naturales, fenómenos atmosféricos y problemas ambientales.'),
+    ('Emergencias y Seguridad', 'Situaciones de crisis como incendios, terremotos, robos, atentados y fugas de gas.'),
+    ('Infraestructura y Servicios', 'Eventos que afectan infraestructuras críticas como cortes de agua, luz, gas, aeropuertos y servicios públicos.'),
+    ('Salud y Bienestar', 'Alertas relacionadas con brotes de enfermedades, emergencias sanitarias y eventos de salud pública.'),
+    ('Tecnología y Comunicaciones', 'Fallos tecnológicos, ciberataques, interrupciones en servicios digitales y eventos de innovación.'),
+    ('Eventos y Cultura', 'Eventos culturales, deportivos, festivos, conciertos, ferias y actividades comunitarias.'),
+    ('Economía y Sociedad', 'Crisis económicas, desabastecimiento de productos, subidas de precios y eventos sociales o financieros.');
 
 
 -- --------------------------------------------------------------------------
@@ -256,7 +278,7 @@ INSERT INTO `categorias` (`nombre`, `descripcion`) VALUES
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `alertas`;
 CREATE TABLE IF NOT EXISTS `alertas` (
-     `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada alerta',
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada alerta',
     `titulo` VARCHAR(255) NOT NULL COMMENT 'Título de la alerta',
     `descripcion` TEXT NOT NULL COMMENT 'Descripción detallada de la alerta',
     `id_etiqueta` INT(11) DEFAULT NULL COMMENT 'ID de la etiqueta relacionada con la alerta',
@@ -275,65 +297,74 @@ CREATE TABLE IF NOT EXISTS `alertas` (
     CONSTRAINT `alertas_ibfk_2` FOREIGN KEY (`id_ubicacion`) REFERENCES `ubicacion` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `alertas` (`titulo`, `descripcion`, `id_etiqueta`, `estado`, `fecha_expiracion`, `usuario_id`, `id_ubicacion`) VALUES
-    ('Tormenta severa en Tierra', 'Fuertes vientos y lluvias afectan grandes áreas.', 12, 'pendiente', '2025-03-01 10:00:00', NULL, 0),
-    ('Actividad sísmica inusual', 'Se detecta un aumento en la actividad sísmica global.', 28, 'pendiente', '2025-03-02 12:00:00', NULL, 0),
-    ('Nevada intensa en Europa', 'Acumulaciones de nieve superiores a 50 cm en varias regiones.', 31, 'pendiente', '2025-03-03 14:00:00', NULL, 1),
-    ('Ola de calor en Europa', 'Temperaturas extremas ponen en riesgo la salud de la población.', 12, 'pendiente', '2025-03-04 18:00:00', NULL, 1),
-    ('Inundaciones en España', 'Ríos desbordados causan cortes de carreteras y evacuaciones.', 5, 'pendiente', '2025-03-05 20:00:00', NULL, 2),
-    ('Fallo eléctrico en España', 'Apagón masivo afecta a varias ciudades y zonas rurales.', 4, 'pendiente', '2025-03-06 21:00:00', NULL, 2),
-    ('Incendio en Andalucía', 'Un gran incendio forestal amenaza viviendas en la región.', 3, 'pendiente', '2025-03-07 15:00:00', NULL, 3),
-    ('Vientos fuertes en Andalucía', 'Rachas de viento de hasta 100 km/h generan riesgo de caída de árboles.', 17, 'pendiente', '2025-03-08 10:00:00', NULL, 3),
-    ('Nevadas en Aragón', 'Acumulación de nieve bloquea carreteras en la región.', 31, 'pendiente', '2025-03-09 08:00:00', NULL, 4),
-    ('Inundaciones en Aragón', 'Fuertes lluvias provocan desbordamientos de ríos.', 5, 'pendiente', '2025-03-10 11:00:00', NULL, 4),
-    ('Accidente de tráfico en Asturias', 'Colisión múltiple en la autopista A-8.', 1, 'pendiente', '2025-03-11 13:00:00', NULL, 5),
-    ('Fuga de gas en Asturias', 'Evacuaciones en un barrio debido a una fuga de gas.', 10, 'pendiente', '2025-03-12 16:00:00', NULL, 5),
-    ('Temporal en Islas Baleares', 'Vientos huracanados y fuertes lluvias afectan la región.', 12, 'pendiente', '2025-03-13 18:00:00', NULL, 6),
-    ('Corte eléctrico en Islas Baleares', 'Apagón masivo en varias localidades.', 4, 'pendiente', '2025-03-14 20:00:00', NULL, 6),
-    ('Mareas altas en Canarias', 'Oleaje extremo pone en riesgo las zonas costeras.', 5, 'pendiente', '2025-03-15 09:00:00', NULL, 7),
-    ('Emergencia volcánica en Canarias', 'Actividad volcánica detectada en la isla.', 28, 'pendiente', '2025-03-16 22:00:00', NULL, 7),
-    ('Cierre de carreteras en Cantabria', 'Derrumbes bloquean varias vías.', 7, 'pendiente', '2025-03-17 06:00:00', NULL, 8),
-    ('Contaminación del aire en Cantabria', 'Niveles altos de polución registrados.', 14, 'pendiente', '2025-03-18 14:00:00', NULL, 8),
-    ('Ola de calor en Extremadura', 'Temperaturas por encima de los 45°C afectan la región.', 12, 'pendiente', '2025-03-23 14:00:00', NULL, 12),
-    ('Incendio forestal en Extremadura', 'Un incendio de gran magnitud avanza hacia zonas residenciales.', 3, 'pendiente', '2025-03-24 17:00:00', NULL, 12),
-    ('Temporal en Galicia', 'Lluvias intensas y fuertes vientos afectan la comunidad.', 12, 'pendiente', '2025-03-25 09:00:00', NULL, 13),
-    ('Marea alta en Galicia', 'Oleaje extremo pone en riesgo los puertos de la región.', 5, 'pendiente', '2025-03-26 11:00:00', NULL, 13),
-    ('Manifestación en Madrid', 'Gran protesta en el centro de la ciudad afecta la movilidad.', 2, 'pendiente', '2025-03-27 16:00:00', NULL, 14),
-    ('Accidente vial en Madrid', 'Colisión múltiple en la M-30 con tráfico detenido.', 1, 'pendiente', '2025-03-28 08:00:00', NULL, 14),
-    ('Terremoto en Murcia', 'Sismo de magnitud 5.2 se siente en varias localidades.', 28, 'pendiente', '2025-03-29 22:00:00', NULL, 15),
-    ('Corte eléctrico en Murcia', 'Interrupción del suministro eléctrico en varios distritos.', 4, 'pendiente', '2025-03-30 12:00:00', NULL, 15),
-    ('Granizada en Navarra', 'Fuertes precipitaciones de granizo causan daños en viviendas.', 9, 'pendiente', '2025-03-31 15:00:00', NULL, 16),
-    ('Fuga de gas en Navarra', 'Evacuación de edificios por una fuga de gas en el centro.', 10, 'pendiente', '2025-04-01 18:00:00', NULL, 16),
-    ('Tornado en La Rioja', 'Vientos extremadamente fuertes generan daños en la ciudad.', 17, 'pendiente', '2025-04-02 14:00:00', NULL, 17),
-    ('Derrumbe en La Rioja', 'Colapso de un edificio deja varias personas atrapadas.', 7, 'pendiente', '2025-04-03 10:00:00', NULL, 17),
-    ('Explosión en el País Vasco', 'Una fuerte explosión sacude una zona industrial.', 26, 'pendiente', '2025-04-04 20:00:00', NULL, 18),
-    ('Corte de comunicaciones en el País Vasco', 'Interrupción total de telefonía e internet en varias ciudades.', 25, 'pendiente', '2025-04-05 07:00:00', NULL, 18),
-    ('Robo masivo en la Comunidad Valenciana', 'Varias tiendas saqueadas en una ola de robos nocturnos.', 23, 'pendiente', '2025-04-06 02:00:00', NULL, 19),
-    ('Tsunami en la Comunidad Valenciana', 'Alerta por posible tsunami tras un fuerte terremoto en el mar.', 24, 'pendiente', '2025-04-07 19:00:00', NULL, 19),
-    ('Emergencia sanitaria en Ceuta', 'Brote de enfermedad infecciosa detectado en la ciudad.', 15, 'pendiente', '2025-04-08 12:00:00', NULL, 20),
-    ('Cierre de aeropuerto en Ceuta', 'Cancelaciones masivas de vuelos debido a condiciones meteorológicas.', 29, 'pendiente', '2025-04-09 06:00:00', NULL, 20),
-    ('Cierre de puerto en Melilla', 'Fuerte oleaje obliga a la suspensión de ferris y tráfico marítimo.', 5, 'pendiente', '2025-04-10 15:00:00', NULL, 21),
-    ('Fallo energético en Melilla', 'Cortes de luz intermitentes afectan el funcionamiento de la ciudad.', 22, 'pendiente', '2025-04-11 08:00:00', NULL, 21),
-    ('Incendio en Salamanca', 'Un incendio afecta una zona industrial con riesgo de propagación.', 3, 'pendiente', '2025-04-12 14:00:00', NULL, 26),
-    ('Corte de agua en Salamanca', 'Mantenimiento programado interrumpe el suministro de agua potable.', 10, 'pendiente', '2025-04-13 08:00:00', NULL, 26),
-    ('Manifestación en Plaza Mayor', 'Protesta pacífica en el centro de la ciudad afecta la movilidad.', 2, 'pendiente', '2025-04-14 11:00:00', NULL, 41),
-    ('Fuga de gas en Garrido', 'Evacuación de varios edificios por escape de gas en una tubería principal.', 10, 'pendiente', '2025-04-15 16:00:00', NULL, 42),
-    ('Accidente de tráfico en Cementerio', 'Colisión múltiple en la avenida principal con varios heridos.', 1, 'pendiente', '2025-04-16 09:00:00', NULL, 43),
-    ('Robo en Pizarrales', 'Asalto en un comercio con enfrentamiento policial.', 23, 'pendiente', '2025-04-17 22:00:00', NULL, 44),
-    ('Corte eléctrico en San José', 'Fallo en la red eléctrica deja sin luz a varios hogares.', 4, 'pendiente', '2025-04-18 07:00:00', NULL, 45),
-    ('Oleaje extremo en Zamora', 'Riesgo de inundaciones en zonas cercanas al río.', 5, 'pendiente', '2025-04-19 13:00:00', NULL, 30),
-    ('Emergencia química en Casco Antiguo', 'Derrame de sustancias peligrosas en un almacén industrial.', 27, 'pendiente', '2025-04-20 15:00:00', NULL, 46),
-    ('Desperfectos por tormenta en San Lázaro', 'Fuertes lluvias causan daños en infraestructuras.', 12, 'pendiente', '2025-04-21 17:00:00', NULL, 47),
-    ('Explosión en San José Obrero', 'Una fuga de gas provoca una explosión en un edificio residencial.', 26, 'pendiente', '2025-04-22 19:00:00', NULL, 48),
-    ('Corte de comunicaciones en Pinilla', 'Interrupción del servicio de telefonía e internet en la zona.', 25, 'pendiente', '2025-04-23 08:00:00', NULL, 49),
-    ('Derrumbe en Los Bloques', 'Colapso de una estructura antigua deja atrapadas a varias personas.', 7, 'pendiente', '2025-04-24 12:00:00', NULL, 50),
-    ('Inundaciones en La Candelaria', 'Fuertes lluvias causan desbordamiento del alcantarillado.', 5, 'pendiente', '2025-04-25 14:00:00', NULL, 51),
-    ('Emergencia sanitaria en Cabañales', 'Se reporta un brote de virus estomacal en la comunidad.', 15, 'pendiente', '2025-04-26 10:00:00', NULL, 52),
-    ('Fallo energético en Pantoja', 'Corte de electricidad afecta a toda la comunidad.', 22, 'pendiente', '2025-04-27 06:00:00', NULL, 53),
-    ('Oleada de robos en San Frontis', 'Incremento de asaltos en comercios locales.', 23, 'pendiente', '2025-04-28 02:00:00', NULL, 54),
-    ('Granizada en Las Viñas', 'Tormenta de granizo daña vehículos y tejados.', 9, 'pendiente', '2025-04-29 18:00:00', NULL, 55),
-    ('Tornado en San Isidro', 'Rachas de viento extremadamente fuertes causan daños estructurales.', 17, 'pendiente', '2025-04-30 21:00:00', NULL, 56);
-
+-- Alertas asociadas a ubicaciones
+INSERT INTO `alertas` (`titulo`, `descripcion`, `id_etiqueta`, `id_categoria`, `estado`, `fecha_expiracion`, `id_ubicacion`) VALUES
+    ('Tormenta severa en Europa', 'Fuertes vientos y lluvias afectan grandes áreas del continente.', 1, 2, 'pendiente', '2025-03-01 10:00:00', 1),  -- Europa
+    ('Inundaciones en España', 'Ríos desbordados causan cortes de carreteras y evacuaciones.', 3, 2, 'pendiente', '2025-03-05 20:00:00', 2),  -- España
+    ('Incendio en Andalucía', 'Un gran incendio forestal amenaza viviendas en la región.', 7, 2, 'pendiente', '2025-03-07 15:00:00', 3),  -- Andalucía
+    ('Nevadas en Aragón', 'Acumulación de nieve bloquea carreteras en la región.', 10, 2, 'pendiente', '2025-03-09 08:00:00', 4),  -- Aragón
+    ('Accidente de tráfico en Asturias', 'Colisión múltiple en la autopista A-8.', 16, 1, 'pendiente', '2025-03-11 13:00:00', 5),  -- Asturias
+    ('Temporal en Islas Baleares', 'Vientos huracanados y fuertes lluvias afectan la región.', 1, 2, 'pendiente', '2025-03-13 18:00:00', 6),  -- Islas Baleares
+    ('Emergencia volcánica en Canarias', 'Actividad volcánica detectada en la isla.', 4, 2, 'pendiente', '2025-03-16 22:00:00', 7),  -- Canarias
+    ('Cierre de carreteras en Cantabria', 'Derrumbes bloquean varias vías.', 24, 4, 'pendiente', '2025-03-17 06:00:00', 8),  -- Cantabria
+    ('Ola de calor en Extremadura', 'Temperaturas por encima de los 45°C afectan la región.', 8, 2, 'pendiente', '2025-03-23 14:00:00', 12),  -- Extremadura
+    ('Temporal en Galicia', 'Lluvias intensas y fuertes vientos afectan la comunidad.', 1, 2, 'pendiente', '2025-03-25 09:00:00', 13),  -- Galicia
+    ('Manifestación en Madrid', 'Gran protesta en el centro de la ciudad afecta la movilidad.', 19, 1, 'pendiente', '2025-03-27 16:00:00', 14),  -- Madrid
+    ('Terremoto en Murcia', 'Sismo de magnitud 5.2 se siente en varias localidades.', 12, 3, 'pendiente', '2025-03-29 22:00:00', 15),  -- Murcia
+    ('Granizada en Navarra', 'Fuertes precipitaciones de granizo causan daños en viviendas.', 9, 2, 'pendiente', '2025-03-31 15:00:00', 16),  -- Navarra
+    ('Tornado en La Rioja', 'Vientos extremadamente fuertes generan daños en la ciudad.', 17, 3, 'pendiente', '2025-04-02 14:00:00', 17),  -- La Rioja
+    ('Explosión en el País Vasco', 'Una fuerte explosión sacude una zona industrial.', 26, 3, 'pendiente', '2025-04-04 20:00:00', 18),  -- País Vasco
+    ('Robo masivo en la Comunidad Valenciana', 'Varias tiendas saqueadas en una ola de robos nocturnos.', 13, 3, 'pendiente', '2025-04-06 02:00:00', 19),  -- Comunidad Valenciana
+    ('Emergencia sanitaria en Ceuta', 'Brote de enfermedad infecciosa detectado en la ciudad.', 25, 5, 'pendiente', '2025-04-08 12:00:00', 20),  -- Ceuta
+    ('Cierre de puerto en Melilla', 'Fuerte oleaje obliga a la suspensión de ferris y tráfico marítimo.', 5, 4, 'pendiente', '2025-04-10 15:00:00', 21),  -- Melilla
+    ('Incendio en Salamanca', 'Un incendio afecta una zona industrial con riesgo de propagación.', 7, 2, 'pendiente', '2025-04-12 14:00:00', 26),  -- Salamanca
+    ('Corte de agua en Salamanca', 'Mantenimiento programado interrumpe el suministro de agua potable.', 20, 4, 'pendiente', '2025-04-13 08:00:00', 26),  -- Salamanca
+    ('Fallo en el transporte público', 'Problemas técnicos causan retrasos en los autobuses urbanos.', 18, 1, 'pendiente', '2025-04-14 10:00:00', 26),  -- Salamanca
+    ('Concierto en el centro', 'Gran concierto en la Plaza Mayor con cortes de tráfico.', 33, 7, 'pendiente', '2025-04-15 20:00:00', 26),  -- Salamanca
+    ('Feria del libro', 'Feria del libro en el centro de la ciudad con actividades culturales.', 36, 7, 'pendiente', '2025-04-16 12:00:00', 26),  -- Salamanca
+    ('Contaminación del aire', 'Alta concentración de partículas en suspensión en la ciudad.', 28, 5, 'pendiente', '2025-04-17 18:00:00', 26),  -- Salamanca
+    ('Manifestación en Plaza Mayor', 'Protesta pacífica en el centro de la ciudad afecta la movilidad.', 19, 1, 'pendiente', '2025-04-14 11:00:00', 41),  -- Plaza Mayor (Salamanca)
+    ('Fuga de gas en Garrido', 'Evacuación de varios edificios por escape de gas en una tubería principal.', 15, 3, 'pendiente', '2025-04-15 16:00:00', 42),  -- Garrido (Salamanca)
+    ('Accidente de tráfico en Cementerio', 'Colisión múltiple en la avenida principal con varios heridos.', 16, 1, 'pendiente', '2025-04-16 09:00:00', 43),  -- Cementerio (Salamanca)
+    ('Robo en Pizarrales', 'Asalto en un comercio con enfrentamiento policial.', 13, 3, 'pendiente', '2025-04-17 22:00:00', 44),  -- Pizarrales (Salamanca)
+    ('Corte eléctrico en San José', 'Fallo en la red eléctrica deja sin luz a varios hogares.', 21, 4, 'pendiente', '2025-04-18 07:00:00', 45),  -- San José (Salamanca)
+    ('Mercado medieval', 'Mercado medieval en la Plaza Mayor con cortes de tráfico.', 36, 7, 'pendiente', '2025-04-23 10:00:00', 41),  -- Plaza Mayor (Salamanca)
+    ('Corte de agua programado', 'Mantenimiento de tuberías afectará el suministro de agua.', 20, 4, 'pendiente', '2025-04-24 08:00:00', 41),  -- Plaza Mayor (Salamanca)
+    ('Fuga de agua en Garrido', 'Fuga de agua en una tubería principal afecta a varias calles.', 20, 4, 'pendiente', '2025-04-25 12:00:00', 42),  -- Garrido (Salamanca)
+    ('Actividad comunitaria', 'Jornada de limpieza y actividades vecinales en el barrio.', 36, 7, 'pendiente', '2025-04-26 10:00:00', 42),  -- Garrido (Salamanca)
+    ('Corte de tráfico por obras', 'Obras de reparación en la avenida principal.', 17, 1, 'pendiente', '2025-04-27 08:00:00', 43),  -- Cementerio (Salamanca)
+    ('Actividad cultural', 'Exposición de arte en el centro cultural del barrio.', 36, 7, 'pendiente', '2025-04-28 18:00:00', 43),  -- Cementerio (Salamanca)
+    ('Robo en comercio local', 'Asalto a un supermercado en el barrio.', 13, 3, 'pendiente', '2025-04-29 22:00:00', 44),  -- Pizarrales (Salamanca)
+    ('Feria de barrio', 'Feria local con actividades para toda la familia.', 36, 7, 'pendiente', '2025-04-30 12:00:00', 44),  -- Pizarrales (Salamanca)
+    ('Corte de luz programado', 'Mantenimiento de la red eléctrica en el barrio.', 21, 4, 'pendiente', '2025-05-01 09:00:00', 45),  -- San José (Salamanca)
+    ('Evento deportivo', 'Torneo de fútbol en el polideportivo del barrio.', 35, 7, 'pendiente', '2025-05-02 16:00:00', 45),  -- San José (Salamanca)
+    ('Oleaje extremo en Zamora', 'Riesgo de inundaciones en zonas cercanas al río.', 5, 2, 'pendiente', '2025-04-19 13:00:00', 30),  -- Zamora
+    ('Corte de luz en Zamora', 'Fallo en la red eléctrica deja sin luz a varios barrios.', 21, 4, 'pendiente', '2025-04-18 07:00:00', 30),  -- Zamora
+    ('Festival de música', 'Festival de música en el casco antiguo con cortes de tráfico.', 34, 7, 'pendiente', '2025-04-19 20:00:00', 30),  -- Zamora
+    ('Accidente de tráfico en la periferia', 'Colisión entre dos vehículos en la carretera de acceso a la ciudad.', 16, 1, 'pendiente', '2025-04-20 09:00:00', 30),  -- Zamora
+    ('Feria gastronómica', 'Feria gastronómica en el centro con degustaciones y actividades.', 36, 7, 'pendiente', '2025-04-21 12:00:00', 30),  -- Zamora
+    ('Alerta por vientos fuertes', 'Rachas de viento de hasta 80 km/h afectan la ciudad.', 17, 3, 'pendiente', '2025-04-22 14:00:00', 30),  -- Zamora
+    ('Emergencia química en Casco Antiguo', 'Derrame de sustancias peligrosas en un almacén industrial.', 27, 3, 'pendiente', '2025-04-20 15:00:00', 46),  -- Casco Antiguo (Zamora)
+    ('Desperfectos por tormenta en San Lázaro', 'Fuertes lluvias causan daños en infraestructuras.', 1, 2, 'pendiente', '2025-04-21 17:00:00', 47),  -- San Lázaro (Zamora)
+    ('Explosión en San José Obrero', 'Una fuga de gas provoca una explosión en un edificio residencial.', 26, 3, 'pendiente', '2025-04-22 19:00:00', 48),  -- San José Obrero (Zamora)
+    ('Corte de comunicaciones en Pinilla', 'Interrupción del servicio de telefonía e internet en la zona.', 29, 6, 'pendiente', '2025-04-23 08:00:00', 49),  -- Pinilla (Zamora)
+    ('Derrumbe en Los Bloques', 'Colapso de una estructura antigua deja atrapadas a varias personas.', 24, 4, 'pendiente', '2025-04-24 12:00:00', 50),  -- Los Bloques (Zamora)
+    ('Inundaciones en La Candelaria', 'Fuertes lluvias causan desbordamiento del alcantarillado.', 3, 2, 'pendiente', '2025-04-25 14:00:00', 51),  -- La Candelaria (Zamora)
+    ('Emergencia sanitaria en Cabañales', 'Se reporta un brote de virus estomacal en la comunidad.', 25, 5, 'pendiente', '2025-04-26 10:00:00', 52),  -- Cabañales (Zamora)
+    ('Fallo energético en Pantoja', 'Corte de electricidad afecta a toda la comunidad.', 22, 4, 'pendiente', '2025-04-27 06:00:00', 53),  -- Pantoja (Zamora)
+    ('Oleada de robos en San Frontis', 'Incremento de asaltos en comercios locales.', 13, 3, 'pendiente', '2025-04-28 02:00:00', 54),  -- San Frontis (Zamora)
+    ('Granizada en Las Viñas', 'Tormenta de granizo daña vehículos y tejados.', 9, 2, 'pendiente', '2025-04-29 18:00:00', 55),  -- Las Viñas (Zamora)
+    ('Tornado en San Isidro', 'Rachas de viento extremadamente fuertes causan daños estructurales.', 17, 3, 'pendiente', '2025-04-30 21:00:00', 56),  -- San Isidro (Zamora)
+    ('Festival de cine', 'Proyección de películas al aire libre en el casco antiguo.', 36, 7, 'pendiente', '2025-05-03 20:00:00', 46),  -- Casco Antiguo (Zamora)
+    ('Corte de tráfico por evento', 'Corte de tráfico debido a un evento cultural.', 17, 1, 'pendiente', '2025-05-04 18:00:00', 46),  -- Casco Antiguo (Zamora)
+    ('Fuga de gas en San Lázaro', 'Evacuación de edificios por una fuga de gas.', 15, 3, 'pendiente', '2025-05-05 14:00:00', 47),  -- San Lázaro (Zamora)
+    ('Actividad vecinal', 'Jornada de limpieza y actividades comunitarias.', 36, 7, 'pendiente', '2025-05-06 10:00:00', 47),  -- San Lázaro (Zamora)
+    ('Corte de agua programado', 'Mantenimiento de tuberías en el barrio.', 20, 4, 'pendiente', '2025-05-07 08:00:00', 48),  -- San José Obrero (Zamora)
+    ('Evento cultural', 'Concierto en el parque del barrio.', 33, 7, 'pendiente', '2025-05-08 20:00:00', 48),  -- San José Obrero (Zamora)
+    ('Robo en vivienda', 'Asalto a una vivienda en el barrio.', 13, 3, 'pendiente', '2025-05-09 22:00:00', 49),  -- Pinilla (Zamora)
+    ('Feria de barrio', 'Feria local con actividades para toda la familia.', 36, 7, 'pendiente', '2025-05-10 12:00:00', 49),  -- Pinilla (Zamora)
+    ('Corte de luz por mantenimiento', 'Mantenimiento de la red eléctrica en el barrio.', 21, 4, 'pendiente', '2025-05-11 09:00:00', 50),  -- Los Bloques (Zamora)
+    ('Actividad deportiva', 'Torneo de baloncesto en el polideportivo.', 35, 7, 'pendiente', '2025-05-12 16:00:00', 50),  -- Los Bloques (Zamora)
 
 
 -- --------------------------------------------------------------------------
@@ -382,9 +413,46 @@ CREATE TABLE `categoria_etiqueta` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `categoria_etiqueta` (`id_categoria`, `id_etiqueta`) VALUES
-    (1, 3),
-    (1, 4),
-    (3, 5);
+    (1, 16), -- Tráfico y Transporte -> Accidente de tráfico
+    (1, 17), -- Tráfico y Transporte -> Cierre de carretera
+    (1, 18), -- Tráfico y Transporte -> Retraso en transporte
+    (1, 19), -- Tráfico y Transporte -> Manifestación
+    (2, 1),  -- Clima y Medio Ambiente -> Alerta meteorológica
+    (2, 2),  -- Clima y Medio Ambiente -> Desastre natural
+    (2, 3),  -- Clima y Medio Ambiente -> Inundación
+    (2, 4),  -- Clima y Medio Ambiente -> Tsunami
+    (2, 5),  -- Clima y Medio Ambiente -> Crecida de cauce
+    (2, 6),  -- Clima y Medio Ambiente -> Sequía
+    (2, 7),  -- Clima y Medio Ambiente -> Incendio forestal
+    (2, 8),  -- Clima y Medio Ambiente -> Ola de calor
+    (2, 9),  -- Clima y Medio Ambiente -> Tormenta eléctrica
+    (2, 10), -- Clima y Medio Ambiente -> Nevada intensa
+    (3, 11), -- Emergencias y Seguridad -> Incendio
+    (3, 12), -- Emergencias y Seguridad -> Terremoto
+    (3, 13), -- Emergencias y Seguridad -> Robo
+    (3, 14), -- Emergencias y Seguridad -> Atentado
+    (3, 15), -- Emergencias y Seguridad -> Fuga de gas
+    (4, 20), -- Infraestructura y Servicios -> Corte de agua
+    (4, 21), -- Infraestructura y Servicios -> Corte de luz
+    (4, 22), -- Infraestructura y Servicios -> Corte de gas
+    (4, 23), -- Infraestructura y Servicios -> Cierre de aeropuerto
+    (4, 24), -- Infraestructura y Servicios -> Fallo en carreteras
+    (5, 25), -- Salud y Bienestar -> Brote de enfermedad
+    (5, 26), -- Salud y Bienestar -> Emergencia sanitaria
+    (5, 27), -- Salud y Bienestar -> Campaña de vacunación
+    (5, 28), -- Salud y Bienestar -> Contaminación del aire
+    (6, 29), -- Tecnología y Comunicaciones -> Corte de internet
+    (6, 30), -- Tecnología y Comunicaciones -> Corte de telefonía
+    (6, 31), -- Tecnología y Comunicaciones -> Ciberataque
+    (6, 32), -- Tecnología y Comunicaciones -> Fallo tecnológico
+    (7, 33), -- Eventos y Cultura -> Concierto
+    (7, 34), -- Eventos y Cultura -> Festival
+    (7, 35), -- Eventos y Cultura -> Evento deportivo
+    (7, 36), -- Eventos y Cultura -> Feria
+    (8, 37), -- Economía y Sociedad -> Crisis económica
+    (8, 38), -- Economía y Sociedad -> Desabastecimiento
+    (8, 39), -- Economía y Sociedad -> Subida de precios
+    (8, 40); -- Economía y Sociedad -> Huelga
 
 
 
