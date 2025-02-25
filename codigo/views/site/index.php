@@ -10,12 +10,33 @@ $this->title = 'Alertas de tu Ciudad';
 ?>
 <div class="container mt-4">
     <h1 class="text-center"><?= Html::encode($this->title) ?></h1>
+    <style>
 
+
+        /* Clase para centrar la alerta y agregar márgenes */
+        .custom-alert {
+            margin: 0 auto 1rem auto;
+            max-width: 600px;
+            background-color: #e9edf1;
+            border-color: #adb5bd;
+        }
+
+        /* Estilo para la etiqueta de ubicación */
+        .ubicacion-label {
+            display: inline-block;
+            background-color: #dee3e8;
+            color: #212529;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+    </style>
     <?php if($ciudad): ?>
         <div class="text-center mb-3">
             <p>Filtrado por: <strong><?= Html::encode($ciudad) ?></strong></p>
-            <a href="<?= \yii\helpers\Url::to(['site/index', 'borrarFiltro' => 1]) ?>" class="btn btn-warning">Borrar filtros</a>
-
+            <a href="<?= Url::to(['site/index', 'borrarFiltro' => 1]) ?>" class="btn btn-warning">Borrar filtros</a>
         </div>
     <?php endif; ?>
 
@@ -24,10 +45,12 @@ $this->title = 'Alertas de tu Ciudad';
             <div id="alertas-container">
                 <?php if (!empty($alertas)): ?>
                     <?php foreach ($alertas as $alerta): ?>
-                        <div class="alert alert-info">
+                        <div class="alert alert-info custom-alert">
                             <h5><?= Html::encode($alerta->titulo) ?></h5>
                             <p><?= Html::encode($alerta->descripcion) ?></p>
-                            <small>Ubicación: <?= Html::encode($alerta->ubicacion->nombre ?? 'No especificada') ?></small>
+                            <div class="ubicacion-label">
+                                <?= Html::encode($alerta->ubicacion->nombre ?? 'No especificada') ?>
+                            </div>
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
@@ -37,13 +60,39 @@ $this->title = 'Alertas de tu Ciudad';
         </div>
 
         <div class="col-md-4">
-            <h4>Categorías de Alertas</h4>
-            <ul class="list-group">
-                <li class="list-group-item"><a href="#">Tráfico</a></li>
-                <li class="list-group-item"><a href="#">Clima</a></li>
-                <li class="list-group-item"><a href="#">Seguridad</a></li>
-                <li class="list-group-item"><a href="#">Eventos de Emergencia</a></li>
-            </ul>
+            <table class="table table-striped table-bordered custom-table">
+                <thead>
+                <tr class="custom-thead">
+                    <th scope="col">Categoría</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><a href="#" class="category-link">Tráfico y Transporte</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#" class="category-link">Clima y Medio Ambiente</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#" class="category-link">Emergencias y Seguridad</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#" class="category-link">Infraestructura y Servicios</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#" class="category-link">Salud y Bienestar</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#" class="category-link">Tecnología y Comunicaciones</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#" class="category-link">Eventos y Cultura</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#" class="category-link">Economía y Sociedad</a></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -75,10 +124,7 @@ $this->title = 'Alertas de tu Ciudad';
 <!-- JavaScript para autocomplete, control del modal y redirección -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Variable que indica si se ha aplicado un filtro (según parámetro recibido en PHP)
         var filterApplied = <?= $ciudad ? 'true' : 'false' ?>;
-
-        // Mostrar el modal sólo si aún no se ha mostrado en la sesión y no hay filtro aplicado
         if (!sessionStorage.getItem("modalShown") && !filterApplied) {
             setTimeout(() => {
                 const modal = new bootstrap.Modal(document.getElementById('modalUbicacion'));
@@ -90,14 +136,13 @@ $this->title = 'Alertas de tu Ciudad';
         const inputCiudad = document.getElementById("inputCiudad");
         const resultados = document.getElementById("listaResultados");
 
-        // Autocompletar ubicaciones dinámicamente
         inputCiudad.addEventListener("input", function() {
             let query = inputCiudad.value.trim();
             if (query.length < 2) {
                 resultados.innerHTML = "";
                 return;
             }
-            fetch(`<?= yii\helpers\Url::to(['site/buscar-ubicacion']) ?>&q=${encodeURIComponent(query)}`)
+            fetch(`<?= Url::to(['site/buscar-ubicacion']) ?>&q=${encodeURIComponent(query)}`)
                 .then(res => res.json())
                 .then(data => {
                     resultados.innerHTML = "";
@@ -106,9 +151,9 @@ $this->title = 'Alertas de tu Ciudad';
                             let div = document.createElement("a");
                             div.classList.add("list-group-item", "list-group-item-action");
                             div.innerHTML = `
-                            <div>${item.nombre}</div>
-                            <small style="color:#6c757d;">${item.padre}</small>
-                        `;
+                                <div>${item.nombre}</div>
+                                <small style="color:#6c757d;">${item.padre}</small>
+                            `;
                             div.href = "#";
                             div.addEventListener("click", (e) => {
                                 e.preventDefault();
@@ -123,18 +168,15 @@ $this->title = 'Alertas de tu Ciudad';
                 });
         });
 
-        // Al aceptar, redirige a la página de inicio con el filtro de ubicación
         document.getElementById("aceptarFiltro").onclick = () => {
             const ciudad = inputCiudad.value.trim();
             if (ciudad) {
-                // Se usa "&ciudad=" ya que la URL base ya incluye ?r=site/index
                 window.location.href = '<?= Url::to(['site/index']) ?>' + '&ciudad=' + encodeURIComponent(ciudad);
             } else {
                 alert("Por favor, selecciona una ubicación.");
             }
         };
 
-        // Al cancelar, cierra el modal
         document.getElementById("cancelarFiltro").onclick = () => {
             const modalEl = document.getElementById('modalUbicacion');
             const modalInstance = bootstrap.Modal.getInstance(modalEl);

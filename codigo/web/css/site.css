@@ -82,3 +82,22 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+/* Clase para centrar la alerta y agregar márgenes */
+.custom-alert {
+    margin: 0 auto 1rem auto;
+    max-width: 600px;
+    background-color: #e9edf1;
+    border-color: #adb5bd;
+}
+
+/* Estilo para la etiqueta de ubicación */
+.ubicacion-label {
+    display: inline-block;
+    background-color: #dee3e8;
+    color: #212529;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
