@@ -297,7 +297,6 @@ CREATE TABLE IF NOT EXISTS `alertas` (
     CONSTRAINT `alertas_ibfk_2` FOREIGN KEY (`id_ubicacion`) REFERENCES `ubicacion` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Alertas asociadas a ubicaciones
 INSERT INTO `alertas` (`titulo`, `descripcion`, `id_etiqueta`, `id_categoria`, `estado`, `fecha_expiracion`, `id_ubicacion`) VALUES
     ('Tormenta severa en Europa', 'Fuertes vientos y lluvias afectan grandes áreas del continente.', 1, 2, 'pendiente', '2025-03-01 10:00:00', 1),  -- Europa
     ('Inundaciones en España', 'Ríos desbordados causan cortes de carreteras y evacuaciones.', 3, 2, 'pendiente', '2025-03-05 20:00:00', 2),  -- España
@@ -364,7 +363,7 @@ INSERT INTO `alertas` (`titulo`, `descripcion`, `id_etiqueta`, `id_categoria`, `
     ('Robo en vivienda', 'Asalto a una vivienda en el barrio.', 13, 3, 'pendiente', '2025-05-09 22:00:00', 49),  -- Pinilla (Zamora)
     ('Feria de barrio', 'Feria local con actividades para toda la familia.', 36, 7, 'pendiente', '2025-05-10 12:00:00', 49),  -- Pinilla (Zamora)
     ('Corte de luz por mantenimiento', 'Mantenimiento de la red eléctrica en el barrio.', 21, 4, 'pendiente', '2025-05-11 09:00:00', 50),  -- Los Bloques (Zamora)
-    ('Actividad deportiva', 'Torneo de baloncesto en el polideportivo.', 35, 7, 'pendiente', '2025-05-12 16:00:00', 50),  -- Los Bloques (Zamora)
+    ('Actividad deportiva', 'Torneo de baloncesto en el polideportivo.', 35, 7, 'pendiente', '2025-05-12 16:00:00', 50);  -- Los Bloques (Zamora)
 
 
 -- --------------------------------------------------------------------------
