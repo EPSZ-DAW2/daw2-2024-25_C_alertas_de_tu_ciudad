@@ -9,8 +9,8 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
-use app\models\Categoria;
 use app\models\Alerta;
+use app\models\Categoria;
 use app\models\Ubicacion;
 
 class SiteController extends Controller
@@ -112,6 +112,7 @@ class SiteController extends Controller
             'ciudad' => $ciudad,
         ]);
     }
+
 
     /**
      * Función optimizada para obtener IDs de descendientes en memoria
