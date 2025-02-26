@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],  // 序列号列
+          
 
             'ID',                // ID 列
             'Titulo',            // 标题列

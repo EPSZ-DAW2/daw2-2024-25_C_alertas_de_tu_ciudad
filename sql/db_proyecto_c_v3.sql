@@ -134,31 +134,31 @@ COMMIT;
 
 
 
+ALTER TABLE `usuario`
+ADD `COLUMN failed_attempts` INT DEFAULT 0, 
+ADD C`OLUMN is_locked` TINYINT(1) DEFAULT 0; 
+
+ALTER TABLE `usuario`
+ADD `COLUMN created_at` DATETIME NULL;
+
+
+ALTER TABLE `usuario`
+MODIFY `COLUMN failed_attempts` INT DEFAULT 0;
+
+ALTER TABLE `usuario`
+ADD COLUMN `updated_at` DATETIME NULL;
+
+
 ALTER TABLE usuario
-ADD COLUMN failed_attempts INT DEFAULT 0, 
-ADD COLUMN is_locked TINYINT(1) DEFAULT 0; 
+ADD `COLUMN is_locked` TINYINT(1) DEFAULT 0;
 
-ALTER TABLE usuario
-ADD COLUMN created_at DATETIME NULL;
+ALTER TABLE `usuario` ADD COLUMN `nick` VARCHAR(255) DEFAULT NULL;
 
 
-ALTER TABLE usuario
-MODIFY COLUMN failed_attempts INT DEFAULT 0;
+ALTER TABLE `incidencias` MODIFY COLUMN respuesta TEXT NULL;
 
-ALTER TABLE usuario
-ADD COLUMN updated_at DATETIME NULL;
-
-
-ALTER TABLE usuario
-ADD COLUMN is_locked TINYINT(1) DEFAULT 0;
-
-ALTER TABLE usuario ADD COLUMN nick VARCHAR(255) DEFAULT NULL;
-
-
-ALTER TABLE incidencias MODIFY COLUMN respuesta TEXT NULL;
-
-ALTER TABLE incidencias
-ADD COLUMN respuesta TEXT NULL;
+ALTER TABLE `incidencias`
+ADD COLUMN `respuesta` TEXT NULL;
 
 
 CREATE TABLE `incidencia` (
@@ -170,7 +170,7 @@ CREATE TABLE `incidencia` (
     `creado_por` INT DEFAULT NULL,             -- 创建者ID
     `revisado_por` INT DEFAULT NULL            -- 审核者ID
 );
-CREATE TABLE notificacion (
+CREATE TABLE `notificacion` (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
     mensaje TEXT NOT NULL,
@@ -187,7 +187,7 @@ INSERT INTO notificacion (usuario_id, mensaje, fecha) VALUES
 (1, 'Notificación: Los backups automáticos se completaron exitosamente.', '2025-02-04 14:50:00');
 
 
-CREATE TABLE Alertas_Creados (
+CREATE TABLE `Alertas_Creados` (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     Titulo VARCHAR(255) NOT NULL,
     Descripcion TEXT,
@@ -196,7 +196,7 @@ CREATE TABLE Alertas_Creados (
 );
 
 
-INSERT INTO Alertas_Creados (Titulo, Descripcion, Fecha_de_Vencimiento, Acciones)
+INSERT INTO `Alertas_Creados` (Titulo, Descripcion, Fecha_de_Vencimiento, Acciones)
 VALUES 
 ('Alerta 1', 'Primera descripción de alerta', '2025-03-01', 'Eliminar'),
 ('Alerta 2', 'Segunda descripción de alerta', '2025-03-05', 'Eliminar'),
@@ -206,10 +206,10 @@ VALUES
 
 
 
-ALTER TABLE usuario ADD COLUMN estado_revisar VARCHAR(20) DEFAULT 'no revisada';
+ALTER TABLE `usuario` ADD COLUMN `estado_revisar` VARCHAR(20) DEFAULT 'no revisada';
 
-ALTER TABLE usuario ADD COLUMN respuesta VARCHAR(255) DEFAULT NULL;
+ALTER TABLE `usuario` ADD COLUMN `respuesta` VARCHAR(255) DEFAULT NULL;
 
-ALTER TABLE usuario ADD COLUMN eliminarrazon TEXT NULL;
+ALTER TABLE `usuario` ADD COLUMN `eliminar_razon` TEXT NULL;
 
 

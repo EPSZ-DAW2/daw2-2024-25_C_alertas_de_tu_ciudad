@@ -110,7 +110,6 @@ class Usuario extends ActiveRecord implements IdentityInterface
             'nick' => 'Apodo', // 添加 nick 的标签
             'estado_revisar' => 'Estado de Revisión',
             'respuesta' => 'Respuesta',
-            'eliminarrazon' => 'Eliminar de Razon', 
             'role'=> 'Role', 
             'eliminar_razon' => 'Razón de Eliminación',
         ];

@@ -13,21 +13,27 @@ class NotificacionController extends Controller
      * @return string
      */
     public function actionIndex()
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Notificacion::find(),
-            'pagination' => [
-                'pageSize' => 10,  // 每页显示 10 条记录
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'fecha' => SORT_DESC,  // 默认按日期降序排序
-                ],
-            ],
-        ]);
+{
+    $dataProvider = new \yii\data\ActiveDataProvider([
+        'query' => Notificacion::find(),
+        'pagination' => [
+            'pageSize' => 10,  // 每页显示 10 条记录
+        ],
+    ]);
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
+    return $this->render('index', [
+        'dataProvider' => $dataProvider,
+    ]);
+}
+
+public function actionDelete($id)
+{
+    $notificacion = Notificacion::findOne($id);
+    if ($notificacion) {
+        $notificacion->delete();
     }
+
+    return $this->redirect(['notificacion/index']); // 删除后返回通知列表
+}
+
 }
