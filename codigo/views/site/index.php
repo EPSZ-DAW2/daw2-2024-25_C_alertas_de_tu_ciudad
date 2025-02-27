@@ -9,47 +9,52 @@ use yii\helpers\Url;
 $this->title = 'Alertas de tu Ciudad';
 ?>
 <div class="container mt-4">
-    <h1 class="text-center"><?= Html::encode($this->title) ?></h1>
-    <style>
+    <h1 class="text-center" style="margin: 50px;">
+        <?= Html::encode($this->title) ?>
+    </h1>
 
-
-        /* Clase para centrar la alerta y agregar márgenes */
-        .custom-alert {
-            margin: 0 auto 1rem auto;
-            max-width: 600px;
-            background-color: #e9edf1;
-            border-color: #adb5bd;
-        }
-
-        /* Estilo para la etiqueta de ubicación */
-        .ubicacion-label {
-            display: inline-block;
-            background-color: #dee3e8;
-            color: #212529;
-            padding: 0.2rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
-        }
-
-    </style>
-    <?php if($ciudad): ?>
+    <!-- Filtro por ciudad -->
+    <?php if ($ciudad): ?>
         <div class="text-center mb-3">
-            <p>Filtrado por: <strong><?= Html::encode($ciudad) ?></strong></p>
-            <a href="<?= Url::to(['site/index', 'borrarFiltro' => 1]) ?>" class="btn btn-warning">Borrar filtros</a>
+            <p class="d-inline">Filtrado por: <strong><?= Html::encode($ciudad) ?></strong></p>
+            <a href="<?= Url::to(['site/index', 'borrarFiltro' => 1]) ?>" class="btn" id="borrarFiltro">Borrar filtros</a>
         </div>
     <?php endif; ?>
 
     <div class="row">
-        <div class="col-md-8">
+        <!-- Aumentamos el ancho de la columna de alertas a col-md-10 -->
+        <div class="col-md-10 mx-auto"> <!-- mx-auto centra la columna -->
             <div id="alertas-container">
                 <?php if (!empty($alertas)): ?>
                     <?php foreach ($alertas as $alerta): ?>
-                        <div class="alert alert-info custom-alert">
-                            <h5><?= Html::encode($alerta->titulo) ?></h5>
-                            <p><?= Html::encode($alerta->descripcion) ?></p>
-                            <div class="ubicacion-label">
-                                <?= Html::encode($alerta->ubicacion->nombre ?? 'No especificada') ?>
+                        <div class="alert-post">
+                            <div class="post-header">
+                                <div class="user-info">
+                                    <img src="<?= !empty($alerta->usuario->foto) ? Html::encode($alerta->usuario->foto) : Url::to('@web/images/resources/iconuser.png') ?>" alt="Foto de perfil" class="profile-pic">
+                                    <div class="user-details">
+                                        <strong><?= Html::encode($alerta->usuario->nombre ?? 'Usuario Anónimo') ?></strong>
+                                        <small><?= date('d M Y', strtotime($alerta->fecha_creacion)) ?></small>
+                                    </div>
+                                    <?php if (!empty($alerta->ubicacion->nombre)): ?>
+                                        <div class="ubicacion-label"><?= Html::encode($alerta->ubicacion->nombre) ?></div>
+                                    <?php endif; ?>
+                                </div>
+
+                            </div>
+                            <div class="post-content">
+                                <img src="<?= !empty($alerta->imagen) ? Html::encode($alerta->imagen) : Url::to('@web/images/resources/no-image.svg') ?>" alt="Imagen de la alerta">
+                                <h5><?= Html::encode($alerta->titulo) ?></h5>
+                                <p class="post-description" id="desc-<?= $alerta->id ?>">
+                                    <?= Html::encode($alerta->descripcion) ?>
+                                </p>
+                            </div>
+                            <div class="post-actions">
+                                <button class="btn-like" onclick="this.firstElementChild.src = this.firstElementChild.src.includes('like.svg') ? '<?= Url::to('@web/images/resources/heart.svg') ?>' : '<?= Url::to('@web/images/resources/like.svg') ?>'">
+                                    <img src="<?= Url::to('@web/images/resources/like.svg') ?>" alt="Me gusta">
+                                </button>
+                                <button class="btn-comment">
+                                    <img src="<?= Url::to('@web/images/resources/coment.svg') ?>" alt="Comentar">
+                                </button>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -59,7 +64,8 @@ $this->title = 'Alertas de tu Ciudad';
             </div>
         </div>
 
-        <div class="col-md-4">
+        <!-- Reducimos el ancho de la columna de categorías a col-md-2 -->
+        <div class="col-md-1">
             <table class="table table-striped table-bordered custom-table">
                 <thead>
                 <tr class="custom-thead">
@@ -115,7 +121,7 @@ $this->title = 'Alertas de tu Ciudad';
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="cancelarFiltro">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="aceptarFiltro">Aceptar</button>
+                <button type="button" class="btn" id="aceptarFiltro">Aceptar</button>
             </div>
         </div>
     </div>
