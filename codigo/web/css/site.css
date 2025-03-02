@@ -159,18 +159,18 @@ main > .container {
     border-top: 1px solid #dbdbdb;
 }
 
-.btn-like, .btn-comment {
+.btn-like, .btn-comment, .btn-open {
     background: none;
     border: none;
     cursor: pointer;
     transition: transform var(--transition);
 }
 
-.btn-like:hover, .btn-comment:hover {
+.btn-like:hover, .btn-comment:hover, .btn-open:hover {
     transform: scale(1.1);
 }
 
-.btn-like img, .btn-comment img {
+.btn-like img, .btn-comment img, .btn-open img {
     width: 24px;
     height: 24px;
 }
@@ -228,6 +228,39 @@ main > .container {
 
 .category-link:hover {
     color: #ffd301;
+}
+
+/* ===========================
+   ESTILOS PARA EL MAPA
+   =========================== */
+#map {
+    border: 2px solid var(--primary-color); /* Borde del mapa */
+    border-radius: var(--border-radius); /* Bordes redondeados */
+    box-shadow: var(--box-shadow); /* Sombra */
+    margin-top: 20px; /* Espacio superior */
+}
+
+.map-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-align: center;
+    margin: 10px;
+}
+
+/* Estilo para los marcadores del mapa */
+.leaflet-popup-content {
+    font-size: 14px;
+    color: #333;
+}
+
+/* Estilo para el contenedor del mapa */
+.map-container {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-top: 15px;
 }
 
 /* ===========================

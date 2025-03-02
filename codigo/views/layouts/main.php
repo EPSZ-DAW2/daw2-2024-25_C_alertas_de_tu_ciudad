@@ -77,7 +77,7 @@ $homeUrl = $ciudad ? Url::to(['site/index', 'ciudad' => $ciudad]) : Yii::$app->h
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
         'items' => [
-            ['label' => 'Búsqueda', 'url' => ['/site/buscarPorUbicacion']],
+            ['label' => 'Búsqueda', 'url' => ['/site/busqueda']],
             ['label' => 'Incidencias', 'url' => ['/site/incidencias']],
             ['label' => 'Áreas', 'url' => ['/site/areas']],
             ['label' => 'Alertas', 'url' => ['/site/alertas']],

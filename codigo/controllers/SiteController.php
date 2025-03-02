@@ -65,44 +65,53 @@ class SiteController extends Controller
      */
     public function actionIndex($ciudad = null)
     {
-        $session = Yii::$app->session;
-
+        // Manejo de sesiones
         if (Yii::$app->request->get('borrarFiltro')) {
-            $session->remove('ciudad');
+            Yii::$app->session->remove('ciudad');
             $ciudad = null;
-        } elseif ($ciudad) {
-            $session->set('ciudad', $ciudad);
-        } elseif ($session->has('ciudad')) {
-            $ciudad = $session->get('ciudad');
+        } elseif ($ciudad = Yii::$app->request->get('ciudad')) {
+            Yii::$app->session->set('ciudad', $ciudad);
+        } else {
+            $ciudad = Yii::$app->session->get('ciudad');
         }
 
+        // Consulta de alertas
         $query = Alerta::find()->joinWith('ubicacion');
 
         if ($ciudad) {
             $ciudadUpper = mb_strtoupper($ciudad, 'UTF-8');
 
-            // Obtener todas las ubicaciones de una vez
-            $todasUbicaciones = Ubicacion::find()->asArray()->all();
+            // Obtener la ubicación principal
+            $ubicacionPrincipal = Ubicacion::find()
+                ->where(['like', 'nombre', $ciudadUpper])
+                ->one();
 
-            // Mapear ubicaciones por ID y padre
-            $mapaHijos = [];
-            $ubicacionId = null;
-            foreach ($todasUbicaciones as $u) {
-                if (mb_strtoupper($u['nombre'], 'UTF-8') === $ciudadUpper) {
-                    $ubicacionId = $u['id'];
-                }
-                $mapaHijos[$u['ub_code_padre']][] = $u['id'];
-            }
+            if ($ubicacionPrincipal) {
+                // Obtener IDs de ubicaciones descendientes
+                $idsUbicaciones = $this->obtenerDescendientes($ubicacionPrincipal->id);
+                $idsUbicaciones[] = $ubicacionPrincipal->id; // Incluir la ubicación principal
 
-            if ($ubicacionId !== null) {
-                // Obtener descendientes en memoria
-                $idsUbicaciones = $this->obtenerDescendientesMemoria($ubicacionId, $mapaHijos);
-                $idsUbicaciones[] = $ubicacionId;
-
+                // Filtrar alertas por ubicaciones
                 $query->andWhere(['ubicacion.id' => $idsUbicaciones]);
+
+                // Obtener ubicaciones para el mapa (incluyendo las hijas)
+                $ubicaciones = Ubicacion::find()
+                    ->select(['nombre', 'latitud', 'longitud'])
+                    ->where(['id' => $idsUbicaciones])
+                    ->andWhere(['not', ['latitud' => null, 'longitud' => null]])
+                    ->asArray()
+                    ->all();
             } else {
-                $query->andWhere('0=1');
+                $query->andWhere('0=1'); // No hay resultados
+                $ubicaciones = []; // No hay ubicaciones para el mapa
             }
+        } else {
+            // Si no hay filtro, obtener todas las ubicaciones con coordenadas
+            $ubicaciones = Ubicacion::find()
+                ->select(['nombre', 'latitud', 'longitud'])
+                ->where(['not', ['latitud' => null, 'longitud' => null]])
+                ->asArray()
+                ->all();
         }
 
         $alertas = $query->all();
@@ -110,29 +119,30 @@ class SiteController extends Controller
         return $this->render('index', [
             'alertas' => $alertas,
             'ciudad' => $ciudad,
+            'ubicaciones' => $ubicaciones, // Pasar las ubicaciones al mapa
         ]);
     }
 
-
     /**
-     * Función optimizada para obtener IDs de descendientes en memoria
+     * Función recursiva para obtener IDs de ubicaciones descendientes.
+     *
+     * @param int $idPadre ID de la ubicación padre.
+     * @return array IDs de las ubicaciones descendientes.
      */
-    private function obtenerDescendientesMemoria($idPadre, &$mapaHijos)
+    private function obtenerDescendientes($idPadre)
     {
         $ids = [];
+        $ubicacionesHijas = Ubicacion::find()
+            ->where(['ub_code_padre' => $idPadre])
+            ->all();
 
-        if (isset($mapaHijos[$idPadre])) {
-            foreach ($mapaHijos[$idPadre] as $hijoId) {
-                $ids[] = $hijoId;
-                // Llamada recursiva en memoria
-                $ids = array_merge($ids, $this->obtenerDescendientesMemoria($hijoId, $mapaHijos));
-            }
+        foreach ($ubicacionesHijas as $ubicacion) {
+            $ids[] = $ubicacion->id;
+            $ids = array_merge($ids, $this->obtenerDescendientes($ubicacion->id));
         }
 
         return $ids;
     }
-
-
 
     /**
      * Returns matching locations as JSON for autocomplete.
@@ -157,7 +167,7 @@ class SiteController extends Controller
         $resultado = [];
         foreach ($ubicaciones as $ubicacion) {
             $resultado[] = [
-                'nombre' => mb_strtoupper($ubicacion->nombre, 'UTF-8'),
+                'nombre' => $ubicacion->nombre,
                 'padre' => $ubicacion->ubCodePadre ? $ubicacion->ubCodePadre->nombre : 'Sin padre',
             ];
         }
@@ -206,7 +216,6 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
         return $this->goHome();
     }
 
@@ -220,7 +229,6 @@ class SiteController extends Controller
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
             Yii::$app->session->setFlash('contactFormSubmitted');
-
             return $this->refresh();
         }
         return $this->render('contact', [

@@ -5,9 +5,16 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $alertas app\models\Alerta[] */
 /* @var $ciudad string|null */
+/* @var $ubicaciones array */
 
 $this->title = 'Alertas de tu Ciudad';
 ?>
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+<!-- Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 <div class="container mt-4">
     <h1 class="text-center" style="margin: 50px;">
         <?= Html::encode($this->title) ?>
@@ -22,8 +29,8 @@ $this->title = 'Alertas de tu Ciudad';
     <?php endif; ?>
 
     <div class="row">
-        <!-- Aumentamos el ancho de la columna de alertas a col-md-10 -->
-        <div class="col-md-10 mx-auto"> <!-- mx-auto centra la columna -->
+        <!-- Columna de alertas (8 columnas de 12) -->
+        <div class="col-md-8">
             <div id="alertas-container">
                 <?php if (!empty($alertas)): ?>
                     <?php foreach ($alertas as $alerta): ?>
@@ -39,18 +46,18 @@ $this->title = 'Alertas de tu Ciudad';
                                         <div class="ubicacion-label"><?= Html::encode($alerta->ubicacion->nombre) ?></div>
                                     <?php endif; ?>
                                 </div>
-
                             </div>
                             <div class="post-content">
                                 <img src="<?= !empty($alerta->imagen) ? Html::encode($alerta->imagen) : Url::to('@web/images/resources/no-image.svg') ?>" alt="Imagen de la alerta">
                                 <h5><?= Html::encode($alerta->titulo) ?></h5>
-                                <p class="post-description" id="desc-<?= $alerta->id ?>">
-                                    <?= Html::encode($alerta->descripcion) ?>
-                                </p>
+                                <p class="post-description"><?= Html::encode($alerta->descripcion) ?></p>
                             </div>
                             <div class="post-actions">
                                 <button class="btn-like" onclick="this.firstElementChild.src = this.firstElementChild.src.includes('like.svg') ? '<?= Url::to('@web/images/resources/heart.svg') ?>' : '<?= Url::to('@web/images/resources/like.svg') ?>'">
                                     <img src="<?= Url::to('@web/images/resources/like.svg') ?>" alt="Me gusta">
+                                </button>
+                                <button class="btn-open">
+                                    <img src="<?= Url::to('@web/images/resources/open.svg') ?>" alt="Abrir">
                                 </button>
                                 <button class="btn-comment">
                                     <img src="<?= Url::to('@web/images/resources/coment.svg') ?>" alt="Comentar">
@@ -63,42 +70,12 @@ $this->title = 'Alertas de tu Ciudad';
                 <?php endif; ?>
             </div>
         </div>
-
-        <!-- Reducimos el ancho de la columna de categorías a col-md-2 -->
-        <div class="col-md-1">
-            <table class="table table-striped table-bordered custom-table">
-                <thead>
-                <tr class="custom-thead">
-                    <th scope="col">Categoría</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td><a href="#" class="category-link">Tráfico y Transporte</a></td>
-                </tr>
-                <tr>
-                    <td><a href="#" class="category-link">Clima y Medio Ambiente</a></td>
-                </tr>
-                <tr>
-                    <td><a href="#" class="category-link">Emergencias y Seguridad</a></td>
-                </tr>
-                <tr>
-                    <td><a href="#" class="category-link">Infraestructura y Servicios</a></td>
-                </tr>
-                <tr>
-                    <td><a href="#" class="category-link">Salud y Bienestar</a></td>
-                </tr>
-                <tr>
-                    <td><a href="#" class="category-link">Tecnología y Comunicaciones</a></td>
-                </tr>
-                <tr>
-                    <td><a href="#" class="category-link">Eventos y Cultura</a></td>
-                </tr>
-                <tr>
-                    <td><a href="#" class="category-link">Economía y Sociedad</a></td>
-                </tr>
-                </tbody>
-            </table>
+        <!-- Columna del mapa -->
+        <div class="col-md-4">
+            <div class="map-container">
+                <div class="map-title">Mapa de Ubicaciones</div>
+                <div id="map" style="height: 600px; width: 100%;"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -127,9 +104,59 @@ $this->title = 'Alertas de tu Ciudad';
     </div>
 </div>
 
-<!-- JavaScript para autocomplete, control del modal y redirección -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
+        // Manejo del modal de filtro por ubicación
+        var inputCiudad = document.getElementById("inputCiudad");
+        var listaResultados = document.getElementById("listaResultados");
+
+        inputCiudad.addEventListener("input", function () {
+            let query = inputCiudad.value.trim();
+            if (query.length < 2) {
+                listaResultados.innerHTML = "";
+                return;
+            }
+            fetch("<?= Url::to(['site/buscar-ubicacion']) ?>&q=" + encodeURIComponent(query))
+                .then(res => res.json())
+                .then(data => {
+                    listaResultados.innerHTML = "";
+                    if (data.length > 0) {
+                        data.forEach(item => {
+                            let div = document.createElement("a");
+                            div.classList.add("list-group-item", "list-group-item-action");
+                            div.innerHTML = `<div>${item.nombre}</div><small style="color:#6c757d;">${item.padre}</small>`;
+                            div.href = "#";
+                            div.addEventListener("click", function (e) {
+                                e.preventDefault();
+                                inputCiudad.value = item.nombre;
+                                listaResultados.innerHTML = "";
+                            });
+                            listaResultados.appendChild(div);
+                        });
+                    } else {
+                        listaResultados.innerHTML = '<p class="list-group-item">No encontrado.</p>';
+                    }
+                });
+        });
+
+        document.getElementById("aceptarFiltro").onclick = function () {
+            var ciudad = inputCiudad.value.trim();
+            if (ciudad) {
+                window.location.href = "<?= Url::to(['site/index']) ?>" + "&ciudad=" + encodeURIComponent(ciudad);
+            } else {
+                alert("Por favor, selecciona una ubicación.");
+            }
+        };
+
+        document.getElementById("cancelarFiltro").onclick = function () {
+            var modalEl = document.getElementById('modalUbicacion');
+            var modalInstance = bootstrap.Modal.getInstance(modalEl);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+        };
+
+        // Mostrar el modal automáticamente si no hay filtro aplicado
         var filterApplied = <?= $ciudad ? 'true' : 'false' ?>;
         if (!sessionStorage.getItem("modalShown") && !filterApplied) {
             setTimeout(() => {
@@ -139,56 +166,55 @@ $this->title = 'Alertas de tu Ciudad';
             }, 1000);
         }
 
-        const inputCiudad = document.getElementById("inputCiudad");
-        const resultados = document.getElementById("listaResultados");
+        // Configuración inicial del mapa
+        const map = L.map('map').setView([40.4168, -3.7038], 6); // Centrar el mapa en España
 
-        inputCiudad.addEventListener("input", function() {
-            let query = inputCiudad.value.trim();
-            if (query.length < 2) {
-                resultados.innerHTML = "";
-                return;
-            }
-            fetch(`<?= Url::to(['site/buscar-ubicacion']) ?>&q=${encodeURIComponent(query)}`)
-                .then(res => res.json())
-                .then(data => {
-                    resultados.innerHTML = "";
-                    if (data.length > 0) {
-                        data.forEach(item => {
-                            let div = document.createElement("a");
-                            div.classList.add("list-group-item", "list-group-item-action");
-                            div.innerHTML = `
-                                <div>${item.nombre}</div>
-                                <small style="color:#6c757d;">${item.padre}</small>
-                            `;
-                            div.href = "#";
-                            div.addEventListener("click", (e) => {
-                                e.preventDefault();
-                                inputCiudad.value = item.nombre;
-                                resultados.innerHTML = "";
-                            });
-                            resultados.appendChild(div);
-                        });
-                    } else {
-                        resultados.innerHTML = '<p class="list-group-item">No encontrado.</p>';
-                    }
+        // Añadir capa de tiles (OpenStreetMap)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Obtener las ubicaciones desde PHP
+        const ubicaciones = <?= json_encode($ubicaciones) ?>;
+
+        // Crear un grupo de marcadores para gestionarlos mejor
+        const markers = L.layerGroup().addTo(map);
+
+        // Añadir marcadores al mapa
+        ubicaciones.forEach(ubicacion => {
+            const { latitud, longitud, nombre } = ubicacion;
+
+            if (latitud && longitud) {
+                // Crear el marcador
+                const marker = L.marker([parseFloat(latitud), parseFloat(longitud)], {
+                    title: nombre // Tooltip por defecto
                 });
+
+                // Crear el contenido del tooltip
+                const tooltipContent = `<b>${nombre}</b>`;
+
+                // Asignar tooltip al marcador
+                marker.bindTooltip(tooltipContent, {
+                    permanent: false, // No mostrar permanentemente
+                    direction: 'top', // Dirección del tooltip
+                    className: 'map-tooltip', // Clase CSS para el tooltip
+                    opacity: 1 // Hacer el tooltip completamente visible
+                });
+
+                // Desactivar el popup al hacer clic
+                marker.on('click', () => {}); // No hacer nada al hacer clic
+
+                // Añadir el marcador al grupo
+                markers.addLayer(marker);
+            }
         });
 
-        document.getElementById("aceptarFiltro").onclick = () => {
-            const ciudad = inputCiudad.value.trim();
-            if (ciudad) {
-                window.location.href = '<?= Url::to(['site/index']) ?>' + '&ciudad=' + encodeURIComponent(ciudad);
-            } else {
-                alert("Por favor, selecciona una ubicación.");
-            }
-        };
-
-        document.getElementById("cancelarFiltro").onclick = () => {
-            const modalEl = document.getElementById('modalUbicacion');
-            const modalInstance = bootstrap.Modal.getInstance(modalEl);
-            if (modalInstance) {
-                modalInstance.hide();
-            }
-        };
+        // Ajustar el zoom del mapa para que se vean todos los marcadores
+        if (ubicaciones.length > 0) {
+            const bounds = L.latLngBounds(ubicaciones.map(ubicacion => [
+                parseFloat(ubicacion.latitud), parseFloat(ubicacion.longitud)
+            ]));
+            map.fitBounds(bounds);
+        }
     });
 </script>
