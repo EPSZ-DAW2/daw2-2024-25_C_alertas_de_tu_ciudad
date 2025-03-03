@@ -82,11 +82,48 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionCategorias()
+    public function actionCategorias($id_categoria = null)
     {
-        $categorias = Categoria::find()->all();
-        return $this->render('categorias', ['categorias' => $categorias]);
+        $categorias = \app\models\Categoria::find()->all();
+        $alertas = [];
+
+        if ($id_categoria !== null) {
+            $alertas = \app\models\Alerta::find()
+                ->where(['id_categoria' => $id_categoria])
+                ->all();
+        }
+
+        return $this->render('categorias', [
+            'categorias' => $categorias,
+            'alertas' => $alertas,
+            'categoriaSeleccionada' => $id_categoria,
+        ]);
     }
+
+    /**
+     * Muestra las etiquetas y las alertas asociadas a una etiqueta específica.
+     *
+     * @return string
+     */
+    public function actionEtiquetas($id_etiqueta = null)
+    {
+        $etiquetas = \app\models\Etiqueta::find()->all();
+        $alertas = [];
+
+        if ($id_etiqueta !== null) {
+            $alertas = \app\models\Alerta::find()
+                ->where(['id_etiqueta' => $id_etiqueta])
+                ->all();
+        }
+
+        return $this->render('etiquetas', [
+            'etiquetas' => $etiquetas,
+            'alertas' => $alertas,
+            'etiquetaSeleccionada' => $id_etiqueta,
+        ]);
+    }
+
+
 
     /**
      * Login action.
