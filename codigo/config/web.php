@@ -51,6 +51,7 @@ $config = [
             'showScriptName' => false,   // Hide the entry script `index.php`
             'rules' => [
                 // Define custom URL rules
+                'busqueda' => 'site/busqueda',
                 'comentarios' => 'comentarios/index',  // Map `comentarios` to `ComentariosController`'s `actionIndex`
                 'comentarios/revisar-denuncias' => 'comentarios/revisar-denuncias',  // Map `comentarios/revisar-denuncias` to `ComentariosController`'s `actionRevisarDenuncias`
             ],

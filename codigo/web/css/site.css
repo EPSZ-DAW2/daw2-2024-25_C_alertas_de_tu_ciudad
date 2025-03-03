@@ -130,13 +130,13 @@ main > .container {
     color: #fff;
 }
 
-#aceptarFiltro, #borrarFiltro {
+#aceptarFiltro, #borrarFiltro, #openMap {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
     color: white;
 }
 
-#aceptarFiltro:hover, #borrarFiltro:hover {
+#aceptarFiltro:hover, #borrarFiltro:hover, #openMap:hover {
     background-color: var(--hover-color);
     border-color: var(--hover-color);
 }
@@ -262,6 +262,7 @@ main > .container {
     box-shadow: var(--box-shadow);
     margin-top: 15px;
 }
+
 
 /* ===========================
    RESPONSIVIDAD

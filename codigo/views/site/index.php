@@ -9,10 +9,8 @@ use yii\helpers\Url;
 
 $this->title = 'Alertas de tu Ciudad';
 ?>
-<!-- Leaflet CSS -->
+<!-- Para que funcione el mapa -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
-<!-- Leaflet JavaScript -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <div class="container mt-4">

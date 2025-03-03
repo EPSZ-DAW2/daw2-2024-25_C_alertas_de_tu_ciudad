@@ -123,6 +123,32 @@ class SiteController extends Controller
         ]);
     }
 
+    public function actionBusqueda($ubicacion = null)
+    {
+        // Si el usuario ha seleccionado una ubicación, la guardamos en la sesión
+        if ($ubicacion) {
+            Yii::$app->session->set('ubicacion', $ubicacion);
+        } else {
+            $ubicacion = Yii::$app->session->get('ubicacion');
+        }
+
+        // Filtrar las alertas por ubicación si se ha seleccionado
+        $query = Alerta::find();
+        if ($ubicacion) {
+            $query->where(['ubicacion_id' => $ubicacion]);
+        }
+
+        $alertas = $query->all();
+        $ubicaciones = Ubicacion::find()->asArray()->all(); // Obtener ubicaciones disponibles
+
+        return $this->render('busqueda', [
+            'alertas' => $alertas,
+            'ubicaciones' => $ubicaciones,
+            'ubicacion' => $ubicacion,
+        ]);
+    }
+
+
     /**
      * Función recursiva para obtener IDs de ubicaciones descendientes.
      *
