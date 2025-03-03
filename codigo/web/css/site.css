@@ -1,47 +1,44 @@
+/* ===========================
+   VARIABLES CSS
+   =========================== */
+:root {
+    --primary-color: #ea590a;
+    --secondary-color: #ea590a;
+    --font-size-small: 12px;
+    --border-radius: 10px;
+    --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --gap: 20px;
+    --footer-bg: #f5f5f5;
+    --footer-height: 60px;
+    --footer-radius: 15px;
+    --hover-color: #c64d09;
+    --transition: 0.2s ease-in-out;
+}
+
+/* ===========================
+   ESTRUCTURA GENERAL
+   =========================== */
 main > .container {
     padding: 70px 15px 20px;
 }
 
 .footer {
-    background-color: #f5f5f5;
-    font-size: .9em;
-    height: 60px;
+    background-color: var(--footer-bg);
+    font-size: 0.9em;
+    height: var(--footer-height);
+    border-radius: var(--footer-radius);
 }
 
 .footer > .container {
-    padding-right: 15px;
-    padding-left: 15px;
+    padding: 0 15px;
 }
 
+/* ===========================
+   ELEMENTOS GENERALES
+   =========================== */
 .not-set {
     color: #c55;
     font-style: italic;
-}
-
-/* add sorting icons to gridview sort links */
-a.asc:after, a.desc:after {
-    content: '';
-    left: 3px;
-    display: inline-block;
-    width: 0;
-    height: 0;
-    border: solid 5px transparent;
-    margin: 4px 4px 2px 4px;
-    background: transparent;
-}
-
-a.asc:after {
-    border-bottom: solid 7px #212529;
-    border-top-width: 0;
-}
-
-a.desc:after {
-    border-top: solid 7px #212529;
-    border-bottom-width: 0;
-}
-
-.grid-view th {
-    white-space: nowrap;
 }
 
 .hint-block {
@@ -58,27 +55,228 @@ a.desc:after {
     margin: 0 0 15px 0;
 }
 
-/* align the logout "link" (button in form) of the navbar */
-.nav li > form > button.logout {
-    padding-top: 7px;
-    color: rgba(255, 255, 255, 0.5);
+/* ===========================
+   ALERTAS EN GRID RESPONSIVO
+   =========================== */
+#alertas-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--gap);
+    padding: 10px;
 }
 
-@media(max-width:767px) {
-    .nav li > form > button.logout {
-        display:block;
-        text-align: left;
-        width: 100%;
-        padding: 10px 0;
-    }
+.alert-post {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border: 1px solid #dbdbdb;
+    border-radius: var(--border-radius);
+    padding: 15px;
+    box-shadow: var(--box-shadow);
+    transition: transform var(--transition), box-shadow var(--transition);
 }
 
-.nav > li > form > button.logout:focus,
-.nav > li > form > button.logout:hover {
+.alert-post:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.post-header, .post-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dbdbdb;
+}
+
+.post-header .user-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.post-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-details strong {
+    font-size: 16px;
+}
+
+.user-details small {
+    font-size: var(--font-size-small);
+    color: var(--secondary-color);
+}
+
+.ubicacion-label {
+    background-color: #f0f0f0;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color var(--transition), color var(--transition);
+}
+
+.ubicacion-label:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+#aceptarFiltro, #borrarFiltro, #openMap {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+#aceptarFiltro:hover, #borrarFiltro:hover, #openMap:hover {
+    background-color: var(--hover-color);
+    border-color: var(--hover-color);
+}
+
+.post-content img {
+    width: 100%;
+    border-radius: var(--border-radius);
+    margin-top: 10px;
+}
+
+.post-description {
+    max-height: 100px;
+    overflow: hidden;
+    padding: 10px 0;
+    color: grey;
+}
+
+.post-actions {
+    padding-top: 10px;
+    border-top: 1px solid #dbdbdb;
+}
+
+.btn-like, .btn-comment, .btn-open {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform var(--transition);
+}
+
+.btn-like:hover, .btn-comment:hover, .btn-open:hover {
+    transform: scale(1.1);
+}
+
+.btn-like img, .btn-comment img, .btn-open img {
+    width: 24px;
+    height: 24px;
+}
+
+/* ===========================
+   FILTRO POR CIUDAD
+   =========================== */
+.text-center.mb-3 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: var(--gap);
+}
+
+.text-center.mb-3 p {
+    margin: 0;
+}
+
+.text-center.mb-3 .btn-warning {
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+/* ===========================
+   TABLA DE CATEGORÍAS
+   =========================== */
+.custom-table {
+    width: 100%;
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+}
+
+.custom-table th, .custom-table td {
+    padding: 10px;
+    text-align: left;
+}
+
+.custom-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.custom-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.category-link {
+    color: var(--primary-color);
     text-decoration: none;
-    color: rgba(255, 255, 255, 0.75);
+    transition: color var(--transition);
 }
 
-.nav > li > form > button.logout:focus {
-    outline: none;
+.category-link:hover {
+    color: #ffd301;
+}
+
+/* ===========================
+   ESTILOS PARA EL MAPA
+   =========================== */
+#map {
+    border: 2px solid var(--primary-color); /* Borde del mapa */
+    border-radius: var(--border-radius); /* Bordes redondeados */
+    box-shadow: var(--box-shadow); /* Sombra */
+    margin-top: 20px; /* Espacio superior */
+}
+
+.map-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-align: center;
+    margin: 10px;
+}
+
+/* Estilo para los marcadores del mapa */
+.leaflet-popup-content {
+    font-size: 14px;
+    color: #333;
+}
+
+/* Estilo para el contenedor del mapa */
+.map-container {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-top: 15px;
+}
+
+
+/* ===========================
+   RESPONSIVIDAD
+   =========================== */
+@media (max-width: 768px) {
+    #alertas-container {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+
+    .col-md-10 {
+        padding: 0;
+    }
+
+    .col-md-2 {
+        display: none;
+    }
 }

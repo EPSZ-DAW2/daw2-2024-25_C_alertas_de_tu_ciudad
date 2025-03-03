@@ -35,7 +35,7 @@ $this->registerMetaTag([
 $this->registerLinkTag([
     'rel' => 'icon',
     'type' => 'image/svg+xml',
-    'href' => Yii::getAlias('@web/images/alertas_favicon.svg')
+    'href' => Yii::getAlias('@web/images/resources/inicio.svg')
 ]);
 
 // Registra etiquetas Open Graph (opcional, para compartir en redes sociales)
@@ -64,7 +64,7 @@ $homeUrl = $ciudad ? Url::to(['site/index', 'ciudad' => $ciudad]) : Yii::$app->h
     <?php
     NavBar::begin([
         'brandLabel' =>
-            Html::img('@web/images/inicio.svg', [
+            Html::img('@web/images/resources/inicio.svg', [
                 'alt' => 'inicio icon',
                 'style' => 'height:50px;'
             ]) .
@@ -77,7 +77,7 @@ $homeUrl = $ciudad ? Url::to(['site/index', 'ciudad' => $ciudad]) : Yii::$app->h
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
         'items' => [
-            ['label' => 'Búsqueda', 'url' => ['/site/buscarPorUbicacion']],
+            ['label' => 'Búsqueda', 'url' => ['/site/busqueda']],
             ['label' => 'Incidencias', 'url' => ['/site/incidencias']],
             ['label' => 'Áreas', 'url' => ['/site/areas']],
             ['label' => 'Alertas', 'url' => ['/site/alertas']],

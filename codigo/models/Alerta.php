@@ -19,6 +19,7 @@ use Yii;
  * @property string|null $url_externa
  * @property string $estado
  * @property int|null $id_usuario
+ * @property int|null $id_imagen
  *
  * @property AlertaEtiqueta[] $alertaEtiquetas
  * @property Comentario[] $comentarios
@@ -27,6 +28,7 @@ use Yii;
  * @property Lugar $lugar
  * @property Usuario $usuario
  * @property Ubicacion $ubicacion
+ * @property Imagen $imagen
  */
 class Alerta extends \yii\db\ActiveRecord
 {
@@ -47,12 +49,13 @@ class Alerta extends \yii\db\ActiveRecord
             [['titulo', 'descripcion', 'fecha_inicio', 'estado'], 'required'],
             [['descripcion', 'detalles', 'notas', 'url_externa'], 'string'],
             [['fecha_inicio'], 'safe'],
-            [['duracion_estimada', 'id_lugar', 'id_usuario', 'id_ubicacion'], 'integer'],
+            [['duracion_estimada', 'id_lugar', 'id_usuario', 'id_ubicacion', 'id_imagen'], 'integer'],
             [['titulo'], 'string', 'max' => 255],
             [['estado'], 'string', 'max' => 50],
             [['id_lugar'], 'exist', 'skipOnError' => true, 'targetClass' => Lugar::class, 'targetAttribute' => ['id_lugar' => 'id']],
             [['id_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::class, 'targetAttribute' => ['id_usuario' => 'id']],
             [['id_ubicacion'], 'exist', 'skipOnError' => true, 'targetClass' => Ubicacion::class, 'targetAttribute' => ['id_ubicacion' => 'id']],
+            [['id_imagen'], 'exist', 'skipOnError' => true, 'targetClass' => Imagen::class, 'targetAttribute' => ['id_imagen' => 'id']],
         ];
     }
 
@@ -74,6 +77,7 @@ class Alerta extends \yii\db\ActiveRecord
             'url_externa' => 'Url Externa',
             'estado' => 'Estado',
             'id_usuario' => 'Id Usuario',
+            'id_imagen' => 'Id Imagen',
         ];
     }
 
@@ -87,8 +91,6 @@ class Alerta extends \yii\db\ActiveRecord
         return $this->hasOne(Ubicacion::class, ['id' => 'id_ubicacion']);
     }
 
-    // Existing relations below
-
     public function getLugar()
     {
         return $this->hasOne(Lugar::class, ['id' => 'id_lugar']);
@@ -97,6 +99,11 @@ class Alerta extends \yii\db\ActiveRecord
     public function getUsuario()
     {
         return $this->hasOne(Usuario::class, ['id' => 'id_usuario']);
+    }
+
+    public function getImagen()
+    {
+        return $this->hasOne(Imagen::class, ['id' => 'id_imagen']);
     }
 
     public function getIncidencias()

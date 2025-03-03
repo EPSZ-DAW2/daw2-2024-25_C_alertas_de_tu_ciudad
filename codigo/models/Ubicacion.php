@@ -102,4 +102,13 @@ class Ubicacion extends \yii\db\ActiveRecord
 
         return $ids;
     }
+
+    public static function obtenerUbicacionesLibres()
+    {
+        return self::find()
+            ->where(['not in', 'id', Ubicacion::find()->select('ub_code_padre')->where('ub_code_padre IS NOT NULL')])
+            ->all();
+    }
+
+
 }

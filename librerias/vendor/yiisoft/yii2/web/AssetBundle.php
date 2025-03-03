@@ -97,7 +97,7 @@ class AssetBundle extends BaseObject
      *
      * Note that only a forward slash "/" should be used as directory separator.
      */
-    public $css = [];
+    public $css = ['css/site.css'];
     /**
      * @var array the options that will be passed to [[View::registerJsFile()]]
      * when registering the JS files in this bundle.

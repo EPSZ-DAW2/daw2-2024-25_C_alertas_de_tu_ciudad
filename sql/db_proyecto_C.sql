@@ -16,14 +16,12 @@ DROP DATABASE IF EXISTS `proyecto_C`;
 CREATE DATABASE IF NOT EXISTS `proyecto_C` CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_general_ci';
 USE `proyecto_C`;
 
-
-
 -- --------------------------------------------------------------------------
 -- Tabla: ETIQUETAS - Creación y volcado de datos
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `etiquetas`;
 CREATE TABLE IF NOT EXISTS `etiquetas` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único de la etiqueta',
+                                           `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único de la etiqueta',
     `nombre` VARCHAR(255) NOT NULL COMMENT 'Nombre de la etiqueta',
     `descripcion` TEXT DEFAULT NULL COMMENT 'Descripción detallada de la etiqueta',
     `creado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de creación de la etiqueta',
@@ -32,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `etiquetas` (
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `etiquetas` (`nombre`, `descripcion`) VALUES
-    -- Etiquetas asociadas a la categoría "Clima y Medio Ambiente"
+                                                      -- Etiquetas asociadas a la categoría "Clima y Medio Ambiente"
     ('Alerta meteorológica', 'Situaciones relacionadas con fenómenos meteorológicos extremos.'),
     ('Desastre natural', 'Eventos naturales que causan daños significativos, como terremotos o inundaciones.'),
     ('Inundación', 'Acumulación de agua en zonas que normalmente están secas.'),
@@ -81,8 +79,6 @@ INSERT INTO `etiquetas` (`nombre`, `descripcion`) VALUES
     ('Subida de precios', 'Aumento significativo en el costo de bienes o servicios.'),
     ('Huelga', 'Paro laboral organizado que puede afectar servicios o empresas.');
 
-
-
 -- --------------------------------------------------------------------------
 -- Tabla: USUARIO - Creación y volcado de datos
 -- --------------------------------------------------------------------------
@@ -102,15 +98,12 @@ CREATE TABLE IF NOT EXISTS `usuario` (
     `phone` VARCHAR(15) DEFAULT NULL COMMENT 'Número de teléfono del usuario',
     `status` TINYINT(1) DEFAULT 0 COMMENT 'Estado del usuario',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `usuario` (`id`, `email`, `password`, `auth_key`, `nick`, `username`, `register_date`, `confirmed`, `role`, `attempts`, `locked`) VALUES
-    (3, 'dj@usal.es', '$2y$13$IXRmKNxfNNMSd7DGQkFo3.aOUovcBEKYby3qojNLF761o4xXfX2.2', 'h5uq58uxdPNhFEmtStMDYoD2a8V60ebT', 'djPiri', 'djPiri', '2025-01-14 12:37:44', 1, 'usuario', 0, 0),
-    (2, 'admin@domain.com', '$2y$13$Y3wzjJgRH5GqtpR3uN1qru0nmMEhDJ.8aE5Xoi0BvZQe7G5uBxM3G', NULL, 'admin', 'admin', '2025-02-20 08:00:00', 1, 'admin', 0, 0);
+INSERT INTO `usuario` (`email`, `password`, `auth_key`, `nick`, `username`, `register_date`, `confirmed`, `role`, `attempts`, `locked`) VALUES
+    ('dj@usal.es', '$2y$13$IXRmKNxfNNMSd7DGQkFo3.aOUovcBEKYby3qojNLF761o4xXfX2.2', 'h5uq58uxdPNhFEmtStMDYoD2a8V60ebT', 'djPiri', 'djPiri', NOW(), 1, 'usuario', 0, 0),
+    ('alba@mg.es', '$2y$13$ef9ObfZ.R7msNW9oCrvTlOMvFYupos5AXRmo2RahJzU7s2QzhCtyu', 'YswvC2pI-AXtqtcoi69oDHyJbwfhmy1N', 'alba', 'alba', NOW(), 1, 'usuario', 0, 0);
 
-
-
--- --------------------------------------------------------------------------
 -- Tabla: COMENTARIOS - Creación y volcado de datos
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `comentarios`;
@@ -124,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `comentarios` (
     `creado_en` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de creación del comentario',
     `actualizado_en` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Fecha y hora de la última actualización',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 INSERT INTO `comentarios` (`contenido`, `numero_denuncias`, `es_denunciado`, `es_visible`, `es_cerrado`) VALUES
     ('Primer comentario de prueba', 0, 0, 1, 0),
@@ -132,8 +125,6 @@ INSERT INTO `comentarios` (`contenido`, `numero_denuncias`, `es_denunciado`, `es
     ('Tercer comentario bloqueado', 0, 0, 0, 0),
     ('Cuarto comentario cerrado', 0, 0, 1, 1),
     ('Quinto comentario activo', 1, 0, 1, 0);
-
-
 
 -- --------------------------------------------------------------------------
 -- Tabla: INCIDENCIA - Creación y volcado de datos
@@ -149,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `incidencia` (
     `prioridad` ENUM('alta', 'media', 'baja') DEFAULT 'media' COMMENT 'Nivel de prioridad de la incidencia',
     `respuesta` TEXT DEFAULT NULL COMMENT 'Respuesta dada a la incidencia una vez revisada',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `incidencia` (`titulo`, `descripcion`, `fecha_creacion`, `fecha_revision`, `estado`, `prioridad`, `respuesta`) VALUES
     ('Error de conexión', 'No se puede conectar al servidor de la base de datos.', '2025-01-23 10:00:00', NULL, 'pendiente', 'alta', NULL),
@@ -157,8 +148,6 @@ INSERT INTO `incidencia` (`titulo`, `descripcion`, `fecha_creacion`, `fecha_revi
     ('Problema de inicio de sesión', 'Usuarios reportan que no pueden iniciar sesión.', '2025-01-23 12:00:00', NULL, 'pendiente', 'media', NULL),
     ('Carga lenta del sistema', 'El sistema tarda más de lo esperado en cargar datos.', '2025-01-23 13:00:00', NULL, 'pendiente', 'baja', NULL),
     ('Error desconocido en el servidor', 'Se produjo un error inesperado en el servidor.', '2025-01-23 14:00:00', NULL, 'pendiente', 'alta', NULL);
-
-
 
 -- --------------------------------------------------------------------------
 -- Tabla: UBICACION - Creación y volcado de datos
@@ -170,84 +159,82 @@ CREATE TABLE `ubicacion` (
     `nombre` VARCHAR(50) NOT NULL COMMENT 'Nombre de la ubicación',
     `code_iso` VARCHAR(10) DEFAULT NULL COMMENT 'Código internacional de país/estado si aplica',
     `ub_code_padre` INT(12) DEFAULT NULL COMMENT 'ID de la ubicación padre en la jerarquía',
+    `latitud` DECIMAL(10, 6) DEFAULT NULL COMMENT 'Latitud de la ubicación para búsqueda en el mapa',
+    `longitud` DECIMAL(10, 6) DEFAULT NULL COMMENT 'Longitud de la ubicación para búsqueda en el mapa',
     PRIMARY KEY (`id`),
     KEY `ub_code_padre` (`ub_code_padre`),
     CONSTRAINT `fk_ubicacion_padre` FOREIGN KEY (`ub_code_padre`) REFERENCES `ubicacion` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
-INSERT INTO `ubicacion` (`id`, `ub_code`, `nombre`, `code_iso`, `ub_code_padre`) VALUES
-    (0, 1, 'Tierra', NULL, NULL),
-    (1, 1, 'Europa', 'EU', 0),
-    (2, 2, 'España', 'ES', 1),
-    (3, 3, 'Andalucía', 'ES-AN', 2),
-    (4, 3, 'Aragón', 'ES-AR', 2),
-    (5, 3, 'Asturias', 'ES-AS', 2),
-    (6, 3, 'Islas Baleares', 'ES-IB', 2),
-    (7, 3, 'Canarias', 'ES-CN', 2),
-    (8, 3, 'Cantabria', 'ES-CB', 2),
-    (9, 3, 'Castilla-La Mancha', 'ES-CM', 2),
-    (10, 3, 'Castilla y León', 'ES-CL', 2),
-    (11, 3, 'Cataluña', 'ES-CT', 2),
-    (12, 3, 'Extremadura', 'ES-EX', 2),
-    (13, 3, 'Galicia', 'ES-GA', 2),
-    (14, 3, 'Madrid', 'ES-MD', 2),
-    (15, 3, 'Murcia', 'ES-MC', 2),
-    (16, 3, 'Navarra', 'ES-NC', 2),
-    (17, 3, 'La Rioja', 'ES-RI', 2),
-    (18, 3, 'País Vasco', 'ES-PV', 2),
-    (19, 3, 'Comunidad Valenciana', 'ES-VC', 2),
-    (20, 3, 'Ceuta', 'ES-CE', 2),
-    (21, 3, 'Melilla', 'ES-ML', 2),
-    (22, 4, 'Ávila', 'ES-AV', 10),
-    (23, 4, 'Burgos', 'ES-BU', 10),
-    (24, 4, 'León', 'ES-LE', 10),
-    (25, 4, 'Palencia', 'ES-P', 10),
-    (26, 4, 'Salamanca', 'ES-SA', 10),
-    (27, 4, 'Segovia', 'ES-SG', 10),
-    (28, 4, 'Soria', 'ES-SO', 10),
-    (29, 4, 'Valladolid', 'ES-VA', 10),
-    (30, 4, 'Zamora', 'ES-ZA', 10),
-    (31, 6, 'Salamanca', 'ES-SA-SAL', 26),
-    (32, 6, 'Béjar', 'ES-SA-BEJ', 26),
-    (33, 6, 'Ciudad Rodrigo', 'ES-SA-CRO', 26),
-    (34, 6, 'Vitigudino', 'ES-SA-VIT', 26),
-    (35, 6, 'Peñaranda de Bracamonte', 'ES-SA-PEN', 26),
-    (36, 6, 'Zamora', 'ES-ZA-ZAM', 30),
-    (37, 6, 'Benavente', 'ES-ZA-BEN', 30),
-    (38, 6, 'Toro', 'ES-ZA-TOR', 30),
-    (39, 6, 'Fuentesaúco', 'ES-ZA-FUE', 30),
-    (40, 6, 'Alcañices', 'ES-ZA-ALC', 30),
-    -- Barrios Salamanca
-    (41, 7, 'Plaza Mayor', NULL, 31),
-    (42, 7, 'Garrido', NULL, 31),
-    (43, 7, 'Cementerio', NULL, 31),
-    (44, 7, 'Pizarrales', NULL, 31),
-    (45, 7, 'San José', NULL, 31),
-    -- Barrios Zamora
-    (46, 7, 'Casco Antiguo', NULL, 36),
-    (47, 7, 'San Lázaro', NULL, 36),
-    (48, 7, 'San José Obrero', NULL, 36),
-    (49, 7, 'Pinilla', NULL, 36),
-    (50, 7, 'Los Bloques', NULL, 36),
-    (51, 7, 'La Candelaria', NULL, 36),
-    (52, 7, 'Cabañales', NULL, 36),
-    (53, 7, 'Pantoja', NULL, 36),
-    (54, 7, 'San Frontis', NULL, 36),
-    (55, 7, 'Las Viñas', NULL, 36),
-    (56, 7, 'San Isidro', NULL, 36),
-    (57, 7, 'Vista Alegre', NULL, 36),
-    (58, 7, 'Otero', NULL, 36),
-    (59, 7, 'Siglo XXI', NULL, 36),
-    (60, 7, 'Tres Cruces', NULL, 36),
-    (61, 7, 'Alto de los Curas', NULL, 36),
-    (62, 7, 'Peña Trevinca', NULL, 36),
-    (63, 7, 'La Vaguada', NULL, 36),
-    (64, 7, 'Los Almendros', NULL, 36),
-    (65, 7, 'Candelaria', NULL, 36),
-    (66, 7, 'San Blas', NULL, 36),
-    (67, 7, 'San José', NULL, 36),
-    (68, 7, 'Villagodio', NULL, 36),
-    (69, 7, 'Rabiche', NULL, 36);
+INSERT INTO `ubicacion` (`id`, `ub_code`, `nombre`, `code_iso`, `ub_code_padre`, `latitud`, `longitud`) VALUES
+    (0, 1, 'Tierra', NULL, NULL, NULL, NULL),
+    (1, 1, 'Europa', 'EU', 0, 54.5260, 15.2551),
+    (2, 2, 'España', 'ES', 1, 40.4637, -3.7492),
+    (3, 3, 'Andalucía', 'ES-AN', 2, 37.5443, -4.7278),
+    (4, 3, 'Aragón', 'ES-AR', 2, 41.5976, -0.9057),
+    (5, 3, 'Asturias', 'ES-AS', 2, 43.3614, -5.8593),
+    (6, 3, 'Islas Baleares', 'ES-IB', 2, 39.6953, 3.0176),
+    (7, 3, 'Canarias', 'ES-CN', 2, 28.2916, -16.6291),
+    (8, 3, 'Cantabria', 'ES-CB', 2, 43.1828, -3.9878),
+    (9, 3, 'Castilla-La Mancha', 'ES-CM', 2, 39.2796, -3.0995),
+    (10, 3, 'Castilla y León', 'ES-CL', 2, 41.8357, -4.3976),
+    (11, 3, 'Cataluña', 'ES-CT', 2, 41.5912, 1.5209),
+    (12, 3, 'Extremadura', 'ES-EX', 2, 39.1934, -6.0988),
+    (13, 3, 'Galicia', 'ES-GA', 2, 42.5751, -8.1339),
+    (14, 3, 'Madrid', 'ES-MD', 2, 40.4168, -3.7038),
+    (15, 3, 'Murcia', 'ES-MC', 2, 37.9922, -1.1307),
+    (16, 3, 'Navarra', 'ES-NC', 2, 42.6954, -1.6761),
+    (17, 3, 'La Rioja', 'ES-RI', 2, 42.2871, -2.5396),
+    (18, 3, 'País Vasco', 'ES-PV', 2, 43.0535, -2.6197),
+    (19, 3, 'Comunidad Valenciana', 'ES-VC', 2, 39.4840, -0.7533),
+    (20, 3, 'Ceuta', 'ES-CE', 2, 35.8894, -5.3213),
+    (21, 3, 'Melilla', 'ES-ML', 2, 35.2923, -2.9381),
+    (26, 4, 'Salamanca', 'ES-SA', 10, 40.9701, -5.6635),
+    (30, 4, 'Zamora', 'ES-ZA', 10, 41.5030, -5.7440),
+    (31, 6, 'Salamanca', 'ES-SA-SAL', 26, 40.9701, -5.6635),
+    (36, 6, 'Zamora', 'ES-ZA-ZAM', 30, 41.5030, -5.7440),
+    -- Barrios de Salamanca
+    (41, 7, 'Plaza Mayor', NULL, 31, 40.9684, -5.6639),
+    (42, 7, 'Garrido', NULL, 31, 40.9766, -5.6474),
+    (43, 7, 'Cementerio', NULL, 31, 40.9498, -5.6525),
+    (44, 7, 'Pizarrales', NULL, 31, 40.9629, -5.6784),
+    (45, 7, 'San José', NULL, 31, 40.9564, -5.6651),
+    -- Barrios de Zamora
+    (46, 7, 'Casco Antiguo', NULL, 36, 41.5030, -5.7440),
+    (47, 7, 'San Lázaro', NULL, 36, 41.5039, -5.7403),
+    (48, 7, 'San José Obrero', NULL, 36, 41.5086, -5.7416),
+    (49, 7, 'Pinilla', NULL, 36, 41.5042, -5.7256),
+    (50, 7, 'Los Bloques', NULL, 36, 41.5061, -5.7477),
+    (51, 7, 'La Candelaria', NULL, 36, 41.5050, -5.7428),
+    (52, 7, 'Cabañales', NULL, 36, 41.5025, -5.7542),
+    (53, 7, 'Pantoja', NULL, 36, 41.5008, -5.7467),
+    (54, 7, 'San Frontis', NULL, 36, 41.5049, -5.7559),
+    (55, 7, 'Las Viñas', NULL, 36, 41.5012, -5.7398),
+    (56, 7, 'San Isidro', NULL, 36, 41.5031, -5.7483),
+    (57, 7, 'Vista Alegre', NULL, 36, 41.5040, -5.7450),
+    (58, 7, 'Otero', NULL, 36, 41.5035, -5.7390),
+    (59, 7, 'Siglo XXI', NULL, 36, 41.5018, -5.7356),
+    (60, 7, 'Tres Cruces', NULL, 36, 41.5007, -5.7409),
+    (61, 6, 'Sevilla', 'ES-SE', 3, 37.3891, -5.9845),
+    (62, 6, 'Málaga', 'ES-MA', 3, 36.7213, -4.4213),
+    (63, 6, 'Alicante', 'ES-A', 19, 38.3452, -0.4810),
+    (64, 6, 'Córdoba', 'ES-CO', 3, 37.8882, -4.7794),
+    (65, 6, 'Vigo', 'ES-PO', 13, 42.2406, -8.7207),
+    (66, 6, 'Toledo', 'ES-TO', 9, 39.8628, -4.0273),
+    (67, 6, 'Santander', 'ES-S', 8, 43.4623, -3.8099),
+    (68, 6, 'Gijón', 'ES-GI', 5, 43.5322, -5.6611),
+    (69, 6, 'Badajoz', 'ES-BA', 12, 38.8786, -6.9706),
+    (70, 6, 'Lleida', 'ES-L', 11, 41.6167, 0.6222),
+    (71, 6, 'Benidorm', 'ES-BEN', 19, 38.5342, -0.1313),
+    (72, 6, 'Torrevieja', 'ES-TOR', 19, 37.9774, -0.6822),
+    (73, 6, 'Castellón de la Plana', 'ES-CS', 19, 39.9864, -0.0513),
+    (74, 6, 'Huelva', 'ES-H', 3, 37.2614, -6.9447),
+    (75, 6, 'Almería', 'ES-AL', 3, 36.8340, -2.4637),
+    (76, 6, 'Ronda', 'ES-RON', 3, 36.7468, -5.1613),
+    (77, 6, 'Cudillero', 'ES-CUD', 5, 43.5631, -6.1476),
+    (78, 6, 'Albarracín', 'ES-ABR', 4, 40.4079, -1.4424),
+    (79, 6, 'Peñíscola', 'ES-PEN', 19, 40.3598, 0.4067),
+    (80, 6, 'Cadaqués', 'ES-CAD', 11, 42.2890, 3.2775);
 
 
 
@@ -256,7 +243,7 @@ INSERT INTO `ubicacion` (`id`, `ub_code`, `nombre`, `code_iso`, `ub_code_padre`)
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `categorias`;
 CREATE TABLE IF NOT EXISTS `categorias` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único de la categoría',
+                                            `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único de la categoría',
     `nombre` VARCHAR(255) NOT NULL COMMENT 'Nombre de la categoría',
     `descripcion` TEXT DEFAULT NULL COMMENT 'Descripción detallada de la categoría',
     PRIMARY KEY (`id`)
@@ -272,7 +259,6 @@ INSERT INTO `categorias` (`nombre`, `descripcion`) VALUES
     ('Eventos y Cultura', 'Eventos culturales, deportivos, festivos, conciertos, ferias y actividades comunitarias.'),
     ('Economía y Sociedad', 'Crisis económicas, desabastecimiento de productos, subidas de precios y eventos sociales o financieros.');
 
-
 -- --------------------------------------------------------------------------
 -- Tabla: ALERTAS - Creación y volcado de datos
 -- --------------------------------------------------------------------------
@@ -281,7 +267,6 @@ CREATE TABLE IF NOT EXISTS `alertas` (
     `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada alerta',
     `titulo` VARCHAR(255) NOT NULL COMMENT 'Título de la alerta',
     `descripcion` TEXT NOT NULL COMMENT 'Descripción detallada de la alerta',
-    `id_etiqueta` INT(11) DEFAULT NULL COMMENT 'ID de la etiqueta relacionada con la alerta',
     `id_categoria` INT(11) DEFAULT NULL COMMENT 'ID de la categoria relacionada',
     `estado` ENUM('pendiente', 'completado') DEFAULT 'pendiente' COMMENT 'Estado actual de la alerta',
     `fecha_creacion` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de creación de la alerta',
@@ -289,82 +274,80 @@ CREATE TABLE IF NOT EXISTS `alertas` (
     `completado_en` TIMESTAMP NULL DEFAULT NULL COMMENT 'Fecha y hora en la que se completó la alerta',
     `usuario_id` INT(11) DEFAULT NULL COMMENT 'ID del usuario que publicó la alerta',
     `id_ubicacion` INT(11) NULL COMMENT 'Referencia a la tabla ubicacion',
+    `id_imagen` INT(11) NULL COMMENT 'Referencia a la tabla imagenes',
     PRIMARY KEY (`id`),
-    KEY `id_etiqueta` (`id_etiqueta`),
     KEY `id_ubicacion` (`id_ubicacion`),
     CONSTRAINT `alertas_fk_categoria` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id`) ON DELETE SET NULL,
-    CONSTRAINT `alertas_ibfk_1` FOREIGN KEY (`id_etiqueta`) REFERENCES `etiquetas` (`id`) ON DELETE SET NULL,
     CONSTRAINT `alertas_ibfk_2` FOREIGN KEY (`id_ubicacion`) REFERENCES `ubicacion` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Alertas asociadas a ubicaciones
-INSERT INTO `alertas` (`titulo`, `descripcion`, `id_etiqueta`, `id_categoria`, `estado`, `fecha_expiracion`, `id_ubicacion`) VALUES
-    ('Tormenta severa en Europa', 'Fuertes vientos y lluvias afectan grandes áreas del continente.', 1, 2, 'pendiente', '2025-03-01 10:00:00', 1),  -- Europa
-    ('Inundaciones en España', 'Ríos desbordados causan cortes de carreteras y evacuaciones.', 3, 2, 'pendiente', '2025-03-05 20:00:00', 2),  -- España
-    ('Incendio en Andalucía', 'Un gran incendio forestal amenaza viviendas en la región.', 7, 2, 'pendiente', '2025-03-07 15:00:00', 3),  -- Andalucía
-    ('Nevadas en Aragón', 'Acumulación de nieve bloquea carreteras en la región.', 10, 2, 'pendiente', '2025-03-09 08:00:00', 4),  -- Aragón
-    ('Accidente de tráfico en Asturias', 'Colisión múltiple en la autopista A-8.', 16, 1, 'pendiente', '2025-03-11 13:00:00', 5),  -- Asturias
-    ('Temporal en Islas Baleares', 'Vientos huracanados y fuertes lluvias afectan la región.', 1, 2, 'pendiente', '2025-03-13 18:00:00', 6),  -- Islas Baleares
-    ('Emergencia volcánica en Canarias', 'Actividad volcánica detectada en la isla.', 4, 2, 'pendiente', '2025-03-16 22:00:00', 7),  -- Canarias
-    ('Cierre de carreteras en Cantabria', 'Derrumbes bloquean varias vías.', 24, 4, 'pendiente', '2025-03-17 06:00:00', 8),  -- Cantabria
-    ('Ola de calor en Extremadura', 'Temperaturas por encima de los 45°C afectan la región.', 8, 2, 'pendiente', '2025-03-23 14:00:00', 12),  -- Extremadura
-    ('Temporal en Galicia', 'Lluvias intensas y fuertes vientos afectan la comunidad.', 1, 2, 'pendiente', '2025-03-25 09:00:00', 13),  -- Galicia
-    ('Manifestación en Madrid', 'Gran protesta en el centro de la ciudad afecta la movilidad.', 19, 1, 'pendiente', '2025-03-27 16:00:00', 14),  -- Madrid
-    ('Terremoto en Murcia', 'Sismo de magnitud 5.2 se siente en varias localidades.', 12, 3, 'pendiente', '2025-03-29 22:00:00', 15),  -- Murcia
-    ('Granizada en Navarra', 'Fuertes precipitaciones de granizo causan daños en viviendas.', 9, 2, 'pendiente', '2025-03-31 15:00:00', 16),  -- Navarra
-    ('Tornado en La Rioja', 'Vientos extremadamente fuertes generan daños en la ciudad.', 17, 3, 'pendiente', '2025-04-02 14:00:00', 17),  -- La Rioja
-    ('Explosión en el País Vasco', 'Una fuerte explosión sacude una zona industrial.', 26, 3, 'pendiente', '2025-04-04 20:00:00', 18),  -- País Vasco
-    ('Robo masivo en la Comunidad Valenciana', 'Varias tiendas saqueadas en una ola de robos nocturnos.', 13, 3, 'pendiente', '2025-04-06 02:00:00', 19),  -- Comunidad Valenciana
-    ('Emergencia sanitaria en Ceuta', 'Brote de enfermedad infecciosa detectado en la ciudad.', 25, 5, 'pendiente', '2025-04-08 12:00:00', 20),  -- Ceuta
-    ('Cierre de puerto en Melilla', 'Fuerte oleaje obliga a la suspensión de ferris y tráfico marítimo.', 5, 4, 'pendiente', '2025-04-10 15:00:00', 21),  -- Melilla
-    ('Incendio en Salamanca', 'Un incendio afecta una zona industrial con riesgo de propagación.', 7, 2, 'pendiente', '2025-04-12 14:00:00', 26),  -- Salamanca
-    ('Corte de agua en Salamanca', 'Mantenimiento programado interrumpe el suministro de agua potable.', 20, 4, 'pendiente', '2025-04-13 08:00:00', 26),  -- Salamanca
-    ('Fallo en el transporte público', 'Problemas técnicos causan retrasos en los autobuses urbanos.', 18, 1, 'pendiente', '2025-04-14 10:00:00', 26),  -- Salamanca
-    ('Concierto en el centro', 'Gran concierto en la Plaza Mayor con cortes de tráfico.', 33, 7, 'pendiente', '2025-04-15 20:00:00', 26),  -- Salamanca
-    ('Feria del libro', 'Feria del libro en el centro de la ciudad con actividades culturales.', 36, 7, 'pendiente', '2025-04-16 12:00:00', 26),  -- Salamanca
-    ('Contaminación del aire', 'Alta concentración de partículas en suspensión en la ciudad.', 28, 5, 'pendiente', '2025-04-17 18:00:00', 26),  -- Salamanca
-    ('Manifestación en Plaza Mayor', 'Protesta pacífica en el centro de la ciudad afecta la movilidad.', 19, 1, 'pendiente', '2025-04-14 11:00:00', 41),  -- Plaza Mayor (Salamanca)
-    ('Fuga de gas en Garrido', 'Evacuación de varios edificios por escape de gas en una tubería principal.', 15, 3, 'pendiente', '2025-04-15 16:00:00', 42),  -- Garrido (Salamanca)
-    ('Accidente de tráfico en Cementerio', 'Colisión múltiple en la avenida principal con varios heridos.', 16, 1, 'pendiente', '2025-04-16 09:00:00', 43),  -- Cementerio (Salamanca)
-    ('Robo en Pizarrales', 'Asalto en un comercio con enfrentamiento policial.', 13, 3, 'pendiente', '2025-04-17 22:00:00', 44),  -- Pizarrales (Salamanca)
-    ('Corte eléctrico en San José', 'Fallo en la red eléctrica deja sin luz a varios hogares.', 21, 4, 'pendiente', '2025-04-18 07:00:00', 45),  -- San José (Salamanca)
-    ('Mercado medieval', 'Mercado medieval en la Plaza Mayor con cortes de tráfico.', 36, 7, 'pendiente', '2025-04-23 10:00:00', 41),  -- Plaza Mayor (Salamanca)
-    ('Corte de agua programado', 'Mantenimiento de tuberías afectará el suministro de agua.', 20, 4, 'pendiente', '2025-04-24 08:00:00', 41),  -- Plaza Mayor (Salamanca)
-    ('Fuga de agua en Garrido', 'Fuga de agua en una tubería principal afecta a varias calles.', 20, 4, 'pendiente', '2025-04-25 12:00:00', 42),  -- Garrido (Salamanca)
-    ('Actividad comunitaria', 'Jornada de limpieza y actividades vecinales en el barrio.', 36, 7, 'pendiente', '2025-04-26 10:00:00', 42),  -- Garrido (Salamanca)
-    ('Corte de tráfico por obras', 'Obras de reparación en la avenida principal.', 17, 1, 'pendiente', '2025-04-27 08:00:00', 43),  -- Cementerio (Salamanca)
-    ('Actividad cultural', 'Exposición de arte en el centro cultural del barrio.', 36, 7, 'pendiente', '2025-04-28 18:00:00', 43),  -- Cementerio (Salamanca)
-    ('Robo en comercio local', 'Asalto a un supermercado en el barrio.', 13, 3, 'pendiente', '2025-04-29 22:00:00', 44),  -- Pizarrales (Salamanca)
-    ('Feria de barrio', 'Feria local con actividades para toda la familia.', 36, 7, 'pendiente', '2025-04-30 12:00:00', 44),  -- Pizarrales (Salamanca)
-    ('Corte de luz programado', 'Mantenimiento de la red eléctrica en el barrio.', 21, 4, 'pendiente', '2025-05-01 09:00:00', 45),  -- San José (Salamanca)
-    ('Evento deportivo', 'Torneo de fútbol en el polideportivo del barrio.', 35, 7, 'pendiente', '2025-05-02 16:00:00', 45),  -- San José (Salamanca)
-    ('Oleaje extremo en Zamora', 'Riesgo de inundaciones en zonas cercanas al río.', 5, 2, 'pendiente', '2025-04-19 13:00:00', 30),  -- Zamora
-    ('Corte de luz en Zamora', 'Fallo en la red eléctrica deja sin luz a varios barrios.', 21, 4, 'pendiente', '2025-04-18 07:00:00', 30),  -- Zamora
-    ('Festival de música', 'Festival de música en el casco antiguo con cortes de tráfico.', 34, 7, 'pendiente', '2025-04-19 20:00:00', 30),  -- Zamora
-    ('Accidente de tráfico en la periferia', 'Colisión entre dos vehículos en la carretera de acceso a la ciudad.', 16, 1, 'pendiente', '2025-04-20 09:00:00', 30),  -- Zamora
-    ('Feria gastronómica', 'Feria gastronómica en el centro con degustaciones y actividades.', 36, 7, 'pendiente', '2025-04-21 12:00:00', 30),  -- Zamora
-    ('Alerta por vientos fuertes', 'Rachas de viento de hasta 80 km/h afectan la ciudad.', 17, 3, 'pendiente', '2025-04-22 14:00:00', 30),  -- Zamora
-    ('Emergencia química en Casco Antiguo', 'Derrame de sustancias peligrosas en un almacén industrial.', 27, 3, 'pendiente', '2025-04-20 15:00:00', 46),  -- Casco Antiguo (Zamora)
-    ('Desperfectos por tormenta en San Lázaro', 'Fuertes lluvias causan daños en infraestructuras.', 1, 2, 'pendiente', '2025-04-21 17:00:00', 47),  -- San Lázaro (Zamora)
-    ('Explosión en San José Obrero', 'Una fuga de gas provoca una explosión en un edificio residencial.', 26, 3, 'pendiente', '2025-04-22 19:00:00', 48),  -- San José Obrero (Zamora)
-    ('Corte de comunicaciones en Pinilla', 'Interrupción del servicio de telefonía e internet en la zona.', 29, 6, 'pendiente', '2025-04-23 08:00:00', 49),  -- Pinilla (Zamora)
-    ('Derrumbe en Los Bloques', 'Colapso de una estructura antigua deja atrapadas a varias personas.', 24, 4, 'pendiente', '2025-04-24 12:00:00', 50),  -- Los Bloques (Zamora)
-    ('Inundaciones en La Candelaria', 'Fuertes lluvias causan desbordamiento del alcantarillado.', 3, 2, 'pendiente', '2025-04-25 14:00:00', 51),  -- La Candelaria (Zamora)
-    ('Emergencia sanitaria en Cabañales', 'Se reporta un brote de virus estomacal en la comunidad.', 25, 5, 'pendiente', '2025-04-26 10:00:00', 52),  -- Cabañales (Zamora)
-    ('Fallo energético en Pantoja', 'Corte de electricidad afecta a toda la comunidad.', 22, 4, 'pendiente', '2025-04-27 06:00:00', 53),  -- Pantoja (Zamora)
-    ('Oleada de robos en San Frontis', 'Incremento de asaltos en comercios locales.', 13, 3, 'pendiente', '2025-04-28 02:00:00', 54),  -- San Frontis (Zamora)
-    ('Granizada en Las Viñas', 'Tormenta de granizo daña vehículos y tejados.', 9, 2, 'pendiente', '2025-04-29 18:00:00', 55),  -- Las Viñas (Zamora)
-    ('Tornado en San Isidro', 'Rachas de viento extremadamente fuertes causan daños estructurales.', 17, 3, 'pendiente', '2025-04-30 21:00:00', 56),  -- San Isidro (Zamora)
-    ('Festival de cine', 'Proyección de películas al aire libre en el casco antiguo.', 36, 7, 'pendiente', '2025-05-03 20:00:00', 46),  -- Casco Antiguo (Zamora)
-    ('Corte de tráfico por evento', 'Corte de tráfico debido a un evento cultural.', 17, 1, 'pendiente', '2025-05-04 18:00:00', 46),  -- Casco Antiguo (Zamora)
-    ('Fuga de gas en San Lázaro', 'Evacuación de edificios por una fuga de gas.', 15, 3, 'pendiente', '2025-05-05 14:00:00', 47),  -- San Lázaro (Zamora)
-    ('Actividad vecinal', 'Jornada de limpieza y actividades comunitarias.', 36, 7, 'pendiente', '2025-05-06 10:00:00', 47),  -- San Lázaro (Zamora)
-    ('Corte de agua programado', 'Mantenimiento de tuberías en el barrio.', 20, 4, 'pendiente', '2025-05-07 08:00:00', 48),  -- San José Obrero (Zamora)
-    ('Evento cultural', 'Concierto en el parque del barrio.', 33, 7, 'pendiente', '2025-05-08 20:00:00', 48),  -- San José Obrero (Zamora)
-    ('Robo en vivienda', 'Asalto a una vivienda en el barrio.', 13, 3, 'pendiente', '2025-05-09 22:00:00', 49),  -- Pinilla (Zamora)
-    ('Feria de barrio', 'Feria local con actividades para toda la familia.', 36, 7, 'pendiente', '2025-05-10 12:00:00', 49),  -- Pinilla (Zamora)
-    ('Corte de luz por mantenimiento', 'Mantenimiento de la red eléctrica en el barrio.', 21, 4, 'pendiente', '2025-05-11 09:00:00', 50),  -- Los Bloques (Zamora)
-    ('Actividad deportiva', 'Torneo de baloncesto en el polideportivo.', 35, 7, 'pendiente', '2025-05-12 16:00:00', 50),  -- Los Bloques (Zamora)
+INSERT INTO `alertas` (`titulo`, `descripcion`, `id_categoria`, `estado`, `fecha_creacion`, `id_ubicacion`, `id_imagen`) VALUES
+    ('Tormenta severa en Europa', 'Una tormenta severa afecta grandes áreas de Europa, con fuertes vientos que superan los 100 km/h y lluvias torrenciales que han causado inundaciones en varias regiones. Se han reportado cortes de electricidad, caída de árboles y daños en infraestructuras. Las autoridades han emitido alertas rojas en varias zonas y recomiendan evitar desplazamientos innecesarios.', 2, 'pendiente', '2025-02-25 15:11:45', 1, NULL),
+    ('Inundaciones en España', 'Varios ríos en España se han desbordado debido a las intensas lluvias, causando inundaciones en zonas cercanas. Se han registrado cortes en carreteras principales, evacuaciones de viviendas y daños en cultivos. Los equipos de emergencia están trabajando para rescatar a personas atrapadas y proporcionar asistencia a los afectados.', 2, 'pendiente', '2025-02-25 15:11:45', 2, NULL),
+    ('Incendio en Andalucía', 'Un gran incendio forestal se ha declarado en Andalucía, amenazando varias viviendas y áreas naturales protegidas. Las altas temperaturas y los fuertes vientos están dificultando las labores de extinción. Se han evacuado varias localidades y se ha solicitado ayuda aérea para controlar las llamas.', 2, 'pendiente', '2025-02-25 15:11:45', 3, NULL),
+    ('Nevadas en Aragón', 'Una fuerte nevada ha afectado la región de Aragón, acumulando más de 50 cm de nieve en algunas zonas. Varias carreteras han quedado bloqueadas, y se han activado protocolos de emergencia para garantizar el suministro de alimentos y medicinas en las áreas más aisladas.', 2, 'pendiente', '2025-02-25 15:11:45', 4, NULL),
+    ('Accidente de tráfico en Asturias', 'Una colisión múltiple en la autopista A-8 ha dejado varios heridos y ha causado retenciones de varios kilómetros. Los servicios de emergencia están atendiendo a las víctimas y desviando el tráfico para evitar mayores complicaciones.', 1, 'pendiente', '2025-02-25 15:11:45', 5, NULL),
+    ('Temporal en Islas Baleares', 'Un temporal con vientos huracanados y lluvias intensas ha afectado las Islas Baleares, causando daños en infraestructuras y cortes de electricidad. Se han cancelado varios vuelos y servicios marítimos debido a las condiciones adversas.', 2, 'pendiente', '2025-02-25 15:11:45', 6, NULL),
+    ('Emergencia volcánica en Canarias', 'Se ha detectado un aumento en la actividad volcánica en una de las islas Canarias, lo que ha llevado a las autoridades a activar un plan de emergencia. Se están realizando evacuaciones preventivas en las zonas de mayor riesgo.', 2, 'pendiente', '2025-02-25 15:11:45', 7, NULL),
+    ('Cierre de carreteras en Cantabria', 'Varios derrumbes causados por las fuertes lluvias han bloqueado carreteras en Cantabria. Los equipos de mantenimiento están trabajando para despejar las vías, pero se recomienda evitar la zona hasta que se resuelva la situación.', 4, 'pendiente', '2025-02-25 15:11:45', 8, NULL),
+    ('Ola de calor en Extremadura', 'Una ola de calor con temperaturas superiores a los 45°C está afectando Extremadura. Las autoridades han emitido alertas sanitarias y recomiendan hidratarse adecuadamente y evitar la exposición al sol durante las horas centrales del día.', 2, 'pendiente', '2025-02-25 15:11:45', 12, NULL),
+    ('Temporal en Galicia', 'Lluvias intensas y vientos fuertes están afectando Galicia, causando inundaciones y cortes de electricidad. Se han registrado daños en viviendas y cultivos, y se recomienda precaución al circular por carreteras secundarias.', 2, 'pendiente', '2025-02-25 15:11:45', 13, NULL),
+    ('Manifestación en Madrid', 'Una gran manifestación en el centro de Madrid ha provocado cortes de tráfico y afectado la movilidad en la zona. La policía está coordinando el tráfico y garantizando la seguridad de los manifestantes.', 1, 'pendiente', '2025-02-25 15:11:45', 14, NULL),
+    ('Terremoto en Murcia', 'Un terremoto de magnitud 5.2 se ha registrado en Murcia, causando daños menores en edificios y cortes de electricidad en algunas zonas. No se han reportado heridos graves, pero las autoridades están evaluando los daños.', 3, 'pendiente', '2025-02-25 15:11:45', 15, NULL),
+    ('Granizada en Navarra', 'Una fuerte granizada ha causado daños en viviendas y vehículos en Navarra. Las precipitaciones han sido tan intensas que han dejado calles cubiertas de hielo, dificultando la circulación.', 2, 'pendiente', '2025-02-25 15:11:45', 16, NULL),
+    ('Tornado en La Rioja', 'Un tornado ha tocado tierra en La Rioja, causando daños estructurales en varias localidades. Los vientos extremadamente fuertes han derribado árboles y postes eléctricos, dejando a varias comunidades sin suministro.', 3, 'pendiente', '2025-02-25 15:11:45', 17, NULL),
+    ('Explosión en el País Vasco', 'Una fuerte explosión en una zona industrial del País Vasco ha causado daños en edificios cercanos. Los equipos de emergencia están investigando las causas y atendiendo a los heridos.', 3, 'pendiente', '2025-02-25 15:11:45', 18, NULL),
+    ('Robo masivo en la Comunidad Valenciana', 'Una ola de robos nocturnos ha afectado a varias tiendas en la Comunidad Valenciana. La policía está investigando los hechos y ha aumentado la presencia en la zona para prevenir nuevos incidentes.', 3, 'pendiente', '2025-02-25 15:11:45', 19, NULL),
+    ('Emergencia sanitaria en Ceuta', 'Se ha detectado un brote de una enfermedad infecciosa en Ceuta. Las autoridades sanitarias están trabajando para contener la propagación y han activado un protocolo de emergencia.', 5, 'pendiente', '2025-02-25 15:11:45', 20, NULL),
+    ('Cierre de puerto en Melilla', 'El fuerte oleaje ha obligado a cerrar el puerto de Melilla, suspendiendo todos los servicios marítimos. Se recomienda a los pasajeros consultar con las compañías antes de viajar.', 4, 'pendiente', '2025-02-25 15:11:45', 21, NULL),
+    ('Incendio en Salamanca', 'Un incendio en una zona industrial de Salamanca ha provocado evacuaciones preventivas. Los bomberos están trabajando para controlar las llamas y evitar que se propague a áreas residenciales.', 2, 'pendiente', '2025-02-25 15:11:45', 26, NULL),
+    ('Corte de agua en Salamanca', 'Un mantenimiento programado ha interrumpido el suministro de agua en varias zonas de Salamanca. Se espera que el servicio se restablezca en las próximas horas.', 4, 'pendiente', '2025-02-25 15:11:45', 26, NULL),
+    ('Fallo en el transporte público', 'Problemas técnicos en los autobuses urbanos de Salamanca están causando retrasos en las rutas. La empresa de transporte está trabajando para solucionar la incidencia lo antes posible.', 1, 'pendiente', '2025-02-25 15:11:45', 26, NULL),
+    ('Concierto en el centro', 'Un gran concierto en la Plaza Mayor de Salamanca ha provocado cortes de tráfico en el centro de la ciudad. Se recomienda utilizar transporte público o rutas alternativas.', 7, 'pendiente', '2025-02-25 15:11:45', 26, NULL),
+    ('Feria del libro', 'La feria del libro en Salamanca ofrece actividades culturales y presentaciones de autores. El evento ha atraído a numerosos visitantes y ha generado un ambiente festivo en la ciudad.', 7, 'pendiente', '2025-02-25 15:11:45', 26, NULL),
+    ('Contaminación del aire', 'Se ha detectado un aumento en la concentración de partículas en suspensión en Salamanca, lo que ha llevado a las autoridades a emitir una alerta sanitaria. Se recomienda evitar actividades al aire libre.', 5, 'pendiente', '2025-02-25 15:11:45', 26, NULL),
+    ('Manifestación en Plaza Mayor', 'Una manifestación pacífica en la Plaza Mayor de Salamanca ha afectado la movilidad en el centro. La policía está coordinando el tráfico para minimizar las molestias.', 1, 'pendiente', '2025-02-25 15:11:45', 41, NULL),
+    ('Fuga de gas en Garrido', 'Una fuga de gas en una tubería principal ha obligado a evacuar varios edificios en el barrio de Garrido. Los equipos de emergencia están trabajando para reparar la avería.', 3, 'pendiente', '2025-02-25 15:11:45', 42, NULL),
+    ('Accidente de tráfico en Cementerio', 'Una colisión múltiple en la avenida principal del barrio del Cementerio ha dejado varios heridos. Los servicios de emergencia están atendiendo a las víctimas y desviando el tráfico.', 1, 'pendiente', '2025-02-25 15:11:45', 43, NULL),
+    ('Robo en Pizarrales', 'Un asalto en un comercio del barrio de Pizarrales ha terminado con un enfrentamiento policial. No se han reportado heridos graves, pero se ha aumentado la presencia policial en la zona.', 3, 'pendiente', '2025-02-25 15:11:45', 44, NULL),
+    ('Corte eléctrico en San José', 'Un fallo en la red eléctrica ha dejado sin luz a varios hogares en el barrio de San José. La compañía eléctrica está trabajando para restablecer el suministro.', 4, 'pendiente', '2025-02-25 15:11:45', 45, NULL),
+    ('Mercado medieval', 'Un mercado medieval en la Plaza Mayor de Salamanca ha atraído a numerosos visitantes. El evento incluye actividades recreativas y gastronomía tradicional.', 7, 'pendiente', '2025-02-25 15:11:45', 41, NULL),
+    ('Corte de agua programado', 'Un mantenimiento de tuberías en Salamanca ha interrumpido el suministro de agua en varias zonas. Se espera que el servicio se restablezca en las próximas horas.', 4, 'pendiente', '2025-02-25 15:11:45', 41, NULL),
+    ('Fuga de agua en Garrido', 'Una fuga de agua en una tubería principal ha afectado a varias calles del barrio de Garrido. Los equipos de mantenimiento están trabajando para reparar la avería.', 4, 'pendiente', '2025-02-25 15:11:45', 42, NULL),
+    ('Actividad comunitaria', 'Una jornada de limpieza y actividades vecinales se está llevando a cabo en el barrio de Garrido. El evento promueve la convivencia y el cuidado del entorno.', 7, 'pendiente', '2025-02-25 15:11:45', 42, NULL),
+    ('Corte de tráfico por obras', 'Obras de reparación en la avenida principal del barrio del Cementerio han provocado cortes de tráfico. Se recomienda utilizar rutas alternativas.', 1, 'pendiente', '2025-02-25 15:11:45', 43, NULL),
+    ('Actividad cultural', 'Una exposición de arte en el centro cultural del barrio del Cementerio ha atraído a numerosos visitantes. El evento incluye obras de artistas locales.', 7, 'pendiente', '2025-02-25 15:11:45', 43, NULL),
+    ('Robo en comercio local', 'Un asalto a un supermercado en el barrio de Pizarrales ha generado alarma entre los vecinos. La policía está investigando el incidente.', 3, 'pendiente', '2025-02-25 15:11:45', 44, NULL),
+    ('Feria de barrio', 'Una feria local en el barrio de Pizarrales ofrece actividades para toda la familia, incluyendo juegos, talleres y puestos de comida tradicional. El evento ha generado un ambiente festivo y ha fortalecido la convivencia entre los vecinos.', 7, 'pendiente', '2025-02-25 15:11:45', 44, NULL),
+    ('Corte de luz programado', 'Un mantenimiento programado de la red eléctrica en el barrio de San José ha dejado sin luz a varias viviendas. La compañía eléctrica ha informado que el suministro se restablecerá en las próximas horas.', 4, 'pendiente', '2025-02-25 15:11:45', 45, NULL),
+    ('Evento deportivo', 'Un torneo de fútbol en el polideportivo del barrio de San José ha reunido a equipos locales. El evento promueve el deporte y la convivencia entre los vecinos.', 7, 'pendiente', '2025-02-25 15:11:45', 45, NULL),
+    ('Oleaje extremo en Zamora', 'El fuerte oleaje en el río Duero ha causado inundaciones en zonas cercanas a Zamora. Las autoridades han emitido alertas y están monitoreando la situación para evitar daños mayores.', 2, 'pendiente', '2025-02-25 15:11:45', 30, NULL),
+    ('Corte de luz en Zamora', 'Un fallo en la red eléctrica ha dejado sin suministro a varios barrios de Zamora. Los equipos técnicos están trabajando para restablecer la electricidad lo antes posible.', 4, 'pendiente', '2025-02-25 15:11:45', 30, NULL),
+    ('Festival de música', 'Un festival de música en el casco antiguo de Zamora ha atraído a numerosos visitantes. El evento incluye actuaciones de artistas locales y nacionales, y ha generado cortes de tráfico en la zona.', 7, 'pendiente', '2025-02-25 15:11:45', 30, NULL),
+    ('Accidente de tráfico en la periferia', 'Una colisión entre dos vehículos en la carretera de acceso a Zamora ha dejado varios heridos. Los servicios de emergencia están atendiendo a las víctimas y desviando el tráfico.', 1, 'pendiente', '2025-02-25 15:11:45', 30, NULL),
+    ('Feria gastronómica', 'Una feria gastronómica en el centro de Zamora ofrece degustaciones de platos tradicionales y actividades culturales. El evento ha atraído a numerosos visitantes y ha generado un ambiente festivo.', 7, 'pendiente', '2025-02-25 15:11:45', 30, NULL),
+    ('Alerta por vientos fuertes', 'Rachas de viento de hasta 80 km/h están afectando la ciudad de Zamora. Las autoridades recomiendan precaución al circular y asegurar objetos que puedan ser arrastrados por el viento.', 3, 'pendiente', '2025-02-25 15:11:45', 30, NULL),
+    ('Emergencia química en Casco Antiguo', 'Un derrame de sustancias químicas en un almacén industrial del Casco Antiguo ha provocado la evacuación de varias calles. Los equipos de emergencia están trabajando para contener el derrame y garantizar la seguridad de los vecinos.', 3, 'pendiente', '2025-02-25 15:11:45', 46, NULL),
+    ('Desperfectos por tormenta en San Lázaro', 'Las fuertes lluvias en San Lázaro han causado daños en infraestructuras y cortes de electricidad. Los equipos de mantenimiento están trabajando para reparar los desperfectos.', 2, 'pendiente', '2025-02-25 15:11:45', 47, NULL),
+    ('Explosión en San José Obrero', 'Una fuga de gas en un edificio residencial de San José Obrero ha provocado una explosión. Los servicios de emergencia están atendiendo a los heridos y evaluando los daños.', 3, 'pendiente', '2025-02-25 15:11:45', 48, NULL),
+    ('Corte de comunicaciones en Pinilla', 'Un fallo en la red de comunicaciones ha dejado sin servicio de telefonía e internet a los residentes de Pinilla. Los técnicos están trabajando para resolver la incidencia.', 6, 'pendiente', '2025-02-25 15:11:45', 49, NULL),
+    ('Derrumbe en Los Bloques', 'El colapso de una estructura antigua en Los Bloques ha dejado atrapadas a varias personas. Los equipos de rescate están trabajando para liberar a los afectados.', 4, 'pendiente', '2025-02-25 15:11:45', 50, NULL),
+    ('Inundaciones en La Candelaria', 'Las fuertes lluvias han causado el desbordamiento del alcantarillado en La Candelaria, provocando inundaciones en varias calles. Los equipos de emergencia están bombeando el agua y ayudando a los afectados.', 2, 'pendiente', '2025-02-25 15:11:45', 51, NULL),
+    ('Emergencia sanitaria en Cabañales', 'Un brote de virus estomacal en Cabañales ha llevado a las autoridades sanitarias a activar un protocolo de emergencia. Se recomienda a los residentes tomar precauciones y seguir las indicaciones de las autoridades.', 5, 'pendiente', '2025-02-25 15:11:45', 52, NULL),
+    ('Fallo energético en Pantoja', 'Un corte de electricidad ha dejado sin suministro a toda la comunidad de Pantoja. Los técnicos están trabajando para restablecer la energía lo antes posible.', 4, 'pendiente', '2025-02-25 15:11:45', 53, NULL),
+    ('Oleada de robos en San Frontis', 'Un incremento en los robos a comercios locales en San Frontis ha generado preocupación entre los vecinos. La policía ha aumentado la presencia en la zona para prevenir nuevos incidentes.', 3, 'pendiente', '2025-02-25 15:11:45', 54, NULL),
+    ('Granizada en Las Viñas', 'Una tormenta de granizo ha causado daños en vehículos y tejados en Las Viñas. Las autoridades recomiendan precaución y revisar los seguros para cubrir los daños.', 2, 'pendiente', '2025-02-25 15:11:45', 55, NULL),
+    ('Tornado en San Isidro', 'Un tornado ha tocado tierra en San Isidro, causando daños estructurales en varias viviendas. Los servicios de emergencia están evaluando los daños y ayudando a los afectados.', 3, 'pendiente', '2025-02-25 15:11:45', 56, NULL),
+    ('Festival de cine', 'Un festival de cine al aire libre en el casco antiguo ha atraído a numerosos visitantes. El evento incluye proyecciones de películas independientes y actividades culturales.', 7, 'pendiente', '2025-02-25 15:11:45', 46, NULL),
+    ('Corte de tráfico por evento', 'Un evento cultural en el centro de la ciudad ha provocado cortes de tráfico en varias calles. Se recomienda utilizar rutas alternativas para evitar retrasos.', 1, 'pendiente', '2025-02-25 15:11:45', 46, NULL),
+    ('Fuga de gas en San Lázaro', 'Una fuga de gas en San Lázaro ha obligado a evacuar varios edificios. Los equipos de emergencia están trabajando para reparar la avería y garantizar la seguridad de los vecinos.', 3, 'pendiente', '2025-02-25 15:11:45', 47, NULL),
+    ('Actividad vecinal', 'Una jornada de limpieza y actividades comunitarias en San Lázaro ha reunido a los vecinos para mejorar el entorno. El evento promueve la convivencia y el cuidado del barrio.', 7, 'pendiente', '2025-02-25 15:11:45', 47, NULL),
+    ('Corte de agua programado', 'Un mantenimiento de tuberías en San José Obrero ha interrumpido el suministro de agua en varias calles. Se espera que el servicio se restablezca en las próximas horas.', 4, 'pendiente', '2025-02-25 15:11:45', 48, NULL),
+    ('Evento cultural', 'Un concierto en el parque del barrio de San José Obrero ha atraído a numerosos visitantes. El evento incluye actuaciones de artistas locales y actividades para toda la familia.', 7, 'pendiente', '2025-02-25 15:11:45', 48, NULL),
+    ('Robo en vivienda', 'Un asalto a una vivienda en Pinilla ha generado alarma entre los vecinos. La policía está investigando el incidente y ha aumentado la presencia en la zona.', 3, 'pendiente', '2025-02-25 15:11:45', 49, NULL),
+    ('Feria de barrio', 'Una feria local en Pinilla ofrece actividades para toda la familia, incluyendo juegos, talleres y puestos de comida tradicional. El evento ha generado un ambiente festivo y ha fortalecido la convivencia entre los vecinos.', 7, 'pendiente', '2025-02-25 15:11:45', 49, NULL),
+    ('Corte de luz por mantenimiento', 'Un mantenimiento de la red eléctrica en Los Bloques ha dejado sin luz a varias viviendas. La compañía eléctrica ha informado que el suministro se restablecerá en las próximas horas.', 4, 'pendiente', '2025-02-25 15:11:45', 50, NULL),
+    ('Actividad deportiva', 'Un torneo de baloncesto en el polideportivo de Los Bloques ha reunido a equipos locales. El evento promueve el deporte y la convivencia entre los vecinos.', 7, 'pendiente', '2025-02-25 15:11:45', 50, NULL);
 
 
 -- --------------------------------------------------------------------------
@@ -372,32 +355,174 @@ INSERT INTO `alertas` (`titulo`, `descripcion`, `id_etiqueta`, `id_categoria`, `
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `configurations`;
 CREATE TABLE IF NOT EXISTS `configurations` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada configuración',
+                                                `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada configuración',
     `key_name` VARCHAR(100) NOT NULL COMMENT 'Clave única de la configuración (ejemplo: "site_title")',
     `value` TEXT NOT NULL COMMENT 'Valor de la configuración (ejemplo: "Mi Aplicación")',
     `description` TEXT DEFAULT NULL COMMENT 'Descripción de la configuración',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de creación',
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Fecha y hora de la última actualización',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 INSERT INTO `configurations` (`key_name`, `value`, `description`) VALUES
     ('pagination_size', '10', 'Número de elementos por página');
-
-
 
 -- --------------------------------------------------------------------------
 -- Tabla: BACKUPS - Creación y volcado de datos
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `backups`;
 CREATE TABLE IF NOT EXISTS `backups` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada archivo de respaldo',
+                                         `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada archivo de respaldo',
     `file_name` VARCHAR(255) NOT NULL COMMENT 'Nombre del archivo de respaldo',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de creación del respaldo',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+-- --------------------------------------------------------------------------
+-- Tabla: ALERTA_ETIQUETA - Creación y volcado de datos
+-- --------------------------------------------------------------------------
+DROP TABLE IF EXISTS `alerta_etiqueta`;
+CREATE TABLE IF NOT EXISTS `alerta_etiqueta` (
+    `id_alerta` INT(11) NOT NULL COMMENT 'ID de la alerta',
+    `id_etiqueta` INT(11) NOT NULL COMMENT 'ID de la etiqueta',
+    PRIMARY KEY (`id_alerta`,`id_etiqueta`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+INSERT INTO `alerta_etiqueta` (`id_alerta`, `id_etiqueta`) VALUES
+    (1, 1),
+    (1, 3),
+    (1, 5),
+    (1, 9),
+    (2, 3),
+    (2, 5),
+    (3, 2),
+    (3, 7),
+    (4, 1),
+    (4, 10),
+    (5, 16),
+    (5, 17),
+    (6, 1),
+    (6, 9),
+    (7, 2),
+    (7, 4),
+    (8, 17),
+    (8, 24),
+    (9, 1),
+    (9, 8),
+    (10, 1),
+    (10, 9),
+    (11, 17),
+    (11, 19),
+    (12, 2),
+    (12, 12),
+    (13, 9),
+    (13, 10),
+    (14, 2),
+    (14, 17),
+    (15, 15),
+    (15, 26),
+    (16, 13),
+    (16, 23),
+    (17, 25),
+    (17, 26),
+    (18, 5),
+    (18, 24),
+    (19, 2),
+    (19, 7),
+    (20, 20),
+    (20, 22),
+    (21, 17),
+    (21, 18),
+    (22, 33),
+    (22, 36),
+    (23, 34),
+    (23, 36),
+    (24, 14),
+    (24, 28),
+    (25, 17),
+    (25, 19),
+    (26, 15),
+    (26, 26),
+    (27, 16),
+    (27, 17),
+    (28, 13),
+    (28, 23),
+    (29, 21),
+    (29, 22),
+    (30, 34),
+    (30, 36),
+    (31, 20),
+    (31, 22),
+    (32, 20),
+    (32, 22),
+    (33, 34),
+    (33, 36),
+    (34, 17),
+    (34, 24),
+    (35, 34),
+    (35, 36),
+    (36, 13),
+    (36, 23),
+    (37, 34),
+    (37, 36),
+    (38, 21),
+    (38, 22),
+    (39, 35),
+    (39, 36),
+    (40, 3),
+    (40, 5),
+    (41, 21),
+    (41, 22),
+    (42, 33),
+    (42, 34),
+    (43, 16),
+    (43, 17),
+    (44, 34),
+    (44, 36),
+    (45, 1),
+    (45, 17),
+    (46, 15),
+    (46, 27),
+    (47, 1),
+    (47, 9),
+    (48, 15),
+    (48, 26),
+    (49, 29),
+    (49, 30),
+    (50, 7),
+    (50, 24),
+    (51, 3),
+    (51, 5),
+    (52, 25),
+    (52, 26),
+    (53, 21),
+    (53, 22),
+    (54, 13),
+    (54, 23),
+    (55, 9),
+    (55, 10),
+    (56, 2),
+    (56, 17),
+    (57, 34),
+    (57, 36),
+    (58, 17),
+    (58, 24),
+    (59, 15),
+    (59, 26),
+    (60, 34),
+    (60, 36),
+    (61, 20),
+    (61, 22),
+    (62, 33),
+    (62, 34),
+    (63, 13),
+    (63, 23),
+    (64, 34),
+    (64, 36),
+    (65, 21),
+    (65, 22),
+    (66, 35),
+    (66, 36);
 
 -- --------------------------------------------------------------------------
 -- Tabla: CATEGORIA_ETIQUETA - Creación y volcado de datos
@@ -413,48 +538,46 @@ CREATE TABLE `categoria_etiqueta` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `categoria_etiqueta` (`id_categoria`, `id_etiqueta`) VALUES
-    (1, 16), -- Tráfico y Transporte -> Accidente de tráfico
-    (1, 17), -- Tráfico y Transporte -> Cierre de carretera
-    (1, 18), -- Tráfico y Transporte -> Retraso en transporte
-    (1, 19), -- Tráfico y Transporte -> Manifestación
-    (2, 1),  -- Clima y Medio Ambiente -> Alerta meteorológica
-    (2, 2),  -- Clima y Medio Ambiente -> Desastre natural
-    (2, 3),  -- Clima y Medio Ambiente -> Inundación
-    (2, 4),  -- Clima y Medio Ambiente -> Tsunami
-    (2, 5),  -- Clima y Medio Ambiente -> Crecida de cauce
-    (2, 6),  -- Clima y Medio Ambiente -> Sequía
-    (2, 7),  -- Clima y Medio Ambiente -> Incendio forestal
-    (2, 8),  -- Clima y Medio Ambiente -> Ola de calor
-    (2, 9),  -- Clima y Medio Ambiente -> Tormenta eléctrica
-    (2, 10), -- Clima y Medio Ambiente -> Nevada intensa
-    (3, 11), -- Emergencias y Seguridad -> Incendio
-    (3, 12), -- Emergencias y Seguridad -> Terremoto
-    (3, 13), -- Emergencias y Seguridad -> Robo
-    (3, 14), -- Emergencias y Seguridad -> Atentado
-    (3, 15), -- Emergencias y Seguridad -> Fuga de gas
-    (4, 20), -- Infraestructura y Servicios -> Corte de agua
-    (4, 21), -- Infraestructura y Servicios -> Corte de luz
-    (4, 22), -- Infraestructura y Servicios -> Corte de gas
-    (4, 23), -- Infraestructura y Servicios -> Cierre de aeropuerto
-    (4, 24), -- Infraestructura y Servicios -> Fallo en carreteras
-    (5, 25), -- Salud y Bienestar -> Brote de enfermedad
-    (5, 26), -- Salud y Bienestar -> Emergencia sanitaria
-    (5, 27), -- Salud y Bienestar -> Campaña de vacunación
-    (5, 28), -- Salud y Bienestar -> Contaminación del aire
-    (6, 29), -- Tecnología y Comunicaciones -> Corte de internet
-    (6, 30), -- Tecnología y Comunicaciones -> Corte de telefonía
-    (6, 31), -- Tecnología y Comunicaciones -> Ciberataque
-    (6, 32), -- Tecnología y Comunicaciones -> Fallo tecnológico
-    (7, 33), -- Eventos y Cultura -> Concierto
-    (7, 34), -- Eventos y Cultura -> Festival
-    (7, 35), -- Eventos y Cultura -> Evento deportivo
-    (7, 36), -- Eventos y Cultura -> Feria
-    (8, 37), -- Economía y Sociedad -> Crisis económica
-    (8, 38), -- Economía y Sociedad -> Desabastecimiento
-    (8, 39), -- Economía y Sociedad -> Subida de precios
-    (8, 40); -- Economía y Sociedad -> Huelga
-
-
+    (1, 16),
+    (1, 17),
+    (1, 18),
+    (1, 19),
+    (2, 1),
+    (2, 2),
+    (2, 3),
+    (2, 4),
+    (2, 5),
+    (2, 6),
+    (2, 7),
+    (2, 8),
+    (2, 9),
+    (2, 10),
+    (3, 11),
+    (3, 12),
+    (3, 13),
+    (3, 14),
+    (3, 15),
+    (4, 20),
+    (4, 21),
+    (4, 22),
+    (4, 23),
+    (4, 24),
+    (5, 25),
+    (5, 26),
+    (5, 27),
+    (5, 28),
+    (6, 29),
+    (6, 30),
+    (6, 31),
+    (6, 32),
+    (7, 33),
+    (7, 34),
+    (7, 35),
+    (7, 36),
+    (8, 37),
+    (8, 38),
+    (8, 39),
+    (8, 40);
 
 SET FOREIGN_KEY_CHECKS = 1;
 COMMIT;
