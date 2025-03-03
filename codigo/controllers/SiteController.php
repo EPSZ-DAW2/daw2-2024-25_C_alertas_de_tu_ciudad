@@ -11,6 +11,7 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\Categoria;
 use app\models\Alerta;
+use app\models\Ubicacion;
 
 class SiteController extends Controller
 {
@@ -57,30 +58,116 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays homepage.
+     * Displays homepage with optional city filter.
      *
-     * @return string
+     * @param string|null $ciudad City name to filter alerts.
+     * @return string Rendered homepage view.
      */
     public function actionIndex($ciudad = null)
     {
-        $query = Alerta::find();
+        $session = Yii::$app->session;
+
+        if (Yii::$app->request->get('borrarFiltro')) {
+            $session->remove('ciudad');
+            $ciudad = null;
+        } elseif ($ciudad) {
+            $session->set('ciudad', $ciudad);
+        } elseif ($session->has('ciudad')) {
+            $ciudad = $session->get('ciudad');
+        }
+
+        $query = Alerta::find()->joinWith('ubicacion');
 
         if ($ciudad) {
-            $query->where(['ubicacion' => $ciudad]);
+            $ciudadUpper = mb_strtoupper($ciudad, 'UTF-8');
+
+            // Obtener todas las ubicaciones de una vez
+            $todasUbicaciones = Ubicacion::find()->asArray()->all();
+
+            // Mapear ubicaciones por ID y padre
+            $mapaHijos = [];
+            $ubicacionId = null;
+            foreach ($todasUbicaciones as $u) {
+                if (mb_strtoupper($u['nombre'], 'UTF-8') === $ciudadUpper) {
+                    $ubicacionId = $u['id'];
+                }
+                $mapaHijos[$u['ub_code_padre']][] = $u['id'];
+            }
+
+            if ($ubicacionId !== null) {
+                // Obtener descendientes en memoria
+                $idsUbicaciones = $this->obtenerDescendientesMemoria($ubicacionId, $mapaHijos);
+                $idsUbicaciones[] = $ubicacionId;
+
+                $query->andWhere(['ubicacion.id' => $idsUbicaciones]);
+            } else {
+                $query->andWhere('0=1');
+            }
         }
 
         $alertas = $query->all();
 
         return $this->render('index', [
             'alertas' => $alertas,
-            'ciudad' => $ciudad
+            'ciudad' => $ciudad,
         ]);
     }
 
     /**
-     * Muestra el árbol de categorías y sus alertas.
+     * Función optimizada para obtener IDs de descendientes en memoria
+     */
+    private function obtenerDescendientesMemoria($idPadre, &$mapaHijos)
+    {
+        $ids = [];
+
+        if (isset($mapaHijos[$idPadre])) {
+            foreach ($mapaHijos[$idPadre] as $hijoId) {
+                $ids[] = $hijoId;
+                // Llamada recursiva en memoria
+                $ids = array_merge($ids, $this->obtenerDescendientesMemoria($hijoId, $mapaHijos));
+            }
+        }
+
+        return $ids;
+    }
+
+
+
+    /**
+     * Returns matching locations as JSON for autocomplete.
      *
-     * @return string
+     * @param string|null $q Query string for searching locations.
+     * @return array JSON array of matching locations.
+     */
+    public function actionBuscarUbicacion($q = null)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        if (empty($q)) {
+            return [];
+        }
+
+        $ubicaciones = Ubicacion::find()
+            ->with('ubCodePadre')
+            ->where(['like', 'ubicacion.nombre', $q])
+            ->limit(10)
+            ->all();
+
+        $resultado = [];
+        foreach ($ubicaciones as $ubicacion) {
+            $resultado[] = [
+                'nombre' => mb_strtoupper($ubicacion->nombre, 'UTF-8'),
+                'padre' => $ubicacion->ubCodePadre ? $ubicacion->ubCodePadre->nombre : 'Sin padre',
+            ];
+        }
+
+        return $resultado;
+    }
+
+    /**
+     * Displays categories tree and related alerts.
+     *
+     * @return string Rendered categories view.
      */
     public function actionCategorias($id_categoria = null)
     {
@@ -127,8 +214,9 @@ class SiteController extends Controller
 
     /**
      * Login action.
+     * Handles user login.
      *
-     * @return Response|string
+     * @return Response|string Redirect or rendered login view.
      */
     public function actionLogin()
     {
@@ -148,9 +236,9 @@ class SiteController extends Controller
     }
 
     /**
-     * Logout action.
+     * Logs out the current user.
      *
-     * @return Response
+     * @return Response Redirects to homepage.
      */
     public function actionLogout()
     {
@@ -160,9 +248,9 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays contact page.
+     * Displays contact form and handles submissions.
      *
-     * @return Response|string
+     * @return Response|string Rendered contact form or refreshed page on successful submission.
      */
     public function actionContact()
     {
@@ -180,7 +268,7 @@ class SiteController extends Controller
     /**
      * Displays about page.
      *
-     * @return string
+     * @return string Rendered about view.
      */
     public function actionAbout()
     {
