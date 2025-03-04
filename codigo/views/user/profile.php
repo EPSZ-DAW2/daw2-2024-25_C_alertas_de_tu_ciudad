@@ -23,6 +23,7 @@ $this->title = Yii::t('app', 'Profile - {username}', ['username' => Html::encode
             </div>
             <div class="text-center mt-4">
                 <?= Html::a(Yii::t('app', 'Edit Profile'), Url::to(['/user/edit']), ['class' => 'btn btn-warning']) ?>
+                <?= Html::a(Yii::t('app', 'Eliminar'), Url::to(['/user/eliminar']),  [
                 <?= Html::a(Yii::t('app', 'Logout'), Url::to(['/site/logout']), [
                     'class' => 'btn btn-danger',
                     'data-method' => 'post'

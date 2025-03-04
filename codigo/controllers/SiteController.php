@@ -309,4 +309,16 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
+    public function validatePassword($attribute, $params)
+{
+    if (!$this->hasErrors()) {
+        $user = $this->getUser();
+
+        if (!$user || !Yii::$app->security->validatePassword($this->password, $user->password)) {
+            $this->addError($attribute, 'Correo o contraseña incorrectos.');
+        }
+    }
+}
+
 }

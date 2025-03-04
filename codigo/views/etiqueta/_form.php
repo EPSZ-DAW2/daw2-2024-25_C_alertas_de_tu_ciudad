@@ -10,7 +10,7 @@ use app\models\Categoria;
     <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'descripcion')->textarea(['rows' => 6]) ?>
 
-    <?php 
+    <?php
     // Obtener todas las categorías disponibles
     $categorias = ArrayHelper::map(Categoria::find()->all(), 'id', 'nombre');
     ?>

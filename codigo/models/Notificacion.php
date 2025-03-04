@@ -16,6 +16,7 @@ class Notificacion extends ActiveRecord
             [['usuario_id', 'mensaje'], 'required'],
             ['mensaje', 'string'],
             ['fecha', 'safe'],
+            ['Acciones', 'string', 'max' => 255],
         ];
     }
 
@@ -26,6 +27,7 @@ class Notificacion extends ActiveRecord
             'usuario_id' => 'Usuario ID',
             'mensaje' => 'Mensaje de Notificación',
             'fecha' => 'Fecha de Notificación',
+            'Acciones' => 'Acciones',
         ];
     }
 }

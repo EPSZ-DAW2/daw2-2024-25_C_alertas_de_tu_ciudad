@@ -54,8 +54,18 @@ class Etiqueta extends ActiveRecord
      */
     public function getCategorias()
     {
-        return $this->hasMany(Categoria::className(), ['id' => 'id_categoria'])
+        return $this->hasMany(Categoria::class, ['id' => 'id_categoria'])
                     ->viaTable('categoria_etiqueta', ['id_etiqueta' => 'id']);
+    }
+
+    /**
+     * Relación con la tabla de alertas.
+     *
+     * @return ActiveQuery
+     */
+    public function getAlertas()
+    {
+        return $this->hasMany(Alerta::class, ['id' => 'id_etiqueta']);
     }
 
     /**
@@ -63,7 +73,7 @@ class Etiqueta extends ActiveRecord
      */
     public function canBeDeleted()
     {
-        return $this->getCategorias()->count() === 0;
+        return $this->getCategorias()->count() === 0 && $this->getAlertas()->count() === 0;
     }
 
     /**

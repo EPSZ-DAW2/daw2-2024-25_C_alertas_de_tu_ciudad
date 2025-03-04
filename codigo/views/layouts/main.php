@@ -15,10 +15,7 @@ AppAsset::register($this);
 
 // Registra meta etiquetas comunes y de seguridad
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
-$this->registerMetaTag([
-    'name' => 'viewport',
-    'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no'
-], 'viewport');
+$this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no']);
 $this->registerCsrfMetaTags();
 
 // Registra meta etiquetas SEO
@@ -31,19 +28,12 @@ $this->registerMetaTag([
     'content' => $this->params['meta_keywords'] ?? 'alertas, ciudad, eventos, incidencias'
 ]);
 
-// Registra el favicon usando un SVG
+// Registra el favicon
 $this->registerLinkTag([
     'rel' => 'icon',
-    'type' => 'image/svg+xml',
-    'href' => Yii::getAlias('@web/images/resources/inicio.svg')
+    'type' => 'image/x-icon',
+    'href' => Yii::getAlias('@web/favicon.ico')
 ]);
-
-// Registra etiquetas Open Graph (opcional, para compartir en redes sociales)
-$this->registerMetaTag(['property' => 'og:title', 'content' => Html::encode($this->title)]);
-$this->registerMetaTag(['property' => 'og:description', 'content' => Html::encode($this->params['meta_description'] ?? 'Descripción predeterminada de la página')]);
-$this->registerMetaTag(['property' => 'og:type', 'content' => 'website']);
-$this->registerMetaTag(['property' => 'og:url', 'content' => Yii::$app->request->absoluteUrl]);
-$this->registerMetaTag(['property' => 'og:image', 'content' => Yii::getAlias('@web/path/to/og-image.jpg')]);
 
 // Obtener el parámetro "ciudad" (si existe) y definir el URL de inicio en consecuencia
 $ciudad = Yii::$app->request->get('ciudad');
@@ -73,9 +63,9 @@ $homeUrl = $ciudad ? Url::to(['site/index', 'ciudad' => $ciudad]) : Yii::$app->h
         'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top']
     ]);
 
-    // Left menu items
+    // Menú izquierdo
     echo Nav::widget([
-        'options' => ['class' => 'navbar-nav'],
+        'options' => ['class' => 'navbar-nav me-auto'],
         'items' => [
             ['label' => 'Búsqueda', 'url' => ['/site/busqueda']],
             ['label' => 'Incidencias', 'url' => ['/site/incidencias']],
@@ -84,7 +74,13 @@ $homeUrl = $ciudad ? Url::to(['site/index', 'ciudad' => $ciudad]) : Yii::$app->h
         ],
     ]);
 
-    // Right menu items
+    // Campo de búsqueda en la barra de navegación
+    echo Html::beginForm(['/site/search'], 'get', ['class' => 'd-flex']);
+    echo Html::textInput('search', '', ['class' => 'form-control me-2', 'placeholder' => 'Buscar...']);
+    echo Html::submitButton('Buscar', ['class' => 'btn btn-outline-light']);
+    echo Html::endForm();
+
+    // Menú derecho
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav ms-auto'],
         'items' => array_merge(
@@ -96,10 +92,25 @@ $homeUrl = $ciudad ? Url::to(['site/index', 'ciudad' => $ciudad]) : Yii::$app->h
                 ? [['label' => 'Iniciar Sesión', 'url' => ['/site/login']]]
                 : [
                 ['label' => 'Perfil', 'url' => ['/site/perfil']],
-                ['label' => 'Cerrar Sesión', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post']]
+                '<li class="nav-item">'
+                    . Html::beginForm(['/site/logout'])
+                    . Html::submitButton(
+                        'Cerrar Sesión (' . Yii::$app->user->identity->username . ')',
+                        ['class' => 'nav-link btn btn-link logout']
+                    )
+                    . Html::endForm()
+                    . '</li>'
             ]
         ),
     ]);
+
+    if (!Yii::$app->user->isGuest) {
+        echo '<div class="ms-auto d-flex align-items-center">';
+        echo '<a href="' . Url::to(['/user/profile']) . '" class="btn btn-light rounded-circle d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; text-decoration: none; font-size: 12px; font-weight: bold;">'
+            . Html::encode(Yii::$app->user->identity->username)
+            . '</a>';
+        echo '</div>';
+    }
 
     NavBar::end();
     ?>
@@ -114,6 +125,15 @@ $homeUrl = $ciudad ? Url::to(['site/index', 'ciudad' => $ciudad]) : Yii::$app->h
         <?= $content ?>
     </div>
 </main>
+
+<footer id="footer" class="mt-auto py-3 bg-light">
+    <div class="container">
+        <div class="row text-muted">
+            <div class="col-md-6 text-center text-md-start">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></div>
+            <div class="col-md-6 text-center text-md-end"><?= Yii::powered() ?></div>
+        </div>
+    </div>
+</footer>
 
 <?php $this->endBody() ?>
 </body>

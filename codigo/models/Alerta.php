@@ -3,9 +3,10 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "alertas".
+ * Esta es la clase modelo para la tabla "alertas".
  *
  * @property int $id
  * @property string $titulo
@@ -30,7 +31,7 @@ use Yii;
  * @property Ubicacion $ubicacion
  * @property Imagen $imagen
  */
-class Alerta extends \yii\db\ActiveRecord
+class Alerta extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -66,23 +67,23 @@ class Alerta extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'titulo' => 'Titulo',
-            'descripcion' => 'Descripcion',
-            'fecha_inicio' => 'Fecha Inicio',
-            'duracion_estimada' => 'Duracion Estimada',
-            'id_lugar' => 'Id Lugar',
-            'id_ubicacion' => 'Id Ubicacion',
+            'titulo' => 'Título',
+            'descripcion' => 'Descripción',
+            'fecha_inicio' => 'Fecha de Inicio',
+            'duracion_estimada' => 'Duración Estimada',
+            'id_lugar' => 'Lugar',
+            'id_ubicacion' => 'Ubicación',
             'detalles' => 'Detalles',
             'notas' => 'Notas',
-            'url_externa' => 'Url Externa',
+            'url_externa' => 'URL Externa',
             'estado' => 'Estado',
-            'id_usuario' => 'Id Usuario',
-            'id_imagen' => 'Id Imagen',
+            'id_usuario' => 'Usuario',
+            'id_imagen' => 'Imagen',
         ];
     }
 
     /**
-     * Gets query for [[Ubicacion]].
+     * Relación con el modelo Ubicación.
      *
      * @return \yii\db\ActiveQuery
      */
@@ -91,36 +92,71 @@ class Alerta extends \yii\db\ActiveRecord
         return $this->hasOne(Ubicacion::class, ['id' => 'id_ubicacion']);
     }
 
+    /**
+     * Relación con el modelo Lugar.
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getLugar()
     {
         return $this->hasOne(Lugar::class, ['id' => 'id_lugar']);
     }
 
+    /**
+     * Relación con el modelo Usuario.
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getUsuario()
     {
         return $this->hasOne(Usuario::class, ['id' => 'id_usuario']);
     }
 
+    /**
+     * Relación con el modelo Imagen.
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getImagen()
     {
         return $this->hasOne(Imagen::class, ['id' => 'id_imagen']);
     }
 
+    /**
+     * Relación con el modelo Incidencia.
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getIncidencias()
     {
         return $this->hasMany(Incidencia::class, ['id_alerta' => 'id']);
     }
 
+    /**
+     * Relación con el modelo Comentario.
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getComentarios()
     {
         return $this->hasMany(Comentario::class, ['id_alerta' => 'id']);
     }
 
+    /**
+     * Relación con el modelo Etiqueta a través de AlertaEtiqueta.
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getEtiquetas()
     {
         return $this->hasMany(Etiqueta::class, ['id' => 'id_etiqueta'])->viaTable('alerta_etiqueta', ['id_alerta' => 'id']);
     }
 
+    /**
+     * Relación con el modelo AlertaEtiqueta.
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getAlertaEtiquetas()
     {
         return $this->hasMany(AlertaEtiqueta::class, ['id_alerta' => 'id']);
@@ -128,10 +164,55 @@ class Alerta extends \yii\db\ActiveRecord
 
     /**
      * {@inheritdoc}
-     * @return AlertaQuery the active query used by this AR class.
+     * @return AlertaQuery la consulta activa usada por esta clase AR.
      */
     public static function find()
     {
         return new AlertaQuery(get_called_class());
+    }
+
+    /**
+     * Lista las alertas de un usuario.
+     *
+     * @param int $usuarioId
+     * @return Alerta[]
+     */
+    public static function listarPorUsuario($usuarioId)
+    {
+        return self::find()->where(['id_usuario' => $usuarioId])->all();
+    }
+
+    /**
+     * Crea una nueva alerta.
+     *
+     * @param array $data
+     * @return bool
+     */
+    public function crearAlerta($data)
+    {
+        $this->load($data, '');
+        return $this->save();
+    }
+
+    /**
+     * Edita una alerta existente.
+     *
+     * @param array $data
+     * @return bool
+     */
+    public function editarAlerta($data)
+    {
+        $this->load($data, '');
+        return $this->save();
+    }
+
+    /**
+     * Elimina una alerta.
+     *
+     * @return bool
+     */
+    public function eliminarAlerta()
+    {
+        return $this->delete();
     }
 }

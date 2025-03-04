@@ -3,6 +3,9 @@
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
+defined('YII_DEBUG') or define('YII_DEBUG', true);
+defined('YII_ENV') or define('YII_ENV', 'dev');
+
 $config = [
     'id' => 'basic',
     'name' => 'Inicio',
@@ -15,7 +18,6 @@ $config = [
     ],
     'components' => [
         'request' => [
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'EPSZ_DAW2_2024-25',
         ],
         'cache' => [
@@ -31,8 +33,7 @@ $config = [
         'mailer' => [
             'class' => \yii\symfonymailer\Mailer::class,
             'viewPath' => '@app/mail',
-            // send all mails to a file by default.
-            'useFileTransport' => true,
+            'useFileTransport' => true, // Enviar todos los correos a un archivo en desarrollo
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -46,35 +47,32 @@ $config = [
         'db' => $db,
 
         'urlManager' => [
-            // Configure URL Manager
-            'enablePrettyUrl' => false,  // Enable clean URLs
-            'showScriptName' => false,   // Hide the entry script `index.php`
+            'enablePrettyUrl' => true,  // Habilitar URLs amigables
+            'showScriptName' => false,   // Ocultar index.php en las URLs
+            'baseUrl' => '/Web2/daw2_2024-25_yii2_basic_epsz/codigo/web',
             'rules' => [
-                // Define custom URL rules
                 'busqueda' => 'site/busqueda',
-                'comentarios' => 'comentarios/index',  // Map `comentarios` to `ComentariosController`'s `actionIndex`
-                'comentarios/revisar-denuncias' => 'comentarios/revisar-denuncias',  // Map `comentarios/revisar-denuncias` to `ComentariosController`'s `actionRevisarDenuncias`
+                'comentarios' => 'comentarios/index',
+                'comentarios/revisar-denuncias' => 'comentarios/revisar-denuncias',
+                'registrar' => 'auth/registrar',
+                'profile' => 'user/profile',
+                'incidencias' => 'incidencia/index',
             ],
         ],
-
     ],
     'params' => $params,
 ];
 
 if (YII_ENV_DEV) {
-    // configuration adjustments for 'dev' environment
+    // Configuración adicional para el entorno de desarrollo
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
-        // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
-        // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 }
 
