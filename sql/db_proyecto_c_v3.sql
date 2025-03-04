@@ -161,7 +161,7 @@ ALTER TABLE `incidencias`
 ADD COLUMN `respuesta` TEXT NULL;
 
 
-CREATE TABLE `incidencia` (
+CREATE TABLE `incidencias` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,       -- 主键
     `descripcion` TEXT NOT NULL,               -- 事件描述
     `estado` VARCHAR(50) NOT NULL,             -- 状态字段，例如 'nueva', 'revisada'

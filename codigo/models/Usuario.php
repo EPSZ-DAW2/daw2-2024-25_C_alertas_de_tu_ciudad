@@ -32,6 +32,8 @@ class Usuario extends ActiveRecord implements IdentityInterface
             [['email'], 'email'],
             [['email'], 'unique'],
             [['password'], 'string', 'min' => 6],
+            [['password1', 'password2'], 'string', 'min' => 6],
+            [['password2'], 'compare', 'compareAttribute' => 'password1', 'message' => 'Las contraseñas no coinciden'],
             [['nick'], 'string', 'max' => 255], // 添加 nick 字段的验证规则
 
             // 密码修改规则
@@ -54,6 +56,8 @@ class Usuario extends ActiveRecord implements IdentityInterface
             [['role'], 'in', 'range' => ['normal', 'moderator', 'admin', 'sysadmin']],
 
             [['eliminar_razon'], 'string'],  // 添加删除原因的验证规则
+            ['status', 'in', 'range' => [0, 1], 'message' => 'El estado debe ser 0 (inactivo) o 1 (activo).'],
+            ['phone', 'match', 'pattern' => '/^[6-9][0-9]{8}$/', 'message' => 'Por favor, introduce un número de teléfono español válido de 9 dígitos.'],
         ];
     }
 
@@ -100,6 +104,8 @@ class Usuario extends ActiveRecord implements IdentityInterface
             'email' => 'Correo Electrónico',
             'username' => 'Nombre de Usuario',
             'password' => 'Contraseña',
+            [['password1', 'password2'], 'string', 'min' => 6],
+            [['password2'], 'compare', 'compareAttribute' => 'password1', 'message' => 'Las contraseñas no coinciden'],
             'currentPassword' => 'Contraseña Actual',
             'newPassword' => 'Nueva Contraseña',
             'confirmPassword' => 'Confirmar Contraseña',
@@ -112,6 +118,9 @@ class Usuario extends ActiveRecord implements IdentityInterface
             'respuesta' => 'Respuesta',
             'role'=> 'Role', 
             'eliminar_razon' => 'Razón de Eliminación',
+            [['auth_key'], 'string', 'max' => 255],
+            'status' => 'Estado del Usuario',
+            'phone' => 'Número de Teléfono', // anadir numero de telefono
         ];
     }
 
@@ -133,22 +142,15 @@ class Usuario extends ActiveRecord implements IdentityInterface
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function findIdentity($id)
+     public static function findIdentity($id)
     {
         return static::findOne($id);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        return static::findOne(['auth_key' => $token]);
+        return static::findOne(['auth_key' => $token]); // 确保 `usuario` 表中有 `auth_key` 字段
     }
-
     /**
      * 获取用户 ID
      */
@@ -176,9 +178,9 @@ class Usuario extends ActiveRecord implements IdentityInterface
     /**
      * 通过用户名查找用户
      */
-    public static function findByUsername($username)
+    public static function findByUsername($email)
     {
-        return static::findOne(['username' => $username]);
+        return static::findOne(['email' => $username]);
     }
 
     /**
