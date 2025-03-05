@@ -21,7 +21,7 @@ USE `proyecto_C`;
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `etiquetas`;
 CREATE TABLE IF NOT EXISTS `etiquetas` (
-                                           `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único de la etiqueta',
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único de la etiqueta',
     `nombre` VARCHAR(255) NOT NULL COMMENT 'Nombre de la etiqueta',
     `descripcion` TEXT DEFAULT NULL COMMENT 'Descripción detallada de la etiqueta',
     `creado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de creación de la etiqueta',
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `etiquetas` (
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `etiquetas` (`nombre`, `descripcion`) VALUES
-                                                      -- Etiquetas asociadas a la categoría "Clima y Medio Ambiente"
+    -- Etiquetas asociadas a la categoría "Clima y Medio Ambiente"
     ('Alerta meteorológica', 'Situaciones relacionadas con fenómenos meteorológicos extremos.'),
     ('Desastre natural', 'Eventos naturales que causan daños significativos, como terremotos o inundaciones.'),
     ('Inundación', 'Acumulación de agua en zonas que normalmente están secas.'),
@@ -104,6 +104,8 @@ INSERT INTO `usuario` (`email`, `password`, `auth_key`, `nick`, `username`, `reg
     ('dj@usal.es', '$2y$13$IXRmKNxfNNMSd7DGQkFo3.aOUovcBEKYby3qojNLF761o4xXfX2.2', 'h5uq58uxdPNhFEmtStMDYoD2a8V60ebT', 'djPiri', 'djPiri', NOW(), 1, 'usuario', 0, 0),
     ('alba@mg.es', '$2y$13$ef9ObfZ.R7msNW9oCrvTlOMvFYupos5AXRmo2RahJzU7s2QzhCtyu', 'YswvC2pI-AXtqtcoi69oDHyJbwfhmy1N', 'alba', 'alba', NOW(), 1, 'usuario', 0, 0);
 
+
+-- --------------------------------------------------------------------------
 -- Tabla: COMENTARIOS - Creación y volcado de datos
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `comentarios`;
@@ -125,6 +127,8 @@ INSERT INTO `comentarios` (`contenido`, `numero_denuncias`, `es_denunciado`, `es
     ('Tercer comentario bloqueado', 0, 0, 0, 0),
     ('Cuarto comentario cerrado', 0, 0, 1, 1),
     ('Quinto comentario activo', 1, 0, 1, 0);
+
+
 
 -- --------------------------------------------------------------------------
 -- Tabla: INCIDENCIA - Creación y volcado de datos
@@ -148,6 +152,8 @@ INSERT INTO `incidencia` (`titulo`, `descripcion`, `fecha_creacion`, `fecha_revi
     ('Problema de inicio de sesión', 'Usuarios reportan que no pueden iniciar sesión.', '2025-01-23 12:00:00', NULL, 'pendiente', 'media', NULL),
     ('Carga lenta del sistema', 'El sistema tarda más de lo esperado en cargar datos.', '2025-01-23 13:00:00', NULL, 'pendiente', 'baja', NULL),
     ('Error desconocido en el servidor', 'Se produjo un error inesperado en el servidor.', '2025-01-23 14:00:00', NULL, 'pendiente', 'alta', NULL);
+
+
 
 -- --------------------------------------------------------------------------
 -- Tabla: UBICACION - Creación y volcado de datos
@@ -243,7 +249,7 @@ INSERT INTO `ubicacion` (`id`, `ub_code`, `nombre`, `code_iso`, `ub_code_padre`,
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `categorias`;
 CREATE TABLE IF NOT EXISTS `categorias` (
-                                            `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único de la categoría',
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único de la categoría',
     `nombre` VARCHAR(255) NOT NULL COMMENT 'Nombre de la categoría',
     `descripcion` TEXT DEFAULT NULL COMMENT 'Descripción detallada de la categoría',
     PRIMARY KEY (`id`)
@@ -355,7 +361,7 @@ INSERT INTO `alertas` (`titulo`, `descripcion`, `id_categoria`, `estado`, `fecha
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `configurations`;
 CREATE TABLE IF NOT EXISTS `configurations` (
-                                                `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada configuración',
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada configuración',
     `key_name` VARCHAR(100) NOT NULL COMMENT 'Clave única de la configuración (ejemplo: "site_title")',
     `value` TEXT NOT NULL COMMENT 'Valor de la configuración (ejemplo: "Mi Aplicación")',
     `description` TEXT DEFAULT NULL COMMENT 'Descripción de la configuración',
@@ -366,6 +372,8 @@ CREATE TABLE IF NOT EXISTS `configurations` (
 
 INSERT INTO `configurations` (`key_name`, `value`, `description`) VALUES
     ('pagination_size', '10', 'Número de elementos por página');
+
+
 
 -- --------------------------------------------------------------------------
 -- Tabla: BACKUPS - Creación y volcado de datos

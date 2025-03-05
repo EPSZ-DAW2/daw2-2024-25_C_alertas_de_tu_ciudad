@@ -32,7 +32,7 @@ $this->registerMetaTag([
 $this->registerLinkTag([
     'rel' => 'icon',
     'type' => 'image/x-icon',
-    'href' => Yii::getAlias('@web/favicon.ico')
+    'href' => Yii::getAlias('@web/images/resources/favicon.png')
 ]);
 
 // Obtener el parámetro "ciudad" (si existe) y definir el URL de inicio en consecuencia
