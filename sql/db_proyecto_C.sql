@@ -90,20 +90,24 @@ CREATE TABLE IF NOT EXISTS `usuario` (
     `auth_key` VARCHAR(255) DEFAULT NULL COMMENT 'Clave de autenticación',
     `nick` VARCHAR(100) NOT NULL COMMENT 'Apodo o nombre de usuario',
     `username` VARCHAR(100) NOT NULL COMMENT 'Nombre de usuario',
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de creación del usuario',
     `register_date` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de registro del usuario',
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Última actualización del usuario',
     `confirmed` TINYINT(1) DEFAULT 0 COMMENT 'Indica si el usuario ha confirmado su registro',
     `role` ENUM('guest','usuario','moderator','admin','sysadmin') DEFAULT 'usuario' COMMENT 'Rol del usuario en el sistema',
     `attempts` INT(11) DEFAULT 0 COMMENT 'Intentos fallidos de acceso',
-    `locked` TINYINT(1) DEFAULT 0 COMMENT 'Indica si el usuario está bloqueado',
+    `is_locked` TINYINT(1) DEFAULT 0 COMMENT 'Indica si el usuario está bloqueado',
     `phone` VARCHAR(15) DEFAULT NULL COMMENT 'Número de teléfono del usuario',
     `status` TINYINT(1) DEFAULT 0 COMMENT 'Estado del usuario',
+    `profile_image` VARCHAR(255) DEFAULT NULL COMMENT 'Imagen de perfil del usuario',
     PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `usuario` (`email`, `password`, `auth_key`, `nick`, `username`, `register_date`, `confirmed`, `role`, `attempts`, `locked`) VALUES
-    ('dj@usal.es', '$2y$13$IXRmKNxfNNMSd7DGQkFo3.aOUovcBEKYby3qojNLF761o4xXfX2.2', 'h5uq58uxdPNhFEmtStMDYoD2a8V60ebT', 'djPiri', 'djPiri', NOW(), 1, 'usuario', 0, 0),
-    ('alba@mg.es', '$2y$13$ef9ObfZ.R7msNW9oCrvTlOMvFYupos5AXRmo2RahJzU7s2QzhCtyu', 'YswvC2pI-AXtqtcoi69oDHyJbwfhmy1N', 'alba', 'alba', NOW(), 1, 'usuario', 0, 0);
-
+-- Inserción de datos con imágenes de perfil
+INSERT INTO `usuario` (`email`, `password`, `auth_key`, `nick`, `username`, `register_date`, `created_at`, `updated_at`, `confirmed`, `role`, `attempts`, `is_locked`, `profile_image`) VALUES
+    ('dj@usal.es', '$2y$13$IXRmKNxfNNMSd7DGQkFo3.aOUovcBEKYby3qojNLF761o4xXfX2.2', 'h5uq58uxdPNhFEmtStMDYoD2a8V60ebT', 'djPiri', 'djpiri', NOW(), NOW(), NOW(), 1, 'usuario', 0, 0, 'djpiri.png'),
+    ('alba@mg.es', '$2y$13$ef9ObfZ.R7msNW9oCrvTlOMvFYupos5AXRmo2RahJzU7s2QzhCtyu', 'YswvC2pI-AXtqtcoi69oDHyJbwfhmy1N', 'alba', 'alba', NOW(), NOW(), NOW(), 1, 'usuario', 0, 0, 'alba.png'),
+    ('mem@usal.es', '$2y$13$hqt.XD489dM.v9JGloiNLeyE.W4B1fqkFQ26pXWAcN4WtHyc354KW', 'RUwSX2LdFVBK0tx0mDsT0ZbBhUQla5v8', 'mem1', 'mem1' , NOW(), NOW(), NOW(), 1, 'usuario', 0, 0, NULL);
 
 -- --------------------------------------------------------------------------
 -- Tabla: COMENTARIOS - Creación y volcado de datos
@@ -252,18 +256,31 @@ CREATE TABLE IF NOT EXISTS `categorias` (
     `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único de la categoría',
     `nombre` VARCHAR(255) NOT NULL COMMENT 'Nombre de la categoría',
     `descripcion` TEXT DEFAULT NULL COMMENT 'Descripción detallada de la categoría',
+    `id_padre` INT(11) DEFAULT NULL COMMENT 'ID de la categoría padre (subcategorias)',
+    -- Lo dejo comentado por si no te funcionase bien
+    -- `id_etiqueta` INT(11) DEFAULT NULL COMMENT 'ID de la etiqueta relacionada',
     PRIMARY KEY (`id`)
+    KEY `id_padre` (`id_padre`),
+    -- KEY `id_etiqueta` (`id_etiqueta`),
+    CONSTRAINT `categorias_ibfk_1` FOREIGN KEY (`id_padre`) REFERENCES `categorias` (`id`) ON DELETE SET NULL,
+    -- CONSTRAINT `categorias_ibfk_2` FOREIGN KEY (`id_etiqueta`) REFERENCES `etiquetas` (`id`) ON DELETE SET NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `categorias` (`nombre`, `descripcion`) VALUES
-    ('Tráfico y Transporte', 'Eventos relacionados con accidentes, cierres de vías, retrasos en transporte público y condiciones viales.'),
-    ('Clima y Medio Ambiente', 'Alertas meteorológicas, desastres naturales, fenómenos atmosféricos y problemas ambientales.'),
-    ('Emergencias y Seguridad', 'Situaciones de crisis como incendios, terremotos, robos, atentados y fugas de gas.'),
-    ('Infraestructura y Servicios', 'Eventos que afectan infraestructuras críticas como cortes de agua, luz, gas, aeropuertos y servicios públicos.'),
-    ('Salud y Bienestar', 'Alertas relacionadas con brotes de enfermedades, emergencias sanitarias y eventos de salud pública.'),
-    ('Tecnología y Comunicaciones', 'Fallos tecnológicos, ciberataques, interrupciones en servicios digitales y eventos de innovación.'),
-    ('Eventos y Cultura', 'Eventos culturales, deportivos, festivos, conciertos, ferias y actividades comunitarias.'),
-    ('Economía y Sociedad', 'Crisis económicas, desabastecimiento de productos, subidas de precios y eventos sociales o financieros.');
+    ('Tráfico y Transporte', 'Eventos relacionados con accidentes, cierres de vías, retrasos en transporte público y condiciones viales.', NULL),
+    ('Clima y Medio Ambiente', 'Alertas meteorológicas, desastres naturales, fenómenos atmosféricos y problemas ambientales.', NULL),
+    ('Emergencias y Seguridad', 'Situaciones de crisis como incendios, terremotos, robos, atentados y fugas de gas.', NULL),
+    ('Infraestructura y Servicios', 'Eventos que afectan infraestructuras críticas como cortes de agua, luz, gas, aeropuertos y servicios públicos.', NULL),
+    ('Salud y Bienestar', 'Alertas relacionadas con brotes de enfermedades, emergencias sanitarias y eventos de salud pública.', NULL),
+    ('Tecnología y Comunicaciones', 'Fallos tecnológicos, ciberataques, interrupciones en servicios digitales y eventos de innovación.', NULL),
+    ('Eventos y Cultura', 'Eventos culturales, deportivos, festivos, conciertos, ferias y actividades comunitarias.', NULL),
+    ('Economía y Sociedad', 'Crisis económicas, desabastecimiento de productos, subidas de precios y eventos sociales o financieros.', NULL);
+    ON DUPLICATE KEY UPDATE
+        nombre = VALUES(nombre),
+        descripcion = VALUES(descripcion),
+        id_padre = VALUES(id_padre),
+        -- id_etiqueta = VALUES(id_etiqueta);
+
 
 -- --------------------------------------------------------------------------
 -- Tabla: ALERTAS - Creación y volcado de datos
@@ -380,7 +397,7 @@ INSERT INTO `configurations` (`key_name`, `value`, `description`) VALUES
 -- --------------------------------------------------------------------------
 DROP TABLE IF EXISTS `backups`;
 CREATE TABLE IF NOT EXISTS `backups` (
-                                         `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada archivo de respaldo',
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada archivo de respaldo',
     `file_name` VARCHAR(255) NOT NULL COMMENT 'Nombre del archivo de respaldo',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de creación del respaldo',
     PRIMARY KEY (`id`)

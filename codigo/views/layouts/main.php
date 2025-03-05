@@ -13,12 +13,10 @@ use yii\helpers\Url;
 
 AppAsset::register($this);
 
-// Registra meta etiquetas comunes y de seguridad
+// Meta etiquetas de seguridad y SEO
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
 $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no']);
 $this->registerCsrfMetaTags();
-
-// Registra meta etiquetas SEO
 $this->registerMetaTag([
     'name' => 'description',
     'content' => $this->params['meta_description'] ?? 'Portal Web sobre la Publicación y Gestión de Alertas, Avisos, Sucesos, Eventos que ocurren en tu Ciudad o cercanías'
@@ -28,16 +26,20 @@ $this->registerMetaTag([
     'content' => $this->params['meta_keywords'] ?? 'alertas, ciudad, eventos, incidencias'
 ]);
 
-// Registra el favicon
+// Favicon
 $this->registerLinkTag([
     'rel' => 'icon',
     'type' => 'image/x-icon',
-    'href' => Yii::getAlias('@web/images/resources/favicon.png')
+    'href' => Url::to('@web/images/resources/favicon.svg', true)
 ]);
 
-// Obtener el parámetro "ciudad" (si existe) y definir el URL de inicio en consecuencia
-$ciudad = Yii::$app->request->get('ciudad');
-$homeUrl = $ciudad ? Url::to(['site/index', 'ciudad' => $ciudad]) : Yii::$app->homeUrl;
+// Definir URL de inicio según el parámetro "ciudad"
+$homeUrl = Yii::$app->request->get('ciudad')
+    ? Url::to(['site/index', 'ciudad' => Yii::$app->request->get('ciudad')])
+    : Yii::$app->homeUrl;
+
+// Obtener el rol del usuario autenticado o asignar "guest"
+$role = Yii::$app->user->isGuest ? 'guest' : Yii::$app->user->identity->role;
 
 ?>
 <?php $this->beginPage() ?>
@@ -55,62 +57,66 @@ $homeUrl = $ciudad ? Url::to(['site/index', 'ciudad' => $ciudad]) : Yii::$app->h
     NavBar::begin([
         'brandLabel' =>
             Html::img('@web/images/resources/inicio.svg', [
-                'alt' => 'inicio icon',
+                'alt' => 'Inicio',
                 'style' => 'height:50px;'
-            ]) .
-            '<span style="margin-left:20px;">' . Html::encode(Yii::$app->name) . '</span>',
+            ]) . '<span class="ms-2">' . Html::encode(Yii::$app->name) . '</span>',
         'brandUrl' => $homeUrl,
-        'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top']
+        'options' => ['class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top']
     ]);
 
-    // Menú izquierdo
+    // Menú izquierdo (según el rol)
+    $menuItems = [['label' => 'Búsqueda', 'url' => ['/site/busqueda']]];
+
+    if (in_array($role, ['moderator', 'admin', 'sysadmin'])) {
+        $menuItems[] = ['label' => 'Incidencias', 'url' => ['/site/incidencias']];
+    }
+    if (in_array($role, ['admin', 'sysadmin'])) {
+        $menuItems[] = ['label' => 'Áreas', 'url' => ['/site/areas']];
+    }
+    if ($role === 'sysadmin') {
+        $menuItems[] = ['label' => 'Alertas', 'url' => ['/site/alertas']];
+    }
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav me-auto'],
-        'items' => [
-            ['label' => 'Búsqueda', 'url' => ['/site/busqueda']],
-            ['label' => 'Incidencias', 'url' => ['/site/incidencias']],
-            ['label' => 'Áreas', 'url' => ['/site/areas']],
-            ['label' => 'Alertas', 'url' => ['/site/alertas']],
-        ],
+        'items' => $menuItems,
     ]);
 
-    // Campo de búsqueda en la barra de navegación
-    echo Html::beginForm(['/site/search'], 'get', ['class' => 'd-flex']);
-    echo Html::textInput('search', '', ['class' => 'form-control me-2', 'placeholder' => 'Buscar...']);
-    echo Html::submitButton('Buscar', ['class' => 'btn btn-outline-light']);
-    echo Html::endForm();
+    // Menú derecho (visible para todos)
+    $menuItemsRight = [
+        ['label' => 'Contacto', 'url' => ['/site/contact']],
+        ['label' => 'Sobre Nosotros', 'url' => ['/site/about']]
+    ];
 
-    // Menú derecho
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav ms-auto'],
-        'items' => array_merge(
-            [
-                ['label' => 'Contacto', 'url' => ['/site/contact']],
-                ['label' => 'Sobre Nosotros', 'url' => ['/site/about']]
-            ],
-            Yii::$app->user->isGuest
-                ? [['label' => 'Iniciar Sesión', 'url' => ['/site/login']]]
-                : [
-                ['label' => 'Perfil', 'url' => ['/site/perfil']],
-                '<li class="nav-item">'
-                    . Html::beginForm(['/site/logout'])
-                    . Html::submitButton(
-                        'Cerrar Sesión (' . Yii::$app->user->identity->username . ')',
-                        ['class' => 'nav-link btn btn-link logout']
-                    )
-                    . Html::endForm()
-                    . '</li>'
-            ]
-        ),
-    ]);
+    if (Yii::$app->user->isGuest) {
+        $menuItemsRight[] = ['label' => 'Iniciar Sesión', 'url' => ['/site/login']];
+    } else {
+        // Botón de cierre de sesión con el nombre del usuario
+        $menuItemsRight[] = '<li class="nav-item">'
+            . Html::beginForm(['/site/logout'], 'post', ['class' => 'nav-item'])
+            . Html::submitButton(
+                'Cerrar Sesión (' . Html::encode(Yii::$app->user->identity->username) . ')',
+                ['class' => 'nav-link btn btn-link logout']
+            )
+            . Html::endForm()
+            . '</li>';
 
-    if (!Yii::$app->user->isGuest) {
-        echo '<div class="ms-auto d-flex align-items-center">';
-        echo '<a href="' . Url::to(['/user/profile']) . '" class="btn btn-light rounded-circle d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; text-decoration: none; font-size: 12px; font-weight: bold;">'
-            . Html::encode(Yii::$app->user->identity->username)
-            . '</a>';
-        echo '</div>';
+        // Imagen de perfil
+        $menuItemsRight[] = '<li class="nav-item d-flex align-items-center ms-2">'
+            . '<a href="' . Url::to(['/user/profile']) . '" class="d-flex align-items-center justify-content-center rounded-circle overflow-hidden" '
+            . 'style="width: 35px; height: 35px; background-color: #fff;">'
+            . '<img src="' . Yii::$app->user->identity->getProfileImage() . '" '
+            . 'alt="Perfil" class="rounded-circle" '
+            . 'style="width: 100%; height: 100%; object-fit: cover;">'
+            . '</a>'
+            . '</li>';
     }
+
+    echo Nav::widget([
+        'options' => ['class' => 'navbar-nav ms-auto d-flex align-items-center'],
+        'items' => $menuItemsRight,
+        'encodeLabels' => false
+    ]);
 
     NavBar::end();
     ?>
@@ -118,9 +124,6 @@ $homeUrl = $ciudad ? Url::to(['site/index', 'ciudad' => $ciudad]) : Yii::$app->h
 
 <main id="main" class="flex-shrink-0" role="main">
     <div class="container">
-        <?php if (!empty($this->params['breadcrumbs'])): ?>
-            <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
-        <?php endif ?>
         <?= Alert::widget() ?>
         <?= $content ?>
     </div>

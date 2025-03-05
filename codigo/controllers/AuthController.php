@@ -64,13 +64,13 @@ class AuthController extends Controller
     public function actionRegistrar()
     {
         $model = new Usuario();
-    
+
         if ($model->load(Yii::$app->request->post())) {
             $model->role = 'normal';  // Rol por defecto para usuarios registrados
             $model->password = Yii::$app->security->generatePasswordHash($model->password1); // Contraseña cifrada
             $model->register_date = date('Y-m-d H:i:s');
             $model->confirmed = 1;
-    
+
             if ($model->save(false)) {
                 Yii::$app->session->setFlash('success', 'Registro exitoso. Ahora puedes iniciar sesión.');
                 return $this->redirect(['auth/login']);
@@ -80,7 +80,7 @@ class AuthController extends Controller
         } else {
             Yii::$app->session->setFlash('error', 'Error en el formulario.');
         }
-    
+
         return $this->render('//site/registrar', ['model' => $model]);
     }
 
@@ -163,5 +163,5 @@ class AuthController extends Controller
         }
     }
 
-    
+
 }

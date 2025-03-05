@@ -5,6 +5,8 @@ namespace app\models;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use yii\helpers\Url;
+
 
 class Usuario extends ActiveRecord implements IdentityInterface
 {
@@ -120,7 +122,8 @@ class Usuario extends ActiveRecord implements IdentityInterface
             'eliminar_razon' => 'Razón de Eliminación',
             [['auth_key'], 'string', 'max' => 255],
             'status' => 'Estado del Usuario',
-            'phone' => 'Número de Teléfono', // anadir numero de telefono
+            'phone' => 'Número de Teléfono',
+            [['profile_image'], 'string', 'max' => 255],
         ];
     }
 
@@ -217,5 +220,11 @@ class Usuario extends ActiveRecord implements IdentityInterface
         $this->is_locked = false;
         return $this->save(false); // 跳过验证直接保存
     }
-    
+
+    public function getProfileImage()
+    {
+        return $this->profile_image
+            ? Url::to('@web/images/profiles/' . $this->profile_image, true)
+            : Url::to('@web/images/resources/iconuser.png', true);
+    }
 }
