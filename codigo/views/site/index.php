@@ -9,7 +9,6 @@ use yii\helpers\Url;
 
 $this->title = 'Alertas de tu Ciudad';
 ?>
-<!-- Para que funcione el mapa -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
@@ -18,7 +17,6 @@ $this->title = 'Alertas de tu Ciudad';
         <?= Html::encode($this->title) ?>
     </h1>
 
-    <!-- Filtro por ciudad -->
     <?php if ($ciudad): ?>
         <div class="text-center mb-3">
             <p class="d-inline">Filtrado por: <strong><?= Html::encode($ciudad) ?></strong></p>
@@ -27,7 +25,6 @@ $this->title = 'Alertas de tu Ciudad';
     <?php endif; ?>
 
     <div class="row">
-        <!-- Columna de alertas (8 columnas de 12) -->
         <div class="col-md-8">
             <div id="alertas-container">
                 <?php if (!empty($alertas)): ?>
@@ -68,7 +65,6 @@ $this->title = 'Alertas de tu Ciudad';
                 <?php endif; ?>
             </div>
         </div>
-        <!-- Columna del mapa -->
         <div class="col-md-4">
             <div class="map-container">
                 <div class="map-title">Mapa de Ubicaciones</div>
@@ -82,7 +78,6 @@ $this->title = 'Alertas de tu Ciudad';
     <p>&copy; <?= date('Y') ?> Alertas de tu Ciudad. Todos los derechos reservados.</p>
 </footer>
 
-<!-- Modal para filtrar por ubicación -->
 <div id="modalUbicacion" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -91,8 +86,8 @@ $this->title = 'Alertas de tu Ciudad';
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <input type="text" id="inputCiudad" class="form-control" placeholder="Escribe el nombre de la ubicación para filtrar las alertas...">
-                <div id="listaResultados" class="list-group mt-2"></div>
+                <input type="text" id="modalInputCiudad" class="form-control" placeholder="Escribe el nombre de la ubicación para filtrar las alertas...">
+                <div id="modalListaResultados" class="list-group mt-2"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="cancelarFiltro">Cancelar</button>
@@ -104,20 +99,19 @@ $this->title = 'Alertas de tu Ciudad';
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Manejo del modal de filtro por ubicación
-        var inputCiudad = document.getElementById("inputCiudad");
-        var listaResultados = document.getElementById("listaResultados");
+        const inputCiudadModal = document.getElementById("modalInputCiudad");
+        const listaResultadosModal = document.getElementById("modalListaResultados");
 
-        inputCiudad.addEventListener("input", function () {
-            let query = inputCiudad.value.trim();
+        inputCiudadModal.addEventListener("input", function () {
+            let query = inputCiudadModal.value.trim();
             if (query.length < 2) {
-                listaResultados.innerHTML = "";
+                listaResultadosModal.innerHTML = "";
                 return;
             }
-            fetch("<?= Url::to(['site/buscar-ubicacion']) ?>&q=" + encodeURIComponent(query))
+            fetch("<?= Url::to(['site/buscar-ubicacion']) ?>?q=" + encodeURIComponent(query))
                 .then(res => res.json())
                 .then(data => {
-                    listaResultados.innerHTML = "";
+                    listaResultadosModal.innerHTML = "";
                     if (data.length > 0) {
                         data.forEach(item => {
                             let div = document.createElement("a");
@@ -126,36 +120,35 @@ $this->title = 'Alertas de tu Ciudad';
                             div.href = "#";
                             div.addEventListener("click", function (e) {
                                 e.preventDefault();
-                                inputCiudad.value = item.nombre;
-                                listaResultados.innerHTML = "";
+                                inputCiudadModal.value = item.nombre;
+                                listaResultadosModal.innerHTML = "";
                             });
-                            listaResultados.appendChild(div);
+                            listaResultadosModal.appendChild(div);
                         });
                     } else {
-                        listaResultados.innerHTML = '<p class="list-group-item">No encontrado.</p>';
+                        listaResultadosModal.innerHTML = '<p class="list-group-item">No encontrado.</p>';
                     }
                 });
         });
 
         document.getElementById("aceptarFiltro").onclick = function () {
-            var ciudad = inputCiudad.value.trim();
+            const ciudad = inputCiudadModal.value.trim();
             if (ciudad) {
-                window.location.href = "<?= Url::to(['site/index']) ?>" + "&ciudad=" + encodeURIComponent(ciudad);
+                window.location.href = "<?= Url::to(['site/index']) ?>?ciudad=" + encodeURIComponent(ciudad);
             } else {
                 alert("Por favor, selecciona una ubicación.");
             }
         };
 
         document.getElementById("cancelarFiltro").onclick = function () {
-            var modalEl = document.getElementById('modalUbicacion');
-            var modalInstance = bootstrap.Modal.getInstance(modalEl);
+            const modalEl = document.getElementById('modalUbicacion');
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
             if (modalInstance) {
                 modalInstance.hide();
             }
         };
 
-        // Mostrar el modal automáticamente si no hay filtro aplicado
-        var filterApplied = <?= $ciudad ? 'true' : 'false' ?>;
+        const filterApplied = <?= $ciudad ? 'true' : 'false' ?>;
         if (!sessionStorage.getItem("modalShown") && !filterApplied) {
             setTimeout(() => {
                 const modal = new bootstrap.Modal(document.getElementById('modalUbicacion'));
@@ -164,55 +157,32 @@ $this->title = 'Alertas de tu Ciudad';
             }, 1000);
         }
 
-        // Configuración inicial del mapa
-        const map = L.map('map').setView([40.4168, -3.7038], 6); // Centrar el mapa en España
-
-        // Añadir capa de tiles (OpenStreetMap)
+        const map = L.map('map').setView([40.4168, -3.7038], 6);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Obtener las ubicaciones desde PHP
         const ubicaciones = <?= json_encode($ubicaciones) ?>;
-
-        // Crear un grupo de marcadores para gestionarlos mejor
         const markers = L.layerGroup().addTo(map);
 
-        // Añadir marcadores al mapa
         ubicaciones.forEach(ubicacion => {
             const { latitud, longitud, nombre } = ubicacion;
-
             if (latitud && longitud) {
-                // Crear el marcador
                 const marker = L.marker([parseFloat(latitud), parseFloat(longitud)], {
-                    title: nombre // Tooltip por defecto
+                    title: nombre
                 });
-
-                // Crear el contenido del tooltip
-                const tooltipContent = `<b>${nombre}</b>`;
-
-                // Asignar tooltip al marcador
-                marker.bindTooltip(tooltipContent, {
-                    permanent: false, // No mostrar permanentemente
-                    direction: 'top', // Dirección del tooltip
-                    className: 'map-tooltip', // Clase CSS para el tooltip
-                    opacity: 1 // Hacer el tooltip completamente visible
-                });
-
-                // Desactivar el popup al hacer clic
-                marker.on('click', () => {}); // No hacer nada al hacer clic
-
-                // Añadir el marcador al grupo
+                marker.bindTooltip(`<b>${nombre}</b>`, { permanent: false, direction: 'top' });
                 markers.addLayer(marker);
             }
         });
 
-        // Ajustar el zoom del mapa para que se vean todos los marcadores
         if (ubicaciones.length > 0) {
-            const bounds = L.latLngBounds(ubicaciones.map(ubicacion => [
-                parseFloat(ubicacion.latitud), parseFloat(ubicacion.longitud)
-            ]));
+            const bounds = L.latLngBounds(ubicaciones.map(ubicacion => [parseFloat(ubicacion.latitud), parseFloat(ubicacion.longitud)]));
             map.fitBounds(bounds);
         }
+
+        document.getElementById('modalUbicacion').addEventListener('shown.bs.modal', function () {
+            map.invalidateSize();
+        });
     });
 </script>

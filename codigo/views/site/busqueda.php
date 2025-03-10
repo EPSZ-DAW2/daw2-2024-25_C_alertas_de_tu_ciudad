@@ -54,7 +54,7 @@ $this->title = 'Búsqueda de Alertas';
                 listaResultados.innerHTML = "";
                 return;
             }
-            fetch("<?= Url::to(['site/buscar-ubicacion']) ?>&q=" + encodeURIComponent(query))
+            fetch("<?= Url::to(['site/buscar-ubicacion']) ?>?q=" + encodeURIComponent(query))
                 .then(res => res.json())
                 .then(data => {
                     listaResultados.innerHTML = "";
@@ -80,7 +80,7 @@ $this->title = 'Búsqueda de Alertas';
         document.getElementById("aceptarFiltro").onclick = function () {
             var ciudad = inputCiudad.value.trim();
             if (ciudad) {
-                window.location.href = "<?= Url::to(['site/index']) ?>" + "&ciudad=" + encodeURIComponent(ciudad);
+                window.location.href = "<?= Url::to(['site/index']) ?>?ciudad=" + encodeURIComponent(ciudad);
             } else {
                 alert("Por favor, selecciona una ubicación.");
             }
