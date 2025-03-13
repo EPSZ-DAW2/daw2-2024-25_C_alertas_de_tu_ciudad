@@ -9,120 +9,192 @@ use yii\helpers\Url;
 
 $this->title = 'Búsqueda de Alertas';
 ?>
-<!-- Para que funcione el mapa -->
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-
 <div class="container mt-4">
-    <h1 class="text-center" style="margin: 50px;">
-        <?= Html::encode($this->title) ?>
-    </h1>
+    <h1 class="text-center mb-4"><?= Html::encode($this->title) ?></h1>
 
-    <!-- Filtro por ubicación en la parte superior -->
-    <div class="card p-3 mb-4 text-center">
-        <h5>Filtrar alertas por ubicación global</h5>
-        <input type="text" id="inputCiudad" class="form-control" placeholder="Escribe el nombre de la ubicación...">
-        <div id="listaResultados" class="list-group mt-2"></div>
-        <div class="mt-2 text-center">
-            <button class="btn" id="aceptarFiltro">Buscar</button>
-            <button class="btn" id="openMap">Búsqueda por mapa</button>
-        </div>
-    </div>
-    <div class="col-md-15" id="map-container" style="display: none;">
-        <div class="map-container">
-                <div class="map-title">Mapa de Ubicaciones</div>
-                <div id="map" style="height: 600px; width: 100%;"></div>
+    <div class="card p-4 mb-4">
+        <h5 class="text-center mb-4">Filtrar alertas por ubicación</h5>
+        <div class="row g-3">
+            <div class="col-md-2 position-relative">
+                <input type="text" class="form-control hierarchy-input"
+                       data-level="1"
+                       placeholder="Continente"
+                       data-parent-level="0">
+                <div class="autocomplete-list"></div>
+            </div>
+            <div class="col-md-2 position-relative">
+                <input type="text" class="form-control hierarchy-input"
+                       data-level="2"
+                       placeholder="País"
+                       data-parent-level="1">
+                <div class="autocomplete-list"></div>
+            </div>
+            <div class="col-md-2 position-relative">
+                <input type="text" class="form-control hierarchy-input"
+                       data-level="3"
+                       placeholder="Región"
+                       data-parent-level="2">
+                <div class="autocomplete-list"></div>
+            </div>
+            <div class="col-md-2 position-relative">
+                <input type="text" class="form-control hierarchy-input"
+                       data-level="4"
+                       placeholder="Provincia"
+                       data-parent-level="3">
+                <div class="autocomplete-list"></div>
+            </div>
+            <div class="col-md-2 position-relative">
+                <input type="text" class="form-control hierarchy-input"
+                       data-level="6"
+                       placeholder="Ciudad"
+                       data-parent-level="4">
+                <div class="autocomplete-list"></div>
+            </div>
+            <div class="col-md-2 position-relative">
+                <input type="text" class="form-control hierarchy-input"
+                       data-level="7"
+                       placeholder="Barrio"
+                       data-parent-level="6">
+                <div class="autocomplete-list"></div>
             </div>
         </div>
+
+        <div class="text-center mt-4">
+            <button class="btn btn-primary" id="aceptarFiltro">Buscar</button>
+            <button class="btn btn-secondary" id="openMap">Búsqueda por mapa</button>
+        </div>
     </div>
-<footer class="text-center mt-5 py-3 bg-dark text-light">
-    <p>&copy; <?= date('Y') ?> Búsqueda de Alertas. Todos los derechos reservados.</p>
-</footer>
+
+    <div id="map-container" class="d-none">
+        <div id="map" style="height: 600px; width: 100%;"></div>
+    </div>
+</div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var inputCiudad = document.getElementById("inputCiudad");
-        var listaResultados = document.getElementById("listaResultados");
-        var mapContainer = document.getElementById("map-container");
-        var openMap = document.getElementById("openMap");
+document.addEventListener("DOMContentLoaded", function () {
+    const inputs = document.querySelectorAll('.hierarchy-input');
+    let selectedValues = {};
+    let map = null;
 
+    // Inicializar estados de los inputs
+    inputs.forEach(input => {
+        const level = input.dataset.level;
+        // Deshabilitar todos los inputs excepto el primer nivel
+        if (parseInt(level) > 1) input.disabled = true;
+    });
 
-        inputCiudad.addEventListener("input", function () {
-            let query = inputCiudad.value.trim();
-            if (query.length < 2) {
-                listaResultados.innerHTML = "";
+    // Función para resetear niveles dependientes
+    const resetDependentLevels = (currentLevel) => {
+        inputs.forEach(input => {
+            const level = parseInt(input.dataset.level);
+            if (level > currentLevel) {
+                input.value = '';
+                input.disabled = true;
+                delete selectedValues[level];
+            }
+        });
+    };
+
+    // Autocompletado jerárquico
+    inputs.forEach(input => {
+        // Manejar el enfoque en el input
+        input.addEventListener('focus', function() {
+            const currentLevel = parseInt(this.dataset.level);
+            resetDependentLevels(currentLevel);
+        });
+
+        // Manejar la entrada de texto
+        input.addEventListener('input', function() {
+            const level = this.dataset.level;
+            const parentLevel = this.dataset.parentLevel;
+            const parentId = selectedValues[parentLevel] || null;
+
+            // Limpiar si hay menos de 2 caracteres
+            if (this.value.length < 2) {
+                this.nextElementSibling.innerHTML = '';
                 return;
             }
-            fetch("<?= Url::to(['site/buscar-ubicacion']) ?>?q=" + encodeURIComponent(query))
+
+            // Fetch de sugerencias
+            fetch(`<?= Url::to(['site/buscar-ubicacion']) ?>?q=${encodeURIComponent(this.value)}&level=${level}&parent=${parentId}`)
                 .then(res => res.json())
                 .then(data => {
-                    listaResultados.innerHTML = "";
-                    if (data.length > 0) {
-                        data.forEach(item => {
-                            let div = document.createElement("a");
-                            div.classList.add("list-group-item", "list-group-item-action");
-                            div.innerHTML = `<div>${item.nombre}</div><small style="color:#6c757d;">${item.padre}</small>`;
-                            div.href = "#";
-                            div.addEventListener("click", function (e) {
-                                e.preventDefault();
-                                inputCiudad.value = item.nombre;
-                                listaResultados.innerHTML = "";
-                            });
-                            listaResultados.appendChild(div);
+                    const list = this.nextElementSibling;
+                    list.innerHTML = data.map(item => `
+                        <div class="autocomplete-item" data-id="${item.id}" data-name="${item.nombre}">
+                            <div>${item.nombre}</div>
+                            ${item.padre ? `<small>${item.padre}</small>` : ''}
+                        </div>
+                    `).join('');
+
+                    // Manejar clic en sugerencia
+                    list.querySelectorAll('.autocomplete-item').forEach(item => {
+                        item.addEventListener('click', () => {
+                            this.value = item.dataset.name;
+                            selectedValues[level] = item.dataset.id;
+                            list.innerHTML = '';
+
+                            // Habilitar siguiente nivel
+                            const nextLevel = parseInt(level) + 1;
+                            const nextInput = document.querySelector(`[data-level="${nextLevel}"]`);
+                            if (nextInput) nextInput.disabled = false;
+
+                            // Resetear niveles inferiores
+                            resetDependentLevels(parseInt(level));
                         });
-                    } else {
-                        listaResultados.innerHTML = '<p class="list-group-item">No encontrado.</p>';
-                    }
+                    });
                 });
         });
 
-        document.getElementById("aceptarFiltro").onclick = function () {
-            var ciudad = inputCiudad.value.trim();
-            if (ciudad) {
-                window.location.href = "<?= Url::to(['site/index']) ?>?ciudad=" + encodeURIComponent(ciudad);
-            } else {
-                alert("Por favor, selecciona una ubicación.");
-            }
-        };
-
-        openMap.onclick = function () {
-            mapContainer.style.display = "block";
-            map.invalidateSize(); //porque no se carga bien a veces
-        };
-
-
-        // Configuración del mapa
-        const map = L.map('map').setView([40.4168, -3.7038], 6);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-
-        const ubicaciones = <?= json_encode($ubicaciones) ?>;
-        const markers = L.layerGroup().addTo(map);
-
-        ubicaciones.forEach(ubicacion => {
-            const { latitud, longitud, nombre } = ubicacion;
-            if (latitud && longitud) {
-                const marker = L.marker([parseFloat(latitud), parseFloat(longitud)], {
-                    title: nombre
-                });
-
-                marker.bindTooltip(`<b>${nombre}</b>`, { permanent: false, direction: 'top' });
-
-                marker.on('click', function () {
-                    // Simular que el usuario ha escrito en el input y ha hecho clic en "Buscar"
-                    inputCiudad.value = nombre;
-                    document.getElementById("aceptarFiltro").click();
-                });
-
-                markers.addLayer(marker);
+        // Limpiar selección si se borra el input
+        input.addEventListener('change', function() {
+            if (this.value === '') {
+                const level = this.dataset.level;
+                delete selectedValues[level];
+                resetDependentLevels(parseInt(level));
             }
         });
-
-        if (ubicaciones.length > 0) {
-            const bounds = L.latLngBounds(ubicaciones.map(ubicacion => [parseFloat(ubicacion.latitud), parseFloat(ubicacion.longitud)]));
-            map.fitBounds(bounds);
-        }
     });
+
+    // Mapa (sin cambios)
+    function initMap() {
+        if (!map) {
+            map = L.map('map').setView([40.4168, -3.7038], 6);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+            <?php foreach ($ubicaciones as $ubicacion): ?>
+                <?php if ($ubicacion['latitud'] && $ubicacion['longitud']): ?>
+                    L.marker([<?= $ubicacion['latitud'] ?>, <?= $ubicacion['longitud'] ?>], {
+                        title: "<?= addslashes($ubicacion['nombre']) ?>"
+                    })
+                    .bindTooltip("<?= addslashes($ubicacion['nombre']) ?>", { permanent: false, direction: 'top' })
+                    .addTo(map)
+                    .on('click', function() {
+                        window.location.href = "<?= Url::to(['site/index']) ?>?ciudad=<?= urlencode($ubicacion['nombre']) ?>";
+                    });
+                <?php endif; ?>
+            <?php endforeach; ?>
+        }
+    }
+
+    // Botones (sin cambios)
+    document.getElementById('aceptarFiltro').addEventListener('click', function() {
+        const params = new URLSearchParams();
+        Object.entries(selectedValues).forEach(([level, id]) => {
+            params.append(`level_${level}`, id);
+        });
+        window.location.href = `<?= Url::to(['site/index']) ?>?${params.toString()}`;
+    });
+
+    document.getElementById('openMap').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('map-container').classList.remove('d-none');
+        initMap();
+        setTimeout(() => map.invalidateSize(), 100);
+    });
+});
 </script>

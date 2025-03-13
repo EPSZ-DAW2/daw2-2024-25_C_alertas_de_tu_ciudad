@@ -131,9 +131,8 @@ $role = Yii::$app->user->isGuest ? 'guest' : Yii::$app->user->identity->role;
 
 <footer id="footer" class="mt-auto py-3 bg-light">
     <div class="container">
-        <div class="row text-muted">
-            <div class="col-md-6 text-center text-md-start">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></div>
-            <div class="col-md-6 text-center text-md-end"><?= Yii::powered() ?></div>
+        <div class="row text-muted row text-center">
+            <p>&copy; <?= date('Y') ?> Alertas de tu Ciudad. Todos los derechos reservados.</p>
         </div>
     </div>
 </footer>

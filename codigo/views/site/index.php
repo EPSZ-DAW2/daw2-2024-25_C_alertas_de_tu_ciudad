@@ -74,10 +74,6 @@ $this->title = 'Alertas de tu Ciudad';
     </div>
 </div>
 
-<footer class="text-center mt-5 py-3 bg-dark text-light">
-    <p>&copy; <?= date('Y') ?> Alertas de tu Ciudad. Todos los derechos reservados.</p>
-</footer>
-
 <div id="modalUbicacion" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
