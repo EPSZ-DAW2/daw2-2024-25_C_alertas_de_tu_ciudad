@@ -64,16 +64,13 @@ $role = Yii::$app->user->isGuest ? 'guest' : Yii::$app->user->identity->role;
         'options' => ['class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top']
     ]);
 
-    // Menú izquierdo (según el rol)
-    $menuItems = [['label' => 'Búsqueda', 'url' => ['/site/busqueda']]];
-
+    // Menú izquierdo (según el rol) -- moderador, admin o sysadmin mostrar mantenimiento
     if (in_array($role, ['moderator', 'admin', 'sysadmin'])) {
-        $menuItems[] = ['label' => 'Incidencias', 'url' => ['/site/incidencias']];
-    }
-    if (in_array($role, ['admin', 'sysadmin'])) {
-        $menuItems[] = ['label' => 'Áreas', 'url' => ['/site/areas']];
-    }
-    if ($role === 'sysadmin') {
+        $menuItems[] = ['label' => 'Ubicaciones', 'url' => ['/ubicacion/index']];
+        $menuItems[] = ['label' => 'Imágenes', 'url' => ['/imagen/index']];
+        $menuItems[] = ['label' => 'Usuarios', 'url' => ['/usuarios/index']];
+    } elseif (in_array($role, ['user', 'guest'])) {
+    $menuItems[] = ['label' => 'Búsqueda', 'url' => ['/site/busqueda']];
         $menuItems[] = ['label' => 'Alertas', 'url' => ['/site/alertas']];
     }
 
@@ -81,6 +78,7 @@ $role = Yii::$app->user->isGuest ? 'guest' : Yii::$app->user->identity->role;
         'options' => ['class' => 'navbar-nav me-auto'],
         'items' => $menuItems,
     ]);
+
 
     // Menú derecho (visible para todos)
     $menuItemsRight = [

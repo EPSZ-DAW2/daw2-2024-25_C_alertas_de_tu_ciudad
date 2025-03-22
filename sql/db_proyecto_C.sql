@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 -- Inserción de datos con imágenes de perfil
 INSERT INTO `usuario` (`email`, `password`, `auth_key`, `nick`, `username`, `register_date`, `created_at`, `updated_at`, `confirmed`, `role`, `attempts`, `is_locked`, `profile_image`) VALUES
     ('dj@usal.es', '$2y$13$IXRmKNxfNNMSd7DGQkFo3.aOUovcBEKYby3qojNLF761o4xXfX2.2', 'h5uq58uxdPNhFEmtStMDYoD2a8V60ebT', 'djPiri', 'djpiri', NOW(), NOW(), NOW(), 1, 'usuario', 0, 0, NULL),
-    ('alba@mg.es', '$2y$13$ef9ObfZ.R7msNW9oCrvTlOMvFYupos5AXRmo2RahJzU7s2QzhCtyu', 'YswvC2pI-AXtqtcoi69oDHyJbwfhmy1N', 'alba', 'alba', NOW(), NOW(), NOW(), 1, 'usuario', 0, 0, 'alba.jpg'),
+    ('alba@mg.es', '$2y$13$ef9ObfZ.R7msNW9oCrvTlOMvFYupos5AXRmo2RahJzU7s2QzhCtyu', 'YswvC2pI-AXtqtcoi69oDHyJbwfhmy1N', 'alba', 'alba', NOW(), NOW(), NOW(), 1, 'admin', 0, 0, 'alba.jpg'),
     ('mem@usal.es', '$2y$13$hqt.XD489dM.v9JGloiNLeyE.W4B1fqkFQ26pXWAcN4WtHyc354KW', 'RUwSX2LdFVBK0tx0mDsT0ZbBhUQla5v8', 'mem1', 'mem1' , NOW(), NOW(), NOW(), 1, 'usuario', 0, 0, NULL);
 
 -- --------------------------------------------------------------------------
@@ -597,6 +597,59 @@ INSERT INTO `categoria_etiqueta` (`id_categoria`, `id_etiqueta`) VALUES
     (8, 38),
     (8, 39),
     (8, 40);
+
+-- --------------------------------------------------------------------------
+-- Tabla: IMAGEN - Creación y volcado de datos
+-- --------------------------------------------------------------------------
+DROP TABLE IF EXISTS `imagen`;
+CREATE TABLE IF NOT EXISTS `imagen` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único de la imagen',
+    `nombre` VARCHAR(255) NOT NULL COMMENT 'Nombre original del archivo',
+    `usuario_id` INT(11) NOT NULL COMMENT 'ID del usuario que subió la imagen',
+    `alerta_id` INT(11) NOT NULL COMMENT 'ID de la alerta asociada',
+    `tam_img` INT(11) NOT NULL COMMENT 'Tamaño del archivo en bytes',
+    `metadatos` TEXT DEFAULT NULL COMMENT 'Información extra de la imagen (opcional)',
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de subida',
+    PRIMARY KEY (`id`),
+    KEY `usuario_id` (`usuario_id`),
+    KEY `alerta_id` (`alerta_id`),
+    CONSTRAINT `imagen_usuario_fk` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `imagen_alerta_fk` FOREIGN KEY (`alerta_id`) REFERENCES `alertas` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `imagen` (`nombre`, `usuario_id`, `alerta_id`, `tam_img`, `metadatos`, `created_at`) VALUES
+    ('tormenta_europa.jpg', 1, 1, 204800, 'Tormenta severa en Europa con fuertes vientos.', CURRENT_TIMESTAMP),
+    ('inundaciones_espana.jpg', 1, 2, 256000, 'Inundaciones en España debido a lluvias intensas.', CURRENT_TIMESTAMP),
+    ('incendio_andalucia.jpg', 1, 3, 512000, 'Incendio forestal en Andalucía.', CURRENT_TIMESTAMP),
+    ('nevadas_aragon.jpg', 1, 4, 409600, 'Nevadas en Aragón bloqueando carreteras.', CURRENT_TIMESTAMP),
+    ('accidente_asturias.jpg', 1, 5, 150000, 'Accidente en la autopista A-8 en Asturias.', CURRENT_TIMESTAMP),
+    ('temporal_baleares.jpg', 1, 6, 300000, 'Temporal en las Islas Baleares con vientos fuertes.', CURRENT_TIMESTAMP),
+    ('volcan_canarias.jpg', 1, 7, 350000, 'Aumento de la actividad volcánica en Canarias.', CURRENT_TIMESTAMP),
+    ('derrumbe_cantabria.jpg', 1, 8, 180000, 'Derrumbe de carreteras en Cantabria.', CURRENT_TIMESTAMP),
+    ('ola_calor_extremadura.jpg', 1, 9, 220000, 'Ola de calor extrema en Extremadura.', CURRENT_TIMESTAMP),
+    ('temporal_galicia.jpg', 1, 10, 240000, 'Lluvias intensas y vientos en Galicia.', CURRENT_TIMESTAMP),
+    ('manifestacion_madrid.jpg', 1, 11, 300000, 'Manifestación en Madrid afectando el tráfico.', CURRENT_TIMESTAMP),
+    ('terremoto_murcia.jpg', 1, 12, 280000, 'Terremoto de magnitud 5.2 en Murcia.', CURRENT_TIMESTAMP),
+    ('granizada_navarra.jpg', 1, 13, 350000, 'Granizo dañando infraestructuras en Navarra.', CURRENT_TIMESTAMP),
+    ('tornado_la_rioja.jpg', 1, 14, 500000, 'Tornado en La Rioja causando daños estructurales.', CURRENT_TIMESTAMP),
+    ('explosion_pais_vasco.jpg', 1, 15, 450000, 'Explosión en una zona industrial del País Vasco.', CURRENT_TIMESTAMP),
+    ('robo_valencia.jpg', 1, 16, 100000, 'Robo masivo en la Comunidad Valenciana.', CURRENT_TIMESTAMP),
+    ('emergencia_sanitaria_ceuta.jpg', 1, 17, 120000, 'Brote infeccioso en Ceuta.', CURRENT_TIMESTAMP),
+    ('cierre_puerto_melilla.jpg', 1, 18, 150000, 'Cierre del puerto de Melilla por oleaje.', CURRENT_TIMESTAMP),
+    ('incendio_salamanca.jpg', 1, 19, 190000, 'Incendio en una zona industrial de Salamanca.', CURRENT_TIMESTAMP),
+    ('corte_agua_salamanca.jpg', 1, 20, 130000, 'Corte de agua por mantenimiento en Salamanca.', CURRENT_TIMESTAMP),
+    ('transporte_salamanca.jpg', 1, 21, 170000, 'Fallo en el transporte público en Salamanca.', CURRENT_TIMESTAMP),
+    ('concierto_salamanca.jpg', 1, 22, 250000, 'Concierto en Plaza Mayor de Salamanca.', CURRENT_TIMESTAMP),
+    ('feria_libro_salamanca.jpg', 1, 23, 220000, 'Feria del libro en Salamanca.', CURRENT_TIMESTAMP),
+    ('contaminacion_aire.jpg', 1, 24, 190000, 'Alerta de contaminación en Salamanca.', CURRENT_TIMESTAMP),
+    ('manifestacion_plaza_mayor.jpg', 1, 25, 210000, 'Manifestación en Plaza Mayor de Salamanca.', CURRENT_TIMESTAMP),
+    ('fuga_gas_garrido.jpg', 1, 26, 170000, 'Fuga de gas en el barrio de Garrido.', CURRENT_TIMESTAMP),
+    ('accidente_cementerio.jpg', 1, 27, 150000, 'Accidente en la avenida principal de Cementerio.', CURRENT_TIMESTAMP),
+    ('robo_pizarrales.jpg', 1, 28, 130000, 'Asalto en un comercio de Pizarrales.', CURRENT_TIMESTAMP),
+    ('corte_electrico_san_jose.jpg', 1, 29, 120000, 'Corte de electricidad en el barrio de San José.', CURRENT_TIMESTAMP),
+    ('mercado_medieval.jpg', 1, 30, 250000, 'Mercado medieval en Plaza Mayor de Salamanca.', CURRENT_TIMESTAMP),
+    ('corte_agua_garrido.jpg', 1, 31, 180000, 'Fuga de agua en tuberías en Garrido.', CURRENT_TIMESTAMP),
+    ('actividad_comunitaria.jpg', 1, 32, 160000, 'Jornada de limpieza comunitaria en Garrido.', CURRENT_TIMESTAMP);
 
 SET FOREIGN_KEY_CHECKS = 1;
 COMMIT;

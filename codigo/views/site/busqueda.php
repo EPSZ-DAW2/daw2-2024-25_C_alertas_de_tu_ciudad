@@ -80,20 +80,12 @@ document.addEventListener("DOMContentLoaded", function () {
     let selectedValues = {};
     let map = null;
 
-    // Inicializar estados de los inputs
-    inputs.forEach(input => {
-        const level = input.dataset.level;
-        // Deshabilitar todos los inputs excepto el primer nivel
-        if (parseInt(level) > 1) input.disabled = true;
-    });
-
     // Función para resetear niveles dependientes
     const resetDependentLevels = (currentLevel) => {
         inputs.forEach(input => {
             const level = parseInt(input.dataset.level);
             if (level > currentLevel) {
                 input.value = '';
-                input.disabled = true;
                 delete selectedValues[level];
             }
         });
@@ -101,17 +93,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Autocompletado jerárquico
     inputs.forEach(input => {
+        const level = parseInt(input.dataset.level);
+
         // Manejar el enfoque en el input
-        input.addEventListener('focus', function() {
-            const currentLevel = parseInt(this.dataset.level);
-            resetDependentLevels(currentLevel);
-        });
+        input.addEventListener('focus', () => resetDependentLevels(level));
 
         // Manejar la entrada de texto
-        input.addEventListener('input', function() {
-            const level = this.dataset.level;
-            const parentLevel = this.dataset.parentLevel;
-            const parentId = selectedValues[parentLevel] || null;
+        input.addEventListener('input', async function() {
+            const parentId = selectedValues[input.dataset.parentLevel] || null;
 
             // Limpiar si hay menos de 2 caracteres
             if (this.value.length < 2) {
@@ -120,42 +109,35 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             // Fetch de sugerencias
-            fetch(`<?= Url::to(['site/buscar-ubicacion']) ?>?q=${encodeURIComponent(this.value)}&level=${level}&parent=${parentId}`)
-                .then(res => res.json())
-                .then(data => {
-                    const list = this.nextElementSibling;
-                    list.innerHTML = data.map(item => `
-                        <div class="autocomplete-item" data-id="${item.id}" data-name="${item.nombre}">
-                            <div>${item.nombre}</div>
-                            ${item.padre ? `<small>${item.padre}</small>` : ''}
-                        </div>
-                    `).join('');
+            const response = await fetch(
+                `<?= Url::to(['site/buscar-ubicacion']) ?>?q=${encodeURIComponent(this.value)}&level=${level}&parent=${parentId}`
+            );
+            const data = await response.json();
 
-                    // Manejar clic en sugerencia
-                    list.querySelectorAll('.autocomplete-item').forEach(item => {
-                        item.addEventListener('click', () => {
-                            this.value = item.dataset.name;
-                            selectedValues[level] = item.dataset.id;
-                            list.innerHTML = '';
+            const list = this.nextElementSibling;
+            list.innerHTML = data.map(item => `
+                <div class="autocomplete-item" data-id="${item.id}" data-name="${item.nombre}">
+                    <div>${item.nombre}</div>
+                    ${item.padre ? `<small>${item.padre}</small>` : ''}
+                </div>
+            `).join('');
 
-                            // Habilitar siguiente nivel
-                            const nextLevel = parseInt(level) + 1;
-                            const nextInput = document.querySelector(`[data-level="${nextLevel}"]`);
-                            if (nextInput) nextInput.disabled = false;
-
-                            // Resetear niveles inferiores
-                            resetDependentLevels(parseInt(level));
-                        });
-                    });
+            // Manejar clic en sugerencia
+            list.querySelectorAll('.autocomplete-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    this.value = item.dataset.name;
+                    selectedValues[level] = item.dataset.id;
+                    list.innerHTML = '';
+                    resetDependentLevels(level);
                 });
+            });
         });
 
         // Limpiar selección si se borra el input
         input.addEventListener('change', function() {
             if (this.value === '') {
-                const level = this.dataset.level;
                 delete selectedValues[level];
-                resetDependentLevels(parseInt(level));
+                resetDependentLevels(level);
             }
         });
     });

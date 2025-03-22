@@ -84,6 +84,19 @@ class UbicacionController extends Controller
 
         throw new NotFoundHttpException('La ubicación no existe.');
     }
+
+    public function actionLibres()
+    {
+        $ubicacionesLibres = Ubicacion::find()
+            ->leftJoin('alertas', 'alertas.id_ubicacion = ubicacion.id')
+            ->where(['alertas.id_ubicacion' => null])
+            ->all();
+
+        return $this->render('libres', [
+            'ubicacionesLibres' => $ubicacionesLibres,
+        ]);
+    }
+
 }
 
 

@@ -194,7 +194,7 @@ class SiteController extends Controller
         foreach ($ubicaciones as $ubicacion) {
             $resultado[] = [
                 'nombre' => $ubicacion->nombre,
-                'padre' => $ubicacion->ubCodePadre ? $ubicacion->ubCodePadre->nombre : 'Sin padre',
+                'padre' => $ubicacion->ubCodePadre ? $ubicacion->ubCodePadre->nombre : '',
             ];
         }
 

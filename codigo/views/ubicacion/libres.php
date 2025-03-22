@@ -21,12 +21,13 @@ $this->title = 'Ubicaciones Libres';
             'label' => 'Tipo',
             'value' => function($model) {
                 $tipos = [
+                    0 => 'Planeta',
                     1 => 'Continente',
                     2 => 'País',
-                    3 => 'Región',
+                    3 => 'Comunidad Autónoma',
                     4 => 'Provincia',
-                    6 => 'Ciudad',
-                    7 => 'Distrito/Zona'
+                    6 => 'Localidad',
+                    7 => 'Barrio/Zona'
                 ];
                 return $tipos[$model->ub_code] ?? 'Desconocido';
             }
