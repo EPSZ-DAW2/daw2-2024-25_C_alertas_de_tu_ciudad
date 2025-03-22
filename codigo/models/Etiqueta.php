@@ -14,6 +14,11 @@ class Etiqueta extends ActiveRecord
     public $categoriasSeleccionadas;
 
     /**
+     * Propiedad para manejar las alertas seleccionadas.
+     */
+    public $alertasSeleccionadas;
+
+    /**
      * Nombre de la tabla asociada.
      */
     public static function tableName()
@@ -31,6 +36,7 @@ class Etiqueta extends ActiveRecord
             [['nombre'], 'string', 'max' => 255],
             [['descripcion'], 'string'],
             [['categoriasSeleccionadas'], 'safe'],
+            [['alertasSeleccionadas'], 'safe'],
         ];
     }
 
@@ -44,7 +50,30 @@ class Etiqueta extends ActiveRecord
             'nombre' => 'Nombre',
             'descripcion' => 'Descripción',
             'categoriasSeleccionadas' => 'Categorías',
+            'alertasSeleccionadas' => 'Alertas Asociadas',
         ];
+    }
+
+    /**
+     * Relación para obtener las alertas asociadas a la etiqueta a través de la tabla intermedia.
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAlertas()
+    {
+        return $this->hasMany(\app\models\Alerta::className(), ['id_categoria' => 'id_categoria'])
+                    ->viaTable('categoria_etiqueta', ['id_etiqueta' => 'id']);
+    }
+
+    /**
+     * Relación para obtener las alertas asociadas a esta etiqueta directamente,
+     * usando el campo 'id_etiqueta' de la tabla 'alertas'.
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAlertasDirect()
+    {
+        return $this->hasMany(\app\models\Alerta::className(), ['id_etiqueta' => 'id']);
     }
 
     /**
@@ -63,7 +92,7 @@ class Etiqueta extends ActiveRecord
      */
     public function canBeDeleted()
     {
-        return $this->getCategorias()->count() === 0;
+        return $this->getCategorias()->count() === 0 && $this->getAlertasDirect()->count() === 0;
     }
 
     /**
@@ -76,18 +105,17 @@ class Etiqueta extends ActiveRecord
     }
 
     /**
-     * Guardar las relaciones con categorías después de guardar la etiqueta.
+     * Guardar las relaciones con categorías y alertas después de guardar la etiqueta.
      */
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
 
-        // Eliminar relaciones existentes
+        // Procesar relaciones de categorías:
         \Yii::$app->db->createCommand()
             ->delete('categoria_etiqueta', ['id_etiqueta' => $this->id])
             ->execute();
 
-        // Insertar nuevas relaciones
         if (!empty($this->categoriasSeleccionadas)) {
             foreach ($this->categoriasSeleccionadas as $idCategoria) {
                 \Yii::$app->db->createCommand()
@@ -96,6 +124,23 @@ class Etiqueta extends ActiveRecord
                         'id_categoria' => $idCategoria,
                     ])->execute();
             }
+        }
+
+        // Procesar relaciones de alertas:
+        if (empty($this->alertasSeleccionadas)) {
+            // Si no se seleccionaron alertas, quitar la asociación de todas las alertas que actualmente tienen este id_etiqueta.
+            \Yii::$app->db->createCommand()
+                ->update('alertas', ['id_etiqueta' => null], ['id_etiqueta' => $this->id])
+                ->execute();
+        } else {
+            // Primero, desasociar alertas que ya no estén seleccionadas.
+            \Yii::$app->db->createCommand()
+                ->update('alertas', ['id_etiqueta' => null], ['and', ['id_etiqueta' => $this->id], ['not in', 'id', $this->alertasSeleccionadas]])
+                ->execute();
+            // Luego, asociar alertas seleccionadas.
+            \Yii::$app->db->createCommand()
+                ->update('alertas', ['id_etiqueta' => $this->id], ['in', 'id', $this->alertasSeleccionadas])
+                ->execute();
         }
     }
 }
