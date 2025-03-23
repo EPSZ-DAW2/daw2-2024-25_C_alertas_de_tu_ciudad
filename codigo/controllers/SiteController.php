@@ -300,6 +300,7 @@ class SiteController extends Controller
         ]);
     }
 
+
     /**
      * Displays about page.
      *
@@ -309,4 +310,53 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
+
+    /**
+     * Displays the category tree.
+     *
+     * @return string Rendered category tree view.
+     */
+    public function actionArbolCategorias()
+    {
+        // Se obtienen las categorías raíz (sin padre)
+        $categorias = \app\models\Categoria::find()->where(['id_padre' => null])->all();
+        return $this->render('_categoryTree', [
+            'categorias' => $categorias,
+        ]);
+    }
+
+    /**
+     * Displays the tag cloud.
+     *
+     * @return string Rendered tag cloud view.
+     */
+    public function actionTagCloud()
+    {
+        $etiquetas = \app\models\Etiqueta::find()->all();
+        return $this->render('_tagCloud', [
+            'etiquetas' => $etiquetas,
+        ]);
+    }
+
+
+
+    /**
+     * Displays advanced search form and results.
+     *
+     * @return string Rendered advanced search view.
+     */
+    public function actionBusquedaAvanzada()
+    {
+        $searchModel = new \app\models\search\AlertaSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        return $this->render('busqueda-avanzada', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    
+
+
 }

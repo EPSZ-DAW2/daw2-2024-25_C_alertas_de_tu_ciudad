@@ -1,6 +1,9 @@
 <?php
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
+use app\models\Categoria;
+use app\models\Etiqueta;
 
 /* @var $this yii\web\View */
 /* @var $alertas app\models\Alerta[] */
@@ -13,13 +16,12 @@ $this->title = 'Búsqueda de Alertas';
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-
 <div class="container mt-4">
     <h1 class="text-center" style="margin: 50px;">
         <?= Html::encode($this->title) ?>
     </h1>
 
-    <!-- Filtro por ubicación en la parte superior -->
+    <!-- Filtro por ubicación en la parte superior (funcionalidad existente) -->
     <div class="card p-3 mb-4 text-center">
         <h5>Filtrar alertas por ubicación global</h5>
         <input type="text" id="inputCiudad" class="form-control" placeholder="Escribe el nombre de la ubicación...">
@@ -29,13 +31,57 @@ $this->title = 'Búsqueda de Alertas';
             <button class="btn" id="openMap">Búsqueda por mapa</button>
         </div>
     </div>
+    
+    <!-- NUEVA: Búsqueda Avanzada -->
+    <div class="card p-3 mb-4">
+        <h5>Búsqueda Avanzada</h5>
+        <form method="get" action="<?= Url::to(['site/index']) ?>">
+            <div class="row">
+                <div class="col-md-3">
+                    <input type="text" name="titulo" class="form-control" placeholder="Título">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" name="descripcion" class="form-control" placeholder="Descripción">
+                </div>
+                <div class="col-md-3">
+                    <?php 
+                    $categorias = ArrayHelper::map(Categoria::find()->all(), 'id', 'nombre');
+                    ?>
+                    <select name="id_categoria" class="form-control">
+                        <option value="">Seleccione una categoría</option>
+                        <?php foreach($categorias as $id => $nombre): ?>
+                            <option value="<?= $id ?>"><?= Html::encode($nombre) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <?php 
+                    $etiquetas = ArrayHelper::map(Etiqueta::find()->all(), 'id', 'nombre');
+                    ?>
+                    <select name="id_etiqueta" class="form-control">
+                        <option value="">Seleccione una etiqueta</option>
+                        <?php foreach($etiquetas as $id => $nombre): ?>
+                            <option value="<?= $id ?>"><?= Html::encode($nombre) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-3 text-center">
+                <button type="submit" class="btn btn-primary">Búsqueda Avanzada</button>
+            </div>
+        </form>
+    </div>
+    <!-- FIN búsqueda avanzada -->
+
+    <!-- Mapa y resultados de ubicación -->
     <div class="col-md-15" id="map-container" style="display: none;">
         <div class="map-container">
-                <div class="map-title">Mapa de Ubicaciones</div>
-                <div id="map" style="height: 600px; width: 100%;"></div>
-            </div>
+            <div class="map-title">Mapa de Ubicaciones</div>
+            <div id="map" style="height: 600px; width: 100%;"></div>
         </div>
     </div>
+</div>
+
 <footer class="text-center mt-5 py-3 bg-dark text-light">
     <p>&copy; <?= date('Y') ?> Búsqueda de Alertas. Todos los derechos reservados.</p>
 </footer>
@@ -46,7 +92,6 @@ $this->title = 'Búsqueda de Alertas';
         var listaResultados = document.getElementById("listaResultados");
         var mapContainer = document.getElementById("map-container");
         var openMap = document.getElementById("openMap");
-
 
         inputCiudad.addEventListener("input", function () {
             let query = inputCiudad.value.trim();
@@ -90,7 +135,6 @@ $this->title = 'Búsqueda de Alertas';
             mapContainer.style.display = "block";
             map.invalidateSize(); //porque no se carga bien a veces
         };
-
 
         // Configuración del mapa
         const map = L.map('map').setView([40.4168, -3.7038], 6);
