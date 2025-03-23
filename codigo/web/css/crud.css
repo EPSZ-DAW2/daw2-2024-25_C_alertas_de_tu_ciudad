@@ -32,6 +32,18 @@ h1 {
     border-color: #c0392b;
 }
 
+.btn-custom.filter {
+    background-color: white;
+    border-color: #ea590a;
+    color: #ea590a;
+}
+
+.btn-custom.filter:hover,  .btn-custom.filter.active{
+    background-color: #ea590a;
+    color: white;
+    border-color: #ea590a;
+}
+
 .button-container-group {
     text-align: center;
 }

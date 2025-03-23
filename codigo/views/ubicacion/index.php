@@ -3,7 +3,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 $this->title = 'Mantenimiento de Ubicaciones';
-$this->registerCssFile(Yii::$app->request->baseUrl . '/css/crud.css?v=' . time());
+$this->registerCssFile('@web/css/crud.css?v=' . time());
 ?>
 <h1><?= Html::encode($this->title) ?></h1>
 <div class="button-container-group">
@@ -19,7 +19,7 @@ $this->registerCssFile(Yii::$app->request->baseUrl . '/css/crud.css?v=' . time()
         'lastPageLabel'  => '>',
         'prevPageLabel'  => false,
         'nextPageLabel'  => false,
-        'maxButtonCount' => 3,
+        'maxButtonCount' => 5,
         'options' => ['class' => 'pagination pagination-sm'],
     ],
     'summary' => "<div class='grid-summary'>{begin} - {end} de {totalCount}</div>",

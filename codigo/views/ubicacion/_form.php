@@ -21,7 +21,7 @@ $this->registerCssFile('@web/css/crud.css?v=' . time());
             3 => 'Región',
             4 => 'Provincia',
             6 => 'Ciudad',
-            7 => 'Distrito/Zona'
+            7 => 'Barrio'
         ], ['prompt' => 'Seleccione el tipo de ubicación'])->label(false) ?>
 
     <?= $form->field($model, 'ub_code_padre')->dropDownList(
@@ -29,7 +29,7 @@ $this->registerCssFile('@web/css/crud.css?v=' . time());
             ['prompt' => 'Seleccione una ubicación padre']
         )->label(false) ?>
 
-    <?= $form->field($model, 'code_iso')->textInput(['maxlength' => true])->label('Código ISO') ?>
+    <?= $form->field($model, 'code_iso')->textInput(['maxlength' => true])->label('Código ISO (Opcional)') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>

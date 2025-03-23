@@ -87,16 +87,58 @@ class UbicacionController extends Controller
 
     public function actionLibres()
     {
-        $ubicacionesLibres = Ubicacion::find()
+        $request = Yii::$app->request;
+        $currentFilters = $request->get('filters', []);
+
+        if (!is_array($currentFilters)) {
+            $currentFilters = explode(',', $currentFilters);
+        }
+
+        if ($request->get('toggle')) {
+            $filter = $request->get('toggle');
+
+            if ($filter === 'todas') {
+                $currentFilters = ['todas'];
+            } else {
+                $currentFilters = array_diff($currentFilters, ['todas']);
+
+                if ($filter === 'revisada') {
+                    $currentFilters = array_diff($currentFilters, ['no_revisada']);
+                }
+                if ($filter === 'no_revisada') {
+                    $currentFilters = array_diff($currentFilters, ['revisada']);
+                }
+
+                if (in_array($filter, $currentFilters)) {
+                    $currentFilters = array_diff($currentFilters, [$filter]);
+                } else {
+                    $currentFilters[] = $filter;
+                }
+            }
+        }
+
+        $query = Ubicacion::find()
             ->leftJoin('alertas', 'alertas.id_ubicacion = ubicacion.id')
-            ->where(['alertas.id_ubicacion' => null])
-            ->all();
+            ->where(['alertas.id_ubicacion' => null]);
+
+        if (!in_array('todas', $currentFilters)) {
+            if (in_array('revisada', $currentFilters)) {
+                $query->andWhere(['ubicacion.is_revisada' => true]);
+            }
+            if (in_array('no_revisada', $currentFilters)) {
+                $query->andWhere(['ubicacion.is_revisada' => false]);
+            }
+            if (in_array('nueva', $currentFilters)) {
+                $threeDaysAgo = date('Y-m-d H:i:s', strtotime('-3 days'));
+                $query->andWhere(['>=', 'ubicacion.fecha_creacion', $threeDaysAgo]);
+            }
+        }
 
         return $this->render('libres', [
-            'ubicacionesLibres' => $ubicacionesLibres,
+            'ubicacionesLibres' => $query->all(),
+            'currentFilters' => array_unique($currentFilters),
         ]);
     }
-
 }
 
 

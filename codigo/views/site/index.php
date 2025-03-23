@@ -153,7 +153,7 @@ $this->title = 'Alertas de tu Ciudad';
             }, 1000);
         }
 
-        const map = L.map('map').setView([40.4168, -3.7038], 6);
+        const map = L.map('map').setView([40.4168, -3.7038], 9);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);

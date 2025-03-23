@@ -1,26 +1,13 @@
 <?php
-
 namespace app\models;
 
 use Yii;
 
-/**
- * This is the model class for table "ubicacion".
- *
- * @property int $id Unique identifier for the location
- * @property int $ub_code Location class code: 1=Continent, 2=Country, 3=Region, 4=Province, 6=City, 7=District/Zone
- * @property string $nombre Name of the location
- * @property string|null $code_iso International country/state code if applicable
- * @property int|null $ub_code_padre ID of the parent location in the hierarchy
- *
- * @property Alerta[] $alertas
- * @property Ubicacion $ubCodePadre
- * @property Ubicacion[] $ubicacions
- */
 class Ubicacion extends \yii\db\ActiveRecord
 {
     /**
-     * {@inheritdoc}
+     * Devuelve el nombre de la tabla asociada con el modelo.
+     * @return string Nombre de la tabla.
      */
     public static function tableName()
     {
@@ -28,37 +15,45 @@ class Ubicacion extends \yii\db\ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
+     * Define las reglas de validación para los atributos del modelo.
+     * @return array Reglas de validación.
      */
     public function rules()
     {
         return [
-            [['ub_code', 'nombre'], 'required'],
+            [['ub_code', 'nombre', 'ub_code_padre'], 'required'],
             [['ub_code', 'ub_code_padre'], 'integer'],
+            [['latitud', 'longitud'], 'number'],
             [['nombre'], 'string', 'max' => 50],
             [['code_iso'], 'string', 'max' => 10],
+            [['fecha_creacion'], 'safe'],
+            [['is_revisada'], 'boolean'],
             [['ub_code_padre'], 'exist', 'skipOnError' => true, 'targetClass' => Ubicacion::class, 'targetAttribute' => ['ub_code_padre' => 'id']],
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * Define las etiquetas de los atributos para su presentación en formularios.
+     * @return array Etiquetas de los atributos.
      */
     public function attributeLabels()
     {
         return [
             'id' => 'ID',
-            'ub_code' => 'Ub Code',
-            'nombre' => 'Name',
-            'code_iso' => 'ISO Code',
-            'ub_code_padre' => 'Parent Ub Code',
+            'ub_code' => 'Tipo de Ubicación',
+            'nombre' => 'Nombre',
+            'code_iso' => 'Código ISO',
+            'ub_code_padre' => 'Ubicación Padre',
+            'latitud' => 'Latitud',
+            'longitud' => 'Longitud',
+            'fecha_creacion' => 'Fecha de Creación',
+            'is_revisada' => 'Revisada',
         ];
     }
 
     /**
-     * Gets query for [[Alertas]].
-     *
-     * @return \yii\db\ActiveQuery
+     * Obtiene las alertas asociadas a la ubicación.
+     * @return \yii\db\ActiveQuery Relación con las alertas.
      */
     public function getAlertas()
     {
@@ -66,9 +61,8 @@ class Ubicacion extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[UbCodePadre]].
-     *
-     * @return \yii\db\ActiveQuery
+     * Obtiene la ubicación padre de esta ubicación.
+     * @return \yii\db\ActiveQuery Relación con la ubicación padre.
      */
     public function getUbCodePadre()
     {
@@ -76,9 +70,8 @@ class Ubicacion extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Ubicacions]].
-     *
-     * @return \yii\db\ActiveQuery
+     * Obtiene las ubicaciones hijas de esta ubicación.
+     * @return \yii\db\ActiveQuery Relación con las ubicaciones hijas.
      */
     public function getUbicacions()
     {
@@ -86,10 +79,9 @@ class Ubicacion extends \yii\db\ActiveRecord
     }
 
     /**
-     * Recursively retrieves all descendant location IDs.
-     *
-     * @param int $idUbicacion ID of the parent location.
-     * @return array List of IDs including descendants.
+     * Obtiene todos los IDs de las ubicaciones descendientes de una ubicación dada.
+     * @param int $idUbicacion ID de la ubicación principal.
+     * @return array Lista de IDs de ubicaciones descendientes.
      */
     public static function obtenerIdsDescendientes($idUbicacion)
     {
@@ -103,12 +95,15 @@ class Ubicacion extends \yii\db\ActiveRecord
         return $ids;
     }
 
+    /**
+     * Obtiene todas las ubicaciones que no están siendo usadas como ubicaciones padre.
+     * @return \app\models\Ubicacion[] Lista de ubicaciones libres.
+     */
     public static function obtenerUbicacionesLibres()
     {
         return self::find()
             ->where(['not in', 'id', Ubicacion::find()->select('ub_code_padre')->where('ub_code_padre IS NOT NULL')])
             ->all();
     }
-
-
 }
+

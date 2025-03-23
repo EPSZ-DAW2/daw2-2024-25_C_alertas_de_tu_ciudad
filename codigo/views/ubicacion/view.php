@@ -1,5 +1,4 @@
 <?php
-
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -7,7 +6,7 @@ use yii\widgets\DetailView;
 /** @var app\models\Ubicacion $model */
 
 $this->title = 'Ubicación: ' . $model->nombre;
-$this->params['breadcrumbs'][] = ['label' => 'Ubicacions', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Ubicaciones', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 $this->registerCssFile('@web/css/crud.css?v=' . time());
@@ -34,7 +33,17 @@ $this->registerCssFile('@web/css/crud.css?v=' . time());
             'ub_code',
             'nombre',
             'code_iso',
-            'ub_code_padre',
+            [
+                'attribute' => 'ub_code_padre',
+                'value' => $model->ubCodePadre ? $model->ubCodePadre->nombre : 'Ninguna',
+            ],
+            'latitud',
+            'longitud',
+            'fecha_creacion',
+            [
+                'attribute' => 'is_revisada',
+                'value' => $model->is_revisada ? 'Sí' : 'No',
+            ],
         ],
     ]) ?>
 
