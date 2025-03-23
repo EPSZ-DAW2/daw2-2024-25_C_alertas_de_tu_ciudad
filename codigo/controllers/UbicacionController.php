@@ -89,19 +89,19 @@ class UbicacionController extends Controller
     {
         $request = Yii::$app->request;
         $currentFilters = $request->get('filters', []);
+        $currentFilters = is_array($currentFilters) ? $currentFilters : explode(',', $currentFilters);
 
-        if (!is_array($currentFilters)) {
-            $currentFilters = explode(',', $currentFilters);
-        }
-
+        // Manejar el toggle de filtros
         if ($request->get('toggle')) {
             $filter = $request->get('toggle');
 
             if ($filter === 'todas') {
                 $currentFilters = ['todas'];
             } else {
+                // Si se selecciona un filtro, quitar 'todas'
                 $currentFilters = array_diff($currentFilters, ['todas']);
 
+                // Manejar exclusividad entre revisada y no_revisada
                 if ($filter === 'revisada') {
                     $currentFilters = array_diff($currentFilters, ['no_revisada']);
                 }
@@ -109,6 +109,7 @@ class UbicacionController extends Controller
                     $currentFilters = array_diff($currentFilters, ['revisada']);
                 }
 
+                // Toggle del filtro
                 if (in_array($filter, $currentFilters)) {
                     $currentFilters = array_diff($currentFilters, [$filter]);
                 } else {
@@ -117,25 +118,44 @@ class UbicacionController extends Controller
             }
         }
 
-        $query = Ubicacion::find()
-            ->leftJoin('alertas', 'alertas.id_ubicacion = ubicacion.id')
-            ->where(['alertas.id_ubicacion' => null]);
+        // Consulta base
+        $query = Ubicacion::find();
 
+        // Aplicar filtro "libres" (ubicaciones sin alertas asociadas)
+        if (in_array('libres', $currentFilters)) {
+            $query->leftJoin('alertas', 'alertas.id_ubicacion = ubicacion.id')
+                  ->andWhere(['IS', 'alertas.id_ubicacion', null]);
+        }
+
+        // Aplicar filtros adicionales
         if (!in_array('todas', $currentFilters)) {
             if (in_array('revisada', $currentFilters)) {
-                $query->andWhere(['ubicacion.is_revisada' => true]);
+                $query->andWhere(['ubicacion.is_revisada' => 1]);
             }
             if (in_array('no_revisada', $currentFilters)) {
-                $query->andWhere(['ubicacion.is_revisada' => false]);
+                $query->andWhere(['ubicacion.is_revisada' => 0]);
             }
             if (in_array('nueva', $currentFilters)) {
-                $threeDaysAgo = date('Y-m-d H:i:s', strtotime('-3 days'));
-                $query->andWhere(['>=', 'ubicacion.fecha_creacion', $threeDaysAgo]);
+                $fechaHace3Dias = date('Y-m-d H:i:s', strtotime('-3 days'));
+                $query->andWhere(['>=', 'ubicacion.fecha_creacion', $fechaHace3Dias]);
             }
         }
 
+        // Configurar el dataProvider
+        $dataProvider = new \yii\data\ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'fecha_creacion' => SORT_DESC,
+                ],
+            ],
+        ]);
+
         return $this->render('libres', [
-            'ubicacionesLibres' => $query->all(),
+            'dataProvider' => $dataProvider,
             'currentFilters' => array_unique($currentFilters),
         ]);
     }

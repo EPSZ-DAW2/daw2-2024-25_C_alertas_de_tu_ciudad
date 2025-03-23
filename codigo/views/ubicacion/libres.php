@@ -16,10 +16,7 @@ $this->registerCssFile('@web/css/crud.css?v=' . time());
 </div>
 
 <?= GridView::widget([
-    'dataProvider' => new \yii\data\ArrayDataProvider([
-        'allModels' => $ubicacionesLibres,
-        'pagination' => ['pageSize' => 10],
-    ]),
+    'dataProvider' => $dataProvider,
     'pager' => [
         'firstPageLabel' => '<',
         'lastPageLabel'  => '>',
@@ -41,22 +38,22 @@ $this->registerCssFile('@web/css/crud.css?v=' . time());
             'enableSorting' => true,
         ],
         [
-                'attribute' => 'ub_code',
-                'label' => 'Tipo',
-                'value' => function($model) {
-                    $tipos = [
-                        0 => 'Planeta',
-                        1 => 'Continente',
-                        2 => 'País',
-                        3 => 'Comunidad Autónoma',
-                        4 => 'Provincia',
-                        5 => 'Ciudad', // Added missing code
-                        6 => 'Localidad',
-                        7 => 'Barrio/Zona'
-                    ];
-                    return $tipos[$model->ub_code] ?? 'Desconocido';
-                },
-                'enableSorting' => true,
+            'attribute' => 'ub_code',
+            'label' => 'Tipo',
+            'value' => function($model) {
+                $tipos = [
+                    0 => 'Planeta',
+                    1 => 'Continente',
+                    2 => 'País',
+                    3 => 'Comunidad Autónoma',
+                    4 => 'Provincia',
+                    5 => 'Ciudad',
+                    6 => 'Localidad',
+                    7 => 'Barrio/Zona'
+                ];
+                return $tipos[$model->ub_code] ?? 'Desconocido';
+            },
+            'enableSorting' => true,
         ],
         [
             'header' => 'Acciones',
