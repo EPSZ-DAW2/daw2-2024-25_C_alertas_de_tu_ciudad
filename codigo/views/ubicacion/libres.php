@@ -1,11 +1,12 @@
 <?php
-
 use yii\helpers\Html;
 use yii\grid\GridView;
 
-$this->title = 'Ubicaciones Libres';
+$this->title = 'Revisar Ubicaciones';
+$this->registerCssFile('@web/css/crud.css?v=' . time());
 ?>
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 <h1><?= Html::encode($this->title) ?></h1>
 
 <?= GridView::widget([

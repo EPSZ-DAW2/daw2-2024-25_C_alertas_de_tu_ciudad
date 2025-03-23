@@ -4,16 +4,10 @@ use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 /** @var app\models\Ubicacion $model */
-$this->title = 'Crear Nueva Ubicacion';
+$this->title = 'Crear Nueva Ubicación';
 $this->params['breadcrumbs'][] = ['label' => 'Ubicaciones', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-
-$this->registerCss("
-    h1 {
-        text-align: center;
-        margin: 50px;
-    }
-");
+$this->registerCssFile('@web/css/crud.css?v=' . time());
 ?>
 
 <div class="ubicacion-create">
