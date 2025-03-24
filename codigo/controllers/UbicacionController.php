@@ -8,9 +8,10 @@ use app\models\UbicacionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use DateTime;
 
 /**
- * UbicacionController implements the CRUD actions for Ubicacion model.
+ * UbicacionController implementa las acciones CRUD para el modelo Ubicacion.
  */
 class UbicacionController extends Controller
 {
@@ -91,17 +92,18 @@ class UbicacionController extends Controller
         $currentFilters = $request->get('filters', []);
         $currentFilters = is_array($currentFilters) ? $currentFilters : explode(',', $currentFilters);
 
-        // Manejar el toggle de filtros
+        if (empty($currentFilters)) {
+            $currentFilters = ['todas'];
+        }
+
         if ($request->get('toggle')) {
             $filter = $request->get('toggle');
 
             if ($filter === 'todas') {
                 $currentFilters = ['todas'];
             } else {
-                // Si se selecciona un filtro, quitar 'todas'
                 $currentFilters = array_diff($currentFilters, ['todas']);
 
-                // Manejar exclusividad entre revisada y no_revisada
                 if ($filter === 'revisada') {
                     $currentFilters = array_diff($currentFilters, ['no_revisada']);
                 }
@@ -109,7 +111,6 @@ class UbicacionController extends Controller
                     $currentFilters = array_diff($currentFilters, ['revisada']);
                 }
 
-                // Toggle del filtro
                 if (in_array($filter, $currentFilters)) {
                     $currentFilters = array_diff($currentFilters, [$filter]);
                 } else {
@@ -118,16 +119,34 @@ class UbicacionController extends Controller
             }
         }
 
-        // Consulta base
         $query = Ubicacion::find();
 
-        // Aplicar filtro "libres" (ubicaciones sin alertas asociadas)
+        $fechaDesde = $request->get('fecha_desde');
+        $fechaHasta = $request->get('fecha_hasta');
+
+        if ($fechaDesde && $fechaHasta) {
+            $fechaDesdeObj = DateTime::createFromFormat('d/m/Y', $fechaDesde);
+            $fechaHastaObj = DateTime::createFromFormat('d/m/Y', $fechaHasta);
+
+            if ($fechaDesdeObj && $fechaHastaObj) {
+                $fechaDesdeFormateada = $fechaDesdeObj->format('Y-m-d');
+                $fechaHastaFormateada = $fechaHastaObj->format('Y-m-d');
+
+                if ($fechaDesdeFormateada > $fechaHastaFormateada) {
+                    Yii::$app->session->setFlash('error', 'La fecha "Desde" no puede ser mayor que la fecha "Hasta".');
+                } else {
+                    $query->andWhere(['between', 'DATE(ubicacion.fecha_creacion)', $fechaDesdeFormateada, $fechaHastaFormateada]);
+                }
+            } else {
+                Yii::$app->session->setFlash('error', 'Formato de fecha inválido. Por favor, use DD/MM/YYYY.');
+            }
+        }
+
         if (in_array('libres', $currentFilters)) {
             $query->leftJoin('alertas', 'alertas.id_ubicacion = ubicacion.id')
                   ->andWhere(['IS', 'alertas.id_ubicacion', null]);
         }
 
-        // Aplicar filtros adicionales
         if (!in_array('todas', $currentFilters)) {
             if (in_array('revisada', $currentFilters)) {
                 $query->andWhere(['ubicacion.is_revisada' => 1]);
@@ -141,7 +160,6 @@ class UbicacionController extends Controller
             }
         }
 
-        // Configurar el dataProvider
         $dataProvider = new \yii\data\ActiveDataProvider([
             'query' => $query,
             'pagination' => [
@@ -157,9 +175,8 @@ class UbicacionController extends Controller
         return $this->render('libres', [
             'dataProvider' => $dataProvider,
             'currentFilters' => array_unique($currentFilters),
+            'fechaDesde' => $fechaDesde,
+            'fechaHasta' => $fechaHasta,
         ]);
     }
 }
-
-
-

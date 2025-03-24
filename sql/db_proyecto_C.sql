@@ -178,7 +178,7 @@ CREATE TABLE `ubicacion` (
     CONSTRAINT `fk_ubicacion_padre` FOREIGN KEY (`ub_code_padre`) REFERENCES `ubicacion` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
-    INSERT INTO `ubicacion` (`id`, `ub_code`, `nombre`, `code_iso`, `ub_code_padre`, `latitud`, `longitud`, `fecha_creacion`, `is_revisada`) VALUES
+INSERT INTO `ubicacion` (`id`, `ub_code`, `nombre`, `code_iso`, `ub_code_padre`, `latitud`, `longitud`, `fecha_creacion`, `is_revisada`) VALUES
     (0, 0, 'Tierra', NULL, NULL, NULL, NULL, '2023-10-05 12:34:56', TRUE),
     (1, 1, 'África', 'AF', 0, -8.7832, 34.5085, '2023-03-15 08:45:23', TRUE),
     (2, 1, 'América', 'AM', 0, 8.7832, -55.4915, '2023-07-22 14:12:47', TRUE),

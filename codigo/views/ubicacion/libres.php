@@ -4,7 +4,31 @@ use yii\grid\GridView;
 
 $this->title = 'Revisar Ubicaciones';
 $this->registerCssFile('@web/css/crud.css?v=' . time());
+$this->registerJs("
+    $('#fecha-filter-toggle').click(function() {
+        $(this).toggleClass('active');
+        $('#fecha-container').toggle();
+    });
+
+    $('#fecha-desde, #fecha-hasta').inputmask('99/99/9999');
+
+    const initFlatpickr = (selector, maxDate = null) => {
+        $(selector).flatpickr({
+            dateFormat: 'd/m/Y',
+            locale: 'es',
+            allowInput: true,
+            maxDate: maxDate,
+        });
+    };
+
+    const today = new Date();
+    const todayFormatted = today.toLocaleDateString('en-GB');
+
+    initFlatpickr('#fecha-desde', todayFormatted);
+    initFlatpickr('#fecha-hasta', todayFormatted);
+");
 ?>
+
 <h1><?= Html::encode($this->title) ?></h1>
 
 <div class="button-container-group">
@@ -13,6 +37,16 @@ $this->registerCssFile('@web/css/crud.css?v=' . time());
     <?= Html::a('Nuevas', ['libres', 'toggle' => 'nueva'], ['class' => 'btn btn-custom button-filter' . (in_array('nueva', $currentFilters) ? ' active' : '')]) ?>
     <?= Html::a('Revisadas', ['libres', 'toggle' => 'revisada'], ['class' => 'btn btn-custom button-filter' . (in_array('revisada', $currentFilters) ? ' active' : '')]) ?>
     <?= Html::a('No Revisadas', ['libres', 'toggle' => 'no_revisada'], ['class' => 'btn btn-custom button-filter' . (in_array('no_revisada', $currentFilters) ? ' active' : '')]) ?>
+    <?= Html::a('Por fechas', 'javascript:void(0);', ['class' => 'btn btn-custom button-filter', 'id' => 'fecha-filter-toggle']) ?>
+
+    <form method="get" class="fecha-container">
+            <span class="fecha-label">Desde:</span>
+            <?= Html::input('text', 'fecha_desde', $fechaDesde, ['class' => 'form-control fecha-input', 'id' => 'fecha-desde']) ?>
+            <span class="fecha-label">Hasta:</span>
+            <?= Html::input('text', 'fecha_hasta', $fechaHasta, ['class' => 'form-control fecha-input', 'id' => 'fecha-hasta']) ?>
+            <?= Html::submitButton('Buscar', ['class' => 'btn btn-custom']) ?>
+    </form>
+
 </div>
 
 <?= GridView::widget([
