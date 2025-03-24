@@ -53,7 +53,7 @@ $this->title = 'Gestión de Usuarios';
                             'role', 
                             $model->role, 
                             [
-                                'normal' => 'Normal',
+                                'normal' => 'Usuario',
                                 'moderator' => 'Moderator',
                                 'admin' => 'Admin',
                                 'sysadmin' => 'Sysadmin'

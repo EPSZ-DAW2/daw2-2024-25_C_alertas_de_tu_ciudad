@@ -33,7 +33,8 @@ $config = [
         'mailer' => [
             'class' => \yii\symfonymailer\Mailer::class,
             'viewPath' => '@app/mail',
-            'useFileTransport' => true, // Enviar todos los correos a un archivo en desarrollo
+            // send all mails to a file by default.
+            'useFileTransport' => true,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -45,10 +46,10 @@ $config = [
             ],
         ],
         'db' => $db,
-
         'urlManager' => [
             'enablePrettyUrl' => true,  // Habilitar URLs amigables
             'showScriptName' => false,   // Ocultar index.php en las URLs
+            'baseUrl' => '/daw2_2024-25_yii2_basic_epsz/codigo/web',
             'rules' => [
                 'busqueda' => 'site/busqueda',
                 'comentarios' => 'comentarios/index',
@@ -67,11 +68,15 @@ if (YII_ENV_DEV) {
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
+        // uncomment the following to add your IP if you are not connecting from localhost.
+        //'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
+        // uncomment the following to add your IP if you are not connecting from localhost.
+        //'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 }
 
