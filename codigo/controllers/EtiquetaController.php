@@ -42,12 +42,14 @@ class EtiquetaController extends Controller
 
     /**
      * Crea una nueva etiqueta.
+     * La asociación de categorías y alertas se gestiona en el modelo (afterSave).
      */
     public function actionCreate()
     {
         $model = new Etiqueta();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            // Se actualizan automáticamente las asociaciones en el modelo.
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -58,12 +60,14 @@ class EtiquetaController extends Controller
 
     /**
      * Actualiza una etiqueta existente.
+     * La asociación de categorías y alertas se gestiona en el modelo (afterSave).
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            // Las relaciones se actualizan en el modelo.
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -115,7 +119,7 @@ class EtiquetaController extends Controller
     }
 
     /**
-     * Ver las etiqutas creadas.
+     * Ver la etiqueta creada.
      */
     public function actionView($id)
     {
@@ -124,7 +128,6 @@ class EtiquetaController extends Controller
             'model' => $model,
         ]);
     }
-
 
     /**
      * Encuentra el modelo de Etiqueta basado en su ID.
