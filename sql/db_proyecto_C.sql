@@ -1062,5 +1062,20 @@ INSERT INTO `alertas_creados` (`titulo`, `descripcion`, `fecha_vencimiento`, `ac
     ('Alerta 4', 'Cuarta descripción de alerta', '2025-04-10', 'Eliminar', 3),
     ('Alerta 5', 'Quinta descripción de alerta', '2025-05-15', 'Eliminar', 2);
 
+-- --------------------------------------------------------------------------
+-- Tabla: PROPUESTA_ETIQUETA - Creación y volcado de datos
+-- --------------------------------------------------------------------------
+CREATE TABLE `propuesta_etiqueta` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único para cada propuesta de etiqueta',
+  `nombre` varchar(255) NOT NULL COMMENT 'Nombre de la propuesta de etiqueta',
+  `descripcion` text DEFAULT NULL COMMENT 'Descripción de la propuesta de etiqueta',
+  `usuario_id` int(11) DEFAULT NULL COMMENT 'ID del usuario que propuso la etiqueta',
+  `estado` enum('pendiente','aprobado','rechazado') NOT NULL DEFAULT 'pendiente' COMMENT 'Estado de la propuesta',
+  `creado_en` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Fecha y hora de creación de la propuesta',
+  `actualizado_en` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT 'Fecha y hora de la última actualización',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
 SET FOREIGN_KEY_CHECKS = 1;
 COMMIT;
