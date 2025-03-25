@@ -11,22 +11,21 @@ use yii\db\ActiveRecord;
  * @property int $id
  * @property string $titulo
  * @property string $descripcion
- * @property string $fecha_inicio
- * @property int|null $duracion_estimada
- * @property int|null $id_lugar
+ * @property string $fecha_creacion
+ * @property string|null $fecha_expiracion
+ * @property string|null $completado_en
+ * @property int|null $id_categoria
  * @property int|null $id_ubicacion
- * @property string|null $detalles
- * @property string|null $notas
- * @property string|null $url_externa
- * @property string $estado
- * @property int|null $id_usuario
  * @property int|null $id_imagen
+ * @property string $estado
+ * @property int|null $usuario_id
+ * @property int|null $id_etiqueta
  *
  * @property AlertaEtiqueta[] $alertaEtiquetas
  * @property Comentario[] $comentarios
  * @property Etiqueta[] $etiquetas
  * @property Incidencia[] $incidencias
- * @property Lugar $lugar
+ * @property Categoria $categoria
  * @property Usuario $usuario
  * @property Ubicacion $ubicacion
  * @property Imagen $imagen
@@ -47,14 +46,14 @@ class Alerta extends ActiveRecord
     public function rules()
     {
         return [
-            [['titulo', 'descripcion', 'fecha_inicio', 'estado'], 'required'],
+            [['titulo', 'descripcion', 'estado'], 'required'],
             [['descripcion', 'detalles', 'notas', 'url_externa'], 'string'],
-            [['fecha_inicio'], 'safe'],
-            [['duracion_estimada', 'id_lugar', 'id_usuario', 'id_ubicacion', 'id_imagen'], 'integer'],
+            [['fecha_creacion', 'fecha_expiracion', 'completado_en'], 'safe'],
+            [['id_categoria', 'id_ubicacion', 'id_imagen', 'usuario_id', 'id_etiqueta'], 'integer'],
             [['titulo'], 'string', 'max' => 255],
             [['estado'], 'string', 'max' => 50],
-            [['id_lugar'], 'exist', 'skipOnError' => true, 'targetClass' => Lugar::class, 'targetAttribute' => ['id_lugar' => 'id']],
-            [['id_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::class, 'targetAttribute' => ['id_usuario' => 'id']],
+            [['id_categoria'], 'exist', 'skipOnError' => true, 'targetClass' => Categoria::class, 'targetAttribute' => ['id_categoria' => 'id']],
+            [['usuario_id'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::class, 'targetAttribute' => ['usuario_id' => 'id']],
             [['id_ubicacion'], 'exist', 'skipOnError' => true, 'targetClass' => Ubicacion::class, 'targetAttribute' => ['id_ubicacion' => 'id']],
             [['id_imagen'], 'exist', 'skipOnError' => true, 'targetClass' => Imagen::class, 'targetAttribute' => ['id_imagen' => 'id']],
         ];
@@ -69,17 +68,29 @@ class Alerta extends ActiveRecord
             'id' => 'ID',
             'titulo' => 'Título',
             'descripcion' => 'Descripción',
-            'fecha_inicio' => 'Fecha de Inicio',
-            'duracion_estimada' => 'Duración Estimada',
-            'id_lugar' => 'Lugar',
+            'fecha_creacion' => 'Fecha de Creación',
+            'fecha_expiracion' => 'Fecha de Expiración',
+            'completado_en' => 'Completado en',
+            'id_categoria' => 'Categoría',
             'id_ubicacion' => 'Ubicación',
             'detalles' => 'Detalles',
             'notas' => 'Notas',
             'url_externa' => 'URL Externa',
             'estado' => 'Estado',
-            'id_usuario' => 'Usuario',
+            'usuario_id' => 'Usuario',
             'id_imagen' => 'Imagen',
+            'id_etiqueta' => 'Etiqueta',
         ];
+    }
+
+    /**
+     * Relación con el modelo Categoría.
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCategoria()
+    {
+        return $this->hasOne(Categoria::class, ['id' => 'id_categoria']);
     }
 
     /**

@@ -224,7 +224,7 @@ class SiteController extends Controller
      * @param \yii\db\ActiveQuery $query Consulta a modificar
      * @param array $params Parámetros de búsqueda
      */
-    private function aplicarFiltrosBusqueda($query, $params){
+    private function aplicarFiltrosBusqueda($query, $params) {
 
         if (!empty($params['titulo'])) {
             $query->andFilterWhere(['like', 'alertas.titulo', $params['titulo']]);
@@ -239,33 +239,28 @@ class SiteController extends Controller
             $query->andFilterWhere(['alertas.id_etiqueta' => $params['id_etiqueta']]);
         }
         $tieneFechaDesde = !empty($params['fecha_desde']);
-        $tieneFechaHasta = !empty($params['fecha_hasta']);
+            $tieneFechaHasta = !empty($params['fecha_hasta']);
 
-        if ($tieneFechaDesde || $tieneFechaHasta) {
-            if ($tieneFechaDesde) {
-                $fechaDesde = $this->formatearFecha($params['fecha_desde'], ' 00:00:00');
-                if (!$fechaDesde) {
-                    Yii::$app->session->setFlash('error', 'Formato de fecha inicial incorrecto. Use dd/mm/aaaa');
+            if ($tieneFechaDesde || $tieneFechaHasta) {
+                $fechaDesde = $tieneFechaDesde ? $this->formatearFecha($params['fecha_desde'], '00:00:00') : null;
+                $fechaHasta = $tieneFechaHasta ? $this->formatearFecha($params['fecha_hasta'], '23:59:59') : null;
+
+                Yii::debug("Fecha desde formateada: " . $fechaDesde);
+                Yii::debug("Fecha hasta formateada: " . $fechaHasta);
+
+                if ($fechaDesde === false || $fechaHasta === false) {
+                    Yii::$app->session->setFlash('error', 'Formato de fecha incorrecto. Usa dd/mm/aaaa');
+                    return $query;
                 }
-            }
 
-            if ($tieneFechaHasta) {
-                $fechaHasta = $this->formatearFecha($params['fecha_hasta'], ' 23:59:59');
-                if (!$fechaHasta) {
-                    Yii::$app->session->setFlash('error', 'Formato de fecha final incorrecto. Use dd/mm/aaaa');
-                }
-            }
-
-            if (($tieneFechaDesde && $fechaDesde) || ($tieneFechaHasta && $fechaHasta)) {
-                if ($tieneFechaDesde && $tieneFechaHasta && $fechaDesde && $fechaHasta){
+                if ($tieneFechaDesde && $tieneFechaHasta) {
                     $query->andWhere(['between', 'alertas.fecha_creacion', $fechaDesde, $fechaHasta]);
-                } elseif ($tieneFechaDesde && $fechaDesde) {
+                } elseif ($tieneFechaDesde) {
                     $query->andWhere(['>=', 'alertas.fecha_creacion', $fechaDesde]);
-                } elseif ($tieneFechaHasta && $fechaHasta) {
+                } elseif ($tieneFechaHasta) {
                     $query->andWhere(['<=', 'alertas.fecha_creacion', $fechaHasta]);
                 }
             }
-        }
 
         $this->aplicarFiltrosUbicacion($query, $params);
     }
@@ -276,32 +271,35 @@ class SiteController extends Controller
      * @param string $hora Hora a concatenar
      * @return string|false Fecha en formato YYYY-mm-dd H:i:s o false si es inválida
      */
-    private function formatearFecha($fecha, $hora = '')
-    {
+    private function formatearFecha($fecha, $hora = '') {
         $fecha = trim($fecha);
 
-        if (!preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $fecha)) {
+        if (empty($fecha)) {
+            return false;
+        }
+
+        if (!preg_match('/^\d{1,2}[\/-]\d{1,2}[\/-]\d{4}$/', $fecha)) {
             Yii::error("Formato de fecha inválido (debe ser dd/mm/aaaa): " . $fecha);
             return false;
         }
 
-        try {
-            $partes = explode('/', $fecha);
-            $dia = $partes[0];
-            $mes = $partes[1];
-            $anio = $partes[2];
+        $separator = strpos($fecha, '/') !== false ? '/' : '-';
+        $partes = explode($separator, $fecha);
 
-            if (!checkdate($mes, $dia, $anio)) {
-                Yii::error("Fecha no válida: " . $fecha);
-                return false;
-            }
-
-            $fechaFormateada = sprintf('%04d-%02d-%02d', $anio, $mes, $dia);
-            return $fechaFormateada . $hora;
-        } catch (\Exception $e) {
-            Yii::error("Error al formatear fecha: " . $e->getMessage());
+        if (count($partes) !== 3) {
             return false;
         }
+
+        $dia = $partes[0];
+        $mes = $partes[1];
+        $anio = $partes[2];
+
+        if (!checkdate($mes, $dia, $anio)) {
+            Yii::error("Fecha no válida: " . $fecha);
+            return false;
+        }
+
+        return sprintf('%04d-%02d-%02d%s', $anio, $mes, $dia, $hora ? ' ' . ltrim($hora) : '');
     }
 
     /**
