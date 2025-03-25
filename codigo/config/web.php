@@ -49,7 +49,6 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'baseUrl' => '/daw2_2024-25_yii2_basic_epsz/codigo/web', 
             'rules' => [
                 'registrar' => 'auth/registrar',
                 'profile' => 'user/profile', 
