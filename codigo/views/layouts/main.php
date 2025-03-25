@@ -96,7 +96,7 @@ $role = Yii::$app->user->isGuest ? 'guest' : Yii::$app->user->identity->role;
 
     // Si el usuario no ha iniciado sesión, ofrecer opción de login
     if (Yii::$app->user->isGuest) {
-        $menuItemsRight[] = ['label' => 'Registrarse', 'url' => ['/site/registrar']];
+        $menuItemsRight[] = ['label' => 'Registrarse', 'url' => ['/registrar']];
         $menuItemsRight[] = ['label' => 'Iniciar Sesión', 'url' => ['/site/login']];
     } else {
         // Si está autenticado, mostrar opción de logout y nombre de usuario

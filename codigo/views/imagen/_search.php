@@ -6,6 +6,7 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var app\models\ImagenSearch $model */
 /** @var yii\widgets\ActiveForm $form */
+$this->registerCssFile('@web/css/crud.css?v=' . time());
 ?>
 
 <div class="imagen-search">
@@ -22,12 +23,6 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'usuario_id') ?>
 
     <?= $form->field($model, 'alerta_id') ?>
-
-    <?= $form->field($model, 'tam_img') ?>
-
-    <?php // echo $form->field($model, 'metadatos') ?>
-
-    <?php // echo $form->field($model, 'created_at') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

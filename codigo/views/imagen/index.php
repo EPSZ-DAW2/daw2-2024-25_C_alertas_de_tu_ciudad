@@ -20,11 +20,10 @@ $this->registerCssFile('@web/css/crud.css?v=' . time());
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <div class="button-container">
-        <?= Html::a('Subir Imagen', ['create'], ['class' => 'btn btn-success']) ?>
+    <div class="button-container-group">
+        <?= Html::a('Subir Imagen', ['create'], ['class' => 'btn btn-custom button-container']) ?>
     </div>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -34,10 +33,12 @@ $this->registerCssFile('@web/css/crud.css?v=' . time());
             [
                 'attribute' => 'id',
                 'label' => 'ID',
+                'enableSorting' => true,
             ],
             [
                 'attribute' => 'nombre',
                 'label' => 'Nombre',
+                'enableSorting' => true,
             ],
             [
                 'attribute' => 'usuario_id',
@@ -45,6 +46,7 @@ $this->registerCssFile('@web/css/crud.css?v=' . time());
                 'value' => function($model) {
                     return $model->usuario->username;
                 },
+                'enableSorting' => true,
             ],
             [
                 'attribute' => 'alerta_id',
@@ -52,11 +54,13 @@ $this->registerCssFile('@web/css/crud.css?v=' . time());
                 'value' => function($model) {
                     return $model->alerta->titulo;
                 },
+                'enableSorting' => true,
             ],
             [
                 'header' => 'Acciones',
                 'class' => ActionColumn::className(),
                 'contentOptions' => ['class' => 'text-center'],
+                'headerOptions' => ['class' => 'text-center'],
                 'buttons' => [
                     'view' => function ($url, $model, $key) {
                         return Html::a('<i class="fas fa-eye"></i>', $url, [

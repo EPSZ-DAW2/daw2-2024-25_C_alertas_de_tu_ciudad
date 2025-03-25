@@ -34,6 +34,7 @@ class AppAsset extends AssetBundle
         'https://cdn.jsdelivr.net/npm/flatpickr',
         'https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js',
         'https://unpkg.com/leaflet/dist/leaflet.js',
+        'https://cdn.jsdelivr.net/npm/exif-js/exif.min.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

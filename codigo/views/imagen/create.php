@@ -5,10 +5,12 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var app\models\Imagen $model */
 
-$this->title = 'Create Imagen';
-$this->params['breadcrumbs'][] = ['label' => 'Imagens', 'url' => ['index']];
+$this->title = 'Crear Nueva Imagen';
+$this->params['breadcrumbs'][] = ['label' => 'Imágenes', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+$this->registerCssFile('@web/css/crud.css?v=' . time());
 ?>
+
 <div class="imagen-create">
 
     <h1><?= Html::encode($this->title) ?></h1>

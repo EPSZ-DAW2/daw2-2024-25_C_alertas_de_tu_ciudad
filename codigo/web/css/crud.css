@@ -73,7 +73,7 @@ table thead th a.desc:after {
     cursor: not-allowed;
 }
 
-.ubicacion-form {
+.ubicacion-form, .imagen-form {
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
