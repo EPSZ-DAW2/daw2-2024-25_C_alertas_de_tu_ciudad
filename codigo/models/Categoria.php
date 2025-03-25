@@ -30,7 +30,7 @@ class Categoria extends ActiveRecord
             [['nombre'], 'string', 'max' => 255],
             [['descripcion'], 'string'],
             [['id_padre'], 'integer'],
-            [['id_padre'], 'exist', 'skipOnError' => true, 'targetClass' => self::className(), 'targetAttribute' => ['id_padre' => 'id']],
+            [['id_padre'], 'exist', 'skipOnError' => true, 'targetClass' => self::class, 'targetAttribute' => ['id_padre' => 'id']],
             [['etiquetasSeleccionadas'], 'safe'], // Permitir que Yii procese las etiquetas seleccionadas
         ];
     }
@@ -56,7 +56,7 @@ class Categoria extends ActiveRecord
      */
     public function getSubcategorias()
     {
-        return $this->hasMany(self::className(), ['id_padre' => 'id']);
+        return $this->hasMany(self::class, ['id_padre' => 'id']);
     }
 
     /**
@@ -66,7 +66,7 @@ class Categoria extends ActiveRecord
      */
     public function getPadre()
     {
-        return $this->hasOne(self::className(), ['id' => 'id_padre']);
+        return $this->hasOne(self::class, ['id' => 'id_padre']);
     }
 
     /**
@@ -76,7 +76,7 @@ class Categoria extends ActiveRecord
      */
     public function getEtiquetas()
     {
-        return $this->hasMany(Etiqueta::className(), ['id' => 'id_etiqueta'])
+        return $this->hasMany(Etiqueta::class, ['id' => 'id_etiqueta'])
                     ->viaTable('categoria_etiqueta', ['id_categoria' => 'id']);
     }
 

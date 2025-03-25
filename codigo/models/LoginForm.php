@@ -28,15 +28,36 @@ class LoginForm extends Model
     }
 
     public function validatePassword($attribute, $params)
-    {
-        if (!$this->hasErrors()) {
-            $user = $this->getUser();
+{
+    if (!$this->hasErrors()) {
+        $user = $this->getUser();
 
-            if (!$user || !Yii::$app->security->validatePassword($this->password, $user->password)) {
+        if (!$user) {
+            $this->addError($attribute, 'Correo o contraseña incorrectos.');
+            return;
+        }
+
+        // **调试输出**
+        Yii::error("User password (from DB): " . $user->password, 'login');
+        Yii::error("Input password: " . $this->password, 'login');
+
+        // 如果数据库密码是明文，则直接比对
+        if (strlen($user->password) < 20) {
+            if ($this->password !== $user->password) {
+                $this->addError($attribute, 'Correo o contraseña incorrectos.');
+            }
+        } else {
+            // 正确使用 `password_verify()`
+            if (!Yii::$app->security->validatePassword($this->password, $user->password)) {
                 $this->addError($attribute, 'Correo o contraseña incorrectos.');
             }
         }
     }
+}
+
+
+
+    
 
     public function login()
     {

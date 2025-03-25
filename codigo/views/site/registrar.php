@@ -23,7 +23,7 @@ $this->title = 'Registrar Usuario';
 
 <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
 
-<?= $form->field($model, 'nick')->textInput() ?>
+<?= $form->field($model, 'username')->textInput() ?>
 
 <?= $form->field($model, 'password1')->passwordInput() ?>
 

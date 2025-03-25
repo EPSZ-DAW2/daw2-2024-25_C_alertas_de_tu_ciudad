@@ -3,17 +3,14 @@
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
-/** @var app\models\Ubicacion $model */
+/** @var app\models\Imagen $model */
 
-$this->title = 'Actualizar Ubicación: ' . $model->nombre;
-$this->params['breadcrumbs'][] = ['label' => 'Ubicacions', 'url' => ['index']];
+$this->title = 'Update Imagen: ' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Imagens', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
-$this->registerCssFile('@web/css/crud.css?v=' . time());
-
 ?>
-
-<div class="ubicacion-update">
+<div class="imagen-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

@@ -1,0 +1,255 @@
+h1 {
+    text-align: center;
+    margin: 50px;
+}
+
+table thead th {
+    color: #ea590a;
+    text-align: center;
+}
+
+table thead th a {
+    color: #ea590a;
+    text-decoration: none;
+    padding-right: 30px;
+    position: relative;
+}
+
+table thead th a:after {
+    content: '\f0dc';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 5px;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+    font-size: 16px;
+}
+
+table thead th a.asc:after {
+    content: '\f062';
+    opacity: 1;
+    font-size: 18px;
+}
+
+table thead th a.desc:after {
+    content: '\f063';
+    opacity: 1;
+    font-size: 18px;
+}
+
+.pagination {
+    margin: 20px 0;
+    justify-content: center;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination li a, .pagination li span {
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #ea590a;
+    color: white;
+    border-radius: 4px;
+    border: 1px solid #ea590a;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination li a:hover, .pagination li span:hover {
+    background-color: #d65b08;
+}
+
+.pagination .active a {
+    background-color: #d65b08;
+    border-color: #d65b08;
+}
+
+.pagination .disabled a, .pagination .disabled span {
+    background-color: #f1f1f1;
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.ubicacion-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    width: 100%;
+}
+
+.form-control:focus {
+    border-color: #ea590a;
+    box-shadow: 0 0 5px rgba(234, 89, 10, 0.5);
+}
+
+.button-container-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+/* Estilos para el contenedor de fechas */
+.fecha-container {
+    display: none; /* Ocultar inicialmente */
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+}
+
+/* Estilos para las etiquetas de fecha */
+.fecha-label {
+    color: #888;
+    font-size: 14px;
+}
+
+/* Estilos para los inputs de fecha */
+.fecha-input {
+    width: 140px;
+    padding: 6px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    text-align: center;
+    color: #888;
+}
+
+/* Estilos cuando los inputs de fecha están en foco */
+.fecha-input:focus {
+    border-color: #ea590a;
+    box-shadow: 0 0 5px rgba(234, 89, 10, 0.5);
+}
+
+/* Estilos para el botón de búsqueda */
+#buscar-fecha-filters {
+    background-color: #ea590a;
+    border-color: #ea590a;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Estilos para el botón de búsqueda cuando está en hover */
+#buscar-fecha-filters:hover {
+    background-color: #d65b08;
+}
+
+/* Mostrar el contenedor de fechas cuando el filtro está activo */
+#fecha-filter-toggle.active ~ .fecha-container {
+    display: flex;
+}
+
+/* Estilos para el botón de filtro */
+#fecha-filter-toggle {
+    margin-left: 10px;
+}
+
+/* Asegurarse de que los inputs de fecha estén visibles */
+#fecha-desde, #fecha-hasta, #apply-fecha-filters {
+    display: inline-block;
+}
+
+.grid-summary {
+    text-align: right;
+    color: #999;
+    font-size: 13px;
+}
+
+.btn-custom, .btn-success {
+    background-color: #ea590a;
+    border-color: #ea590a;
+    color: white;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+    padding: 8px 16px;
+}
+
+.btn-custom:hover, .btn-custom:active, .btn-success:hover {
+    background-color: #d24d08;
+    border-color: #ea590a;
+    color: white;
+}
+
+.button-container-group .btn-custom.active {
+    background-color: #ea590a;
+    border-color: #ea590a;
+    color: white;
+}
+
+.btn-custom.delete {
+    background-color: white;
+    border-color: #ea590a;
+    color: #ea590a;
+}
+
+.btn-custom.delete:hover {
+    background-color: #c0392b;
+    color: white;
+    border-color: #c0392b;
+}
+
+.btn-success {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+}
+
+.btn-custom.button-filter {
+    background-color: white;
+    border-color: #ea590a;
+    color: #ea590a;
+}
+
+.btn-custom.button-filter:hover,
+.btn-custom.button-filter:active {
+    background-color: rgba(234, 89, 10, 0.1);
+    border-color: #ea590a;
+    color: #ea590a;
+}
+
+.btn-custom.button-filter.active {
+    background-color: #ea590a;
+    border-color: #ea590a;
+    color: white;
+}
+
+.btn-custom.button-filter.active:hover {
+    background-color: #d24d08;
+    border-color: #ea590a;
+    color: white;
+}
+
+.flatpickr-day:hover, .flatpickr-day.selected, .flatpickr-day.today {
+    background-color: #ea590a !important;
+    color: #ffffff !important;
+    border: 1px solid #ea590a !important;
+}
+
+.flatpickr-weekday {
+    color: #ea590a !important;
+}
+
+
+
+

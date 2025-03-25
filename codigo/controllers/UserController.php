@@ -20,7 +20,7 @@ class UserController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'], // Only authenticated users can access
+                        'roles' => ['@'], // Solo usuarios autenticados pueden acceder
                     ],
                 ],
             ],
@@ -28,69 +28,107 @@ class UserController extends Controller
     }
 
     /**
-     * Displays the user profile page.
+     * Muestra la página del perfil del usuario.
      * @return string
-     * @throws NotFoundHttpException if the user is not logged in
+     * @throws NotFoundHttpException si el usuario no está autenticado
      */
     public function actionProfile()
     {
-        // Get the currently logged-in user
         $user = Yii::$app->user->identity;
+        $this->ensureUserExists($user);
 
-        // Check if the user is logged in
-        if ($user === null) {
-            throw new NotFoundHttpException('User not found.');
-        }
-
-        // Render the profile view
         return $this->render('profile', [
             'user' => $user,
         ]);
     }
 
     /**
-     * Edit user profile
+     * Editar perfil de usuario.
      * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the user is not logged in
+     * @throws NotFoundHttpException si el usuario no está autenticado
      */
     public function actionEdit()
     {
-        // 获取当前登录用户
         $user = Yii::$app->user->identity;
-    
-        // 确保用户存在
-        if ($user === null) {
-            throw new NotFoundHttpException('User not found.');
-        }
-    
-        // 如果是 POST 请求，加载数据并验证
-        if ($user->load(Yii::$app->request->post())) {
-            if ($user->validate() && $user->save()) {
-                // 保存成功，设置成功消息并重定向
-                Yii::$app->session->setFlash('success', 'Profile updated successfully.');
+        $this->ensureUserExists($user);
+
+        if ($user->load(Yii::$app->request->post()) && $user->validate()) {
+            if ($user->save()) {
+                Yii::$app->session->setFlash('success', 'Perfil actualizado correctamente.');
                 return $this->redirect(['profile']);
             } else {
-                // 验证失败，设置错误消息
-                Yii::$app->session->setFlash('error', 'Failed to update profile. Please check your inputs.');
+                Yii::$app->session->setFlash('error', 'No se pudo guardar los cambios. Inténtalo de nuevo.');
             }
         }
-    
-        // 渲染编辑视图
+
         return $this->render('edit', [
             'user' => $user,
         ]);
     }
-    
+
     /**
-     * Handles not found users
-     * This helper function ensures we handle missing users cleanly.
-     * @return void
+     * Cambiar la contraseña del usuario.
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException si el usuario no está autenticado
+     */
+    public function actionChangePassword()
+    {
+        $user = Yii::$app->user->identity;
+        $this->ensureUserExists($user);
+
+        $user->scenario = 'changePassword';
+
+        if ($user->load(Yii::$app->request->post()) && $user->validate()) {
+            $user->setPassword($user->newPassword);
+            if ($user->save(false)) {
+                Yii::$app->session->setFlash('success', 'Contraseña cambiada con éxito.');
+                return $this->redirect(['profile']);
+            } else {
+                Yii::$app->session->setFlash('error', 'No se pudo guardar la nueva contraseña. Inténtalo de nuevo.');
+            }
+        }
+
+        return $this->render('change-password', [
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * Eliminar cuenta de usuario.
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException si el usuario no está autenticado
+     */
+    public function actionEliminar()
+    {
+        $user = Yii::$app->user->identity;
+        $this->ensureUserExists($user);
+
+        if (Yii::$app->request->isPost) {
+            $postData = Yii::$app->request->post('Usuario');
+
+            if ($postData && isset($postData['eliminar_razon'])) {
+                $user->eliminar_razon = $postData['eliminar_razon'];
+                if ($user->save(false)) {
+                    Yii::$app->user->logout();
+                    return $this->redirect(['/site/login']);
+                }
+            } else {
+                Yii::$app->session->setFlash('error', 'Debe proporcionar una razón para eliminar la cuenta.');
+            }
+        }
+
+        return $this->render('eliminar', ['user' => $user]);
+    }
+
+    /**
+     * Asegura que el usuario exista, de lo contrario lanza un error 404.
+     * @param mixed $user
      * @throws NotFoundHttpException
      */
     protected function ensureUserExists($user)
     {
         if ($user === null) {
-            throw new NotFoundHttpException('User not found.');
+            throw new NotFoundHttpException('Usuario no encontrado.');
         }
     }
 }

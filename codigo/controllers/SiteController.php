@@ -15,9 +15,6 @@ use app\models\Ubicacion;
 
 class SiteController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
@@ -41,145 +38,85 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function actions()
     {
         return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
+            'error'   => ['class' => 'yii\web\ErrorAction'],
             'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
+                'class'           => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
         ];
     }
 
     /**
-     * Displays homepage with optional city filter.
-     *
-     * @param string|null $ciudad City name to filter alerts.
-     * @return string Rendered homepage view.
+     * Acción principal que muestra alertas con filtros opcionales por ciudad
+     * @param string|null $ciudad Nombre de ciudad para filtrar
+     * @param bool|null $borrarFiltro Bandera para limpiar filtros actuales
+     * @return string Vista renderizada con alertas y ubicaciones
      */
-    public function actionIndex($ciudad = null)
+    public function actionIndex($ciudad = null, $borrarFiltro = null)
     {
-        // Manejo de sesiones
-        if (Yii::$app->request->get('borrarFiltro')) {
-            Yii::$app->session->remove('ciudad');
-            $ciudad = null;
-        } elseif ($ciudad = Yii::$app->request->get('ciudad')) {
-            Yii::$app->session->set('ciudad', $ciudad);
-        } else {
-            $ciudad = Yii::$app->session->get('ciudad');
+        if ($borrarFiltro) {
+            return $this->redirect(['site/index']);
         }
 
-        // Consulta de alertas
         $query = Alerta::find()->joinWith('ubicacion');
+        $searchParams = Yii::$app->request->get();
+        $this->aplicarFiltrosBusqueda($query, $searchParams);
 
         if ($ciudad) {
-            $ciudadUpper = mb_strtoupper($ciudad, 'UTF-8');
-
-            // Obtener la ubicación principal
-            $ubicacionPrincipal = Ubicacion::find()
-                ->where(['like', 'nombre', $ciudadUpper])
-                ->one();
-
-            if ($ubicacionPrincipal) {
-                // Obtener IDs de ubicaciones descendientes
-                $idsUbicaciones = $this->obtenerDescendientes($ubicacionPrincipal->id);
-                $idsUbicaciones[] = $ubicacionPrincipal->id; // Incluir la ubicación principal
-
-                // Filtrar alertas por ubicaciones
-                $query->andWhere(['ubicacion.id' => $idsUbicaciones]);
-
-                // Obtener ubicaciones para el mapa (incluyendo las hijas)
-                $ubicaciones = Ubicacion::find()
-                    ->select(['nombre', 'latitud', 'longitud'])
-                    ->where(['id' => $idsUbicaciones])
-                    ->andWhere(['not', ['latitud' => null, 'longitud' => null]])
-                    ->asArray()
-                    ->all();
-            } else {
-                $query->andWhere('0=1'); // No hay resultados
-                $ubicaciones = []; // No hay ubicaciones para el mapa
-            }
+            $ubicaciones = $this->aplicarFiltroUbicacion($query, $ciudad);
         } else {
-            // Si no hay filtro, obtener todas las ubicaciones con coordenadas
             $ubicaciones = Ubicacion::find()
                 ->select(['nombre', 'latitud', 'longitud'])
-                ->where(['not', ['latitud' => null, 'longitud' => null]])
+                ->where(['not', ['latitud' => null]])
+                ->andWhere(['not', ['longitud' => null]])
                 ->asArray()
                 ->all();
         }
 
-        $alertas = $query->all();
-
         return $this->render('index', [
-            'alertas' => $alertas,
-            'ciudad' => $ciudad,
-            'ubicaciones' => $ubicaciones, // Pasar las ubicaciones al mapa
+            'alertas'      => $query->all(),
+            'ciudad'       => $ciudad,
+            'ubicaciones'  => $ubicaciones,
+            'searchParams' => $searchParams
         ]);
     }
 
+    /**
+     * Acción de búsqueda de alertas por ubicación
+     * @param int|null $ubicacion ID de ubicación para filtrar
+     * @return string Vista renderizada con resultados de búsqueda
+     */
     public function actionBusqueda($ubicacion = null)
     {
-        // Si el usuario ha seleccionado una ubicación, la guardamos en la sesión
         if ($ubicacion) {
             Yii::$app->session->set('ubicacion', $ubicacion);
         } else {
             $ubicacion = Yii::$app->session->get('ubicacion');
         }
 
-        // Filtrar las alertas por ubicación si se ha seleccionado
         $query = Alerta::find();
         if ($ubicacion) {
             $query->where(['ubicacion_id' => $ubicacion]);
         }
 
-        $alertas = $query->all();
-        $ubicaciones = Ubicacion::find()->asArray()->all(); // Obtener ubicaciones disponibles
-
         return $this->render('busqueda', [
-            'alertas' => $alertas,
-            'ubicaciones' => $ubicaciones,
-            'ubicacion' => $ubicacion,
+            'alertas'      => $query->all(),
+            'ubicaciones'  => Ubicacion::find()->asArray()->all(),
+            'ubicacion'    => $ubicacion,
         ]);
     }
 
-
     /**
-     * Función recursiva para obtener IDs de ubicaciones descendientes.
-     *
-     * @param int $idPadre ID de la ubicación padre.
-     * @return array IDs de las ubicaciones descendientes.
-     */
-    private function obtenerDescendientes($idPadre)
-    {
-        $ids = [];
-        $ubicacionesHijas = Ubicacion::find()
-            ->where(['ub_code_padre' => $idPadre])
-            ->all();
-
-        foreach ($ubicacionesHijas as $ubicacion) {
-            $ids[] = $ubicacion->id;
-            $ids = array_merge($ids, $this->obtenerDescendientes($ubicacion->id));
-        }
-
-        return $ids;
-    }
-
-    /**
-     * Returns matching locations as JSON for autocomplete.
-     *
-     * @param string|null $q Query string for searching locations.
-     * @return array JSON array of matching locations.
+     * Endpoint AJAX para búsqueda de ubicaciones
+     * @param string|null $q Término de búsqueda
+     * @return array Resultados en formato JSON
      */
     public function actionBuscarUbicacion($q = null)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
-
         if (empty($q)) {
             return [];
         }
@@ -190,70 +127,49 @@ class SiteController extends Controller
             ->limit(10)
             ->all();
 
-        $resultado = [];
-        foreach ($ubicaciones as $ubicacion) {
-            $resultado[] = [
+        return array_map(function($ubicacion) {
+            return [
                 'nombre' => $ubicacion->nombre,
-                'padre' => $ubicacion->ubCodePadre ? $ubicacion->ubCodePadre->nombre : 'Sin padre',
+                'padre'  => $ubicacion->ubCodePadre ? $ubicacion->ubCodePadre->nombre : '',
             ];
-        }
-
-        return $resultado;
+        }, $ubicaciones);
     }
 
     /**
-     * Displays categories tree and related alerts.
-     *
-     * @return string Rendered categories view.
+     * Muestra alertas filtradas por categoría
+     * @param int|null $id_categoria ID de categoría para filtrar
+     * @return string Vista renderizada con alertas por categoría
      */
     public function actionCategorias($id_categoria = null)
     {
-        $categorias = \app\models\Categoria::find()->all();
-        $alertas = [];
-
-        if ($id_categoria !== null) {
-            $alertas = \app\models\Alerta::find()
-                ->where(['id_categoria' => $id_categoria])
-                ->all();
-        }
+        $alertas = $id_categoria ? Alerta::find()->where(['id_categoria' => $id_categoria])->all() : [];
 
         return $this->render('categorias', [
-            'categorias' => $categorias,
-            'alertas' => $alertas,
-            'categoriaSeleccionada' => $id_categoria,
+            'categorias'           => Categoria::find()->all(),
+            'alertas'              => $alertas,
+            'categoriaSeleccionada'=> $id_categoria,
         ]);
     }
 
     /**
-     * Muestra las etiquetas y las alertas asociadas a una etiqueta específica.
-     *
-     * @return string
+     * Muestra alertas filtradas por etiqueta
+     * @param int|null $id_etiqueta ID de etiqueta para filtrar
+     * @return string Vista renderizada con alertas por etiqueta
      */
     public function actionEtiquetas($id_etiqueta = null)
     {
-        $etiquetas = \app\models\Etiqueta::find()->all();
-        $alertas = [];
-
-        if ($id_etiqueta !== null) {
-            $alertas = \app\models\Alerta::find()
-                ->where(['id_etiqueta' => $id_etiqueta])
-                ->all();
-        }
+        $alertas = $id_etiqueta ? Alerta::find()->where(['id_etiqueta' => $id_etiqueta])->all() : [];
 
         return $this->render('etiquetas', [
-            'etiquetas' => $etiquetas,
-            'alertas' => $alertas,
-            'etiquetaSeleccionada' => $id_etiqueta,
+            'etiquetas'           => \app\models\Etiqueta::find()->all(),
+            'alertas'             => $alertas,
+            'etiquetaSeleccionada'=> $id_etiqueta,
         ]);
     }
 
-
-
     /**
-     * Login action.
-     * Handles user login.
-     *
-     * @return Response|string Redirect or rendered login view.
+     * Acción para el formulario de login
+     * @return mixed Redirección o vista de login
      */
     public function actionLogin()
     {
@@ -267,15 +183,12 @@ class SiteController extends Controller
         }
 
         $model->password = '';
-        return $this->render('login', [
-            'model' => $model,
-        ]);
+        return $this->render('login', ['model' => $model]);
     }
 
     /**
-     * Logs out the current user.
-     *
-     * @return Response Redirects to homepage.
+     * Acción para cerrar sesión
+     * @return mixed Redirección al home
      */
     public function actionLogout()
     {
@@ -284,9 +197,8 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays contact form and handles submissions.
-     *
-     * @return Response|string Rendered contact form or refreshed page on successful submission.
+     * Acción para el formulario de contacto
+     * @return string Vista renderizada del formulario
      */
     public function actionContact()
     {
@@ -295,68 +207,166 @@ class SiteController extends Controller
             Yii::$app->session->setFlash('contactFormSubmitted');
             return $this->refresh();
         }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
+        return $this->render('contact', ['model' => $model]);
     }
 
-
     /**
-     * Displays about page.
-     *
-     * @return string Rendered about view.
+     * Acción para la página "Acerca de"
+     * @return string Vista renderizada
      */
     public function actionAbout()
     {
         return $this->render('about');
     }
 
-
     /**
-     * Displays the category tree.
-     *
-     * @return string Rendered category tree view.
+     * Aplica filtros de búsqueda incluyendo rango de fechas
+     * @param \yii\db\ActiveQuery $query Consulta a modificar
+     * @param array $params Parámetros de búsqueda
      */
-    public function actionArbolCategorias()
-    {
-        // Se obtienen las categorías raíz (sin padre)
-        $categorias = \app\models\Categoria::find()->where(['id_padre' => null])->all();
-        return $this->render('_categoryTree', [
-            'categorias' => $categorias,
-        ]);
+    private function aplicarFiltrosBusqueda($query, $params) {
+
+        if (!empty($params['titulo'])) {
+            $query->andFilterWhere(['like', 'alertas.titulo', $params['titulo']]);
+        }
+        if (!empty($params['descripcion'])) {
+            $query->andFilterWhere(['like', 'alertas.descripcion', $params['descripcion']]);
+        }
+        if (!empty($params['id_categoria'])) {
+            $query->andFilterWhere(['alertas.id_categoria' => $params['id_categoria']]);
+        }
+        if (!empty($params['id_etiqueta'])) {
+            $query->andFilterWhere(['alertas.id_etiqueta' => $params['id_etiqueta']]);
+        }
+        $tieneFechaDesde = !empty($params['fecha_desde']);
+            $tieneFechaHasta = !empty($params['fecha_hasta']);
+
+            if ($tieneFechaDesde || $tieneFechaHasta) {
+                $fechaDesde = $tieneFechaDesde ? $this->formatearFecha($params['fecha_desde'], '00:00:00') : null;
+                $fechaHasta = $tieneFechaHasta ? $this->formatearFecha($params['fecha_hasta'], '23:59:59') : null;
+
+                Yii::debug("Fecha desde formateada: " . $fechaDesde);
+                Yii::debug("Fecha hasta formateada: " . $fechaHasta);
+
+                if ($fechaDesde === false || $fechaHasta === false) {
+                    Yii::$app->session->setFlash('error', 'Formato de fecha incorrecto. Usa dd/mm/aaaa');
+                    return $query;
+                }
+
+                if ($tieneFechaDesde && $tieneFechaHasta) {
+                    $query->andWhere(['between', 'alertas.fecha_creacion', $fechaDesde, $fechaHasta]);
+                } elseif ($tieneFechaDesde) {
+                    $query->andWhere(['>=', 'alertas.fecha_creacion', $fechaDesde]);
+                } elseif ($tieneFechaHasta) {
+                    $query->andWhere(['<=', 'alertas.fecha_creacion', $fechaHasta]);
+                }
+            }
+
+        $this->aplicarFiltrosUbicacion($query, $params);
     }
 
     /**
-     * Displays the tag cloud.
-     *
-     * @return string Rendered tag cloud view.
+     * Convierte fecha de formato dd/mm/YYYY a YYYY-mm-dd para la base de datos
+     * @param string $fecha Fecha en formato dd/mm/YYYY
+     * @param string $hora Hora a concatenar
+     * @return string|false Fecha en formato YYYY-mm-dd H:i:s o false si es inválida
      */
-    public function actionTagCloud()
-    {
-        $etiquetas = \app\models\Etiqueta::find()->all();
-        return $this->render('_tagCloud', [
-            'etiquetas' => $etiquetas,
-        ]);
+    private function formatearFecha($fecha, $hora = '') {
+        $fecha = trim($fecha);
+
+        if (empty($fecha)) {
+            return false;
+        }
+
+        if (!preg_match('/^\d{1,2}[\/-]\d{1,2}[\/-]\d{4}$/', $fecha)) {
+            Yii::error("Formato de fecha inválido (debe ser dd/mm/aaaa): " . $fecha);
+            return false;
+        }
+
+        $separator = strpos($fecha, '/') !== false ? '/' : '-';
+        $partes = explode($separator, $fecha);
+
+        if (count($partes) !== 3) {
+            return false;
+        }
+
+        $dia = $partes[0];
+        $mes = $partes[1];
+        $anio = $partes[2];
+
+        if (!checkdate($mes, $dia, $anio)) {
+            Yii::error("Fecha no válida: " . $fecha);
+            return false;
+        }
+
+        return sprintf('%04d-%02d-%02d%s', $anio, $mes, $dia, $hora ? ' ' . ltrim($hora) : '');
     }
-
-
 
     /**
-     * Displays advanced search form and results.
-     *
-     * @return string Rendered advanced search view.
+     * Aplica filtros de ubicación jerárquica a la consulta
+     * @param \yii\db\ActiveQuery $query Consulta a modificar
+     * @param array $params Parámetros de búsqueda
      */
-    public function actionBusquedaAvanzada()
+    private function aplicarFiltrosUbicacion($query, $params)
     {
-        $searchModel = new \app\models\search\AlertaSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        return $this->render('busqueda-avanzada', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        $niveles = [
+            'continente' => 1,
+            'pais'       => 2,
+            'comunidad'  => 3,
+            'provincia'  => 4,
+            'localidad'  => 6,
+            'barrio'     => 7
+        ];
+
+        $nivelesInvertidos = array_reverse($niveles, true);
+        foreach ($nivelesInvertidos as $paramName => $ubCode) {
+            if (!empty($params[$paramName])) {
+                $ubicacion = Ubicacion::find()
+                    ->where(['nombre' => $params[$paramName], 'ub_code' => $ubCode])
+                    ->one();
+                if ($ubicacion) {
+                    $ubicacionIds = $this->obtenerUbicacionesJerarquia($ubicacion->id);
+                    $query->andWhere(['alertas.id_ubicacion' => $ubicacionIds]);
+                    break;
+                }
+            }
+        }
     }
 
-    
+    /**
+     * Obtiene recursivamente todos los IDs de ubicaciones descendientes
+     * @param int $idUbicacion ID de ubicación padre
+     * @return array IDs de todas las ubicaciones hijas
+     */
+    private function obtenerUbicacionesJerarquia($idUbicacion)
+    {
+        $ids = [$idUbicacion];
+        $descendientes = Ubicacion::find()->where(['ub_code_padre' => $idUbicacion])->all();
+        foreach ($descendientes as $desc) {
+            $ids = array_merge($ids, $this->obtenerUbicacionesJerarquia($desc->id));
+        }
+        return $ids;
+    }
 
-
+    /**
+     * Aplica filtro por ubicación basado en nombre de ciudad
+     * @param \yii\db\ActiveQuery $query Consulta a modificar
+     * @param string $ciudad Nombre de la ciudad
+     * @return array Ubicaciones encontradas
+     */
+    private function aplicarFiltroUbicacion($query, $ciudad)
+    {
+        $ubicacion = Ubicacion::find()->where(['nombre' => $ciudad])->one();
+        if ($ubicacion) {
+            $ubicacionIds = $this->obtenerUbicacionesJerarquia($ubicacion->id);
+            $query->andWhere(['alertas.id_ubicacion' => $ubicacionIds]);
+        }
+        return Ubicacion::find()
+            ->select(['nombre', 'latitud', 'longitud'])
+            ->where(['nombre' => $ciudad])
+            ->andWhere(['not', ['latitud' => null]])
+            ->andWhere(['not', ['longitud' => null]])
+            ->asArray()
+            ->all();
+    }
 }

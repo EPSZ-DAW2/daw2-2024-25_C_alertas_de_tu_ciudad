@@ -9,7 +9,9 @@ use yii\web\NotFoundHttpException;
 
 class ConfigurationsController extends Controller
 {
-    // Listar todas las configuraciones
+    /**
+     * Listar todas las configuraciones.
+     */
     public function actionIndex()
     {
         $configurations = Configuration::find()->all();
@@ -18,7 +20,12 @@ class ConfigurationsController extends Controller
         ]);
     }
 
-    // Actualizar una configuración
+    /**
+     * Actualizar una configuración.
+     *
+     * @param int $id
+     * @return mixed
+     */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
@@ -32,7 +39,13 @@ class ConfigurationsController extends Controller
         ]);
     }
 
-    // Buscar modelo por ID
+    /**
+     * Buscar modelo por ID.
+     *
+     * @param int $id
+     * @return Configuration
+     * @throws NotFoundHttpException
+     */
     protected function findModel($id)
     {
         if (($model = Configuration::findOne($id)) !== null) {

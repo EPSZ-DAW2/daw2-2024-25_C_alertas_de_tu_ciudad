@@ -24,7 +24,7 @@ class Comentario extends ActiveRecord
         return [
             [['texto', 'id_alerta', 'id_usuario'], 'required'],
             [['texto'], 'string'],
-            [['id_alerta', 'id_usuario', 'estado_cierre', 'num_denuncias'], 'integer'],
+            [['id_alerta', 'id_usuario', 'estado_cierre', 'num_denuncias', 'es_denunciado', 'es_visible', 'es_cerrado'], 'integer'],
             [['bloqueado'], 'boolean'],
             [['creado_en', 'actualizado_en'], 'safe'], // Fechas aceptadas como valores válidos
         ];
@@ -43,6 +43,9 @@ class Comentario extends ActiveRecord
             'estado_cierre' => 'Estado de Cierre',
             'num_denuncias' => 'Número de Denuncias',
             'bloqueado' => 'Bloqueado',
+            'es_denunciado' => 'Denunciado',
+            'es_visible' => 'Visible',
+            'es_cerrado' => 'Cerrado',
             'creado_en' => 'Fecha de Creación',
             'actualizado_en' => 'Última Actualización',
         ];
