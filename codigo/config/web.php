@@ -47,9 +47,8 @@ $config = [
         ],
         'db' => $db,
         'urlManager' => [
-            'enablePrettyUrl' => true,  // Habilitar URLs amigables
-            'showScriptName' => false,   // Ocultar index.php en las URLs
-            'baseUrl' => '/daw2_2024-25_yii2_basic_epsz/codigo/web',
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
             'rules' => [
                 'busqueda' => 'site/busqueda',
                 'comentarios' => 'comentarios/index',

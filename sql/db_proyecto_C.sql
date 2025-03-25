@@ -97,9 +97,14 @@ CREATE TABLE IF NOT EXISTS `usuario` (
     `role` ENUM('guest','usuario','moderator','admin','sysadmin') DEFAULT 'usuario' COMMENT 'Rol del usuario en el sistema',
     `attempts` INT(11) DEFAULT 0 COMMENT 'Intentos fallidos de acceso',
     `is_locked` TINYINT(1) DEFAULT 0 COMMENT 'Indica si el usuario está bloqueado',
+    `locked` tinyint(1) DEFAULT 0 COMMENT 'Indica si el usuario está bloqueado',
     `phone` VARCHAR(15) DEFAULT NULL COMMENT 'Número de teléfono del usuario',
     `status` TINYINT(1) DEFAULT 0 COMMENT 'Estado del usuario',
     `profile_image` VARCHAR(255) DEFAULT NULL COMMENT 'Imagen de perfil del usuario',
+    `failed_attempts` INT(11) DEFAULT 0 COMMENT 'Intentos fallidos de inicio de sesión',
+    `estado_revisar` ENUM('revisada', 'no revisada') DEFAULT 'no revisada' COMMENT 'Estado de revisión del usuario',
+    `respuesta` VARCHAR(255) DEFAULT NULL COMMENT 'Respuesta a la revisión del usuario',
+    `eliminar_razon` TEXT DEFAULT NULL COMMENT 'Razón para la eliminación del usuario',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -562,6 +567,7 @@ CREATE TABLE IF NOT EXISTS `alertas` (
     `fecha_expiracion` TIMESTAMP NULL DEFAULT NULL COMMENT 'Fecha y hora de expiración de la alerta',
     `completado_en` TIMESTAMP NULL DEFAULT NULL COMMENT 'Fecha y hora en la que se completó la alerta',
     `usuario_id` INT(11) DEFAULT NULL COMMENT 'ID del usuario que publicó la alerta',
+    `id_etiqueta` INT(11) DEFAULT NULL COMMENT 'ID de la etiqueta relacionada',
     `id_ubicacion` INT(11) NULL COMMENT 'Referencia a la tabla ubicacion',
     `id_imagen` INT(11) NULL COMMENT 'Referencia a la tabla imagenes',
     PRIMARY KEY (`id`),
@@ -977,6 +983,83 @@ INSERT INTO `imagen` (`nombre`, `usuario_id`, `alerta_id`, `tam_img`, `metadatos
     ('mercado_medieval.jpg', 1, 30, 250000, 'Mercado medieval en Plaza Mayor de Salamanca.', CURRENT_TIMESTAMP),
     ('corte_agua_garrido.jpg', 1, 31, 180000, 'Fuga de agua en tuberías en Garrido.', CURRENT_TIMESTAMP),
     ('actividad_comunitaria.jpg', 1, 32, 160000, 'Jornada de limpieza comunitaria en Garrido.', CURRENT_TIMESTAMP);
+
+-- --------------------------------------------------------------------------
+-- Tabla: INCIDENCIAS - Creación y volcado de datos
+-- --------------------------------------------------------------------------
+DROP TABLE IF EXISTS `incidencias`;
+CREATE TABLE IF NOT EXISTS `incidencias` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único de la incidencia',
+    `descripcion` TEXT NOT NULL COMMENT 'Descripción detallada de la incidencia',
+    `estado` ENUM('revisada', 'no revisada') NOT NULL DEFAULT 'no revisada' COMMENT 'Estado actual de la incidencia',
+    `fecha_creacion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de creación',
+    `fecha_revision` DATETIME DEFAULT NULL COMMENT 'Fecha y hora de revisión',
+    `creado_por` INT(11) DEFAULT NULL COMMENT 'ID del usuario que creó la incidencia',
+    `revisado_por` INT(11) DEFAULT NULL COMMENT 'ID del usuario que revisó la incidencia',
+    `respuesta` TEXT DEFAULT NULL COMMENT 'Respuesta a la incidencia',
+    PRIMARY KEY (`id`),
+    KEY `creado_por` (`creado_por`),
+    KEY `revisado_por` (`revisado_por`),
+    CONSTRAINT `incidencias_ibfk_1` FOREIGN KEY (`creado_por`) REFERENCES `usuario` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `incidencias_ibfk_2` FOREIGN KEY (`revisado_por`) REFERENCES `usuario` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `incidencias` (`descripcion`, `estado`, `fecha_creacion`, `fecha_revision`, `respuesta`) VALUES
+    ('Primera incidencia', 'revisada', '2025-01-01 10:00:00', '2025-01-02 11:30:00', 'Incidencia resuelta satisfactoriamente'),
+    ('Segunda incidencia', 'no revisada', '2025-01-05 14:25:00', NULL, NULL),
+    ('Tercera incidencia', 'revisada', '2025-01-10 09:15:00', '2025-01-11 16:45:00', 'Problema solucionado con actualización de software'),
+    ('Cuarta incidencia', 'no revisada', '2025-01-12 08:30:00', NULL, NULL),
+    ('Quinta incidencia', 'revisada', '2025-01-15 13:20:00', '2025-01-16 10:10:00', 'Error corregido en la base de datos'),
+    ('Sexta incidencia', 'no revisada', '2025-01-18 17:40:00', NULL, NULL),
+    ('Séptima incidencia', 'revisada', '2025-01-20 11:50:00', '2025-01-21 09:25:00', 'Configuración restaurada a valores por defecto');
+
+-- --------------------------------------------------------------------------
+-- Tabla: NOTIFICACION - Creación y volcado de datos
+-- --------------------------------------------------------------------------
+DROP TABLE IF EXISTS `notificacion`;
+CREATE TABLE IF NOT EXISTS `notificacion` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único de la notificación',
+    `usuario_id` INT(11) NOT NULL COMMENT 'ID del usuario destinatario',
+    `mensaje` TEXT NOT NULL COMMENT 'Contenido de la notificación',
+    `fecha` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora de creación',
+    `leida` TINYINT(1) DEFAULT 0 COMMENT 'Indica si la notificación ha sido leída',
+    PRIMARY KEY (`id`),
+    KEY `usuario_id` (`usuario_id`),
+    CONSTRAINT `notificacion_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `notificacion` (`usuario_id`, `mensaje`, `fecha`, `leida`) VALUES
+    (1, 'Alerta: El servidor principal ha superado el límite de uso de CPU.', '2025-02-09 09:00:00', 1),
+    (1, 'Alerta crítica: Fallo en la conexión con el servicio de base de datos.', '2025-02-08 18:30:00', 1),
+    (2, 'Advertencia: Espacio de almacenamiento disponible al 90%.', '2025-02-07 15:45:00', 0),
+    (2, 'Alerta: Se detectó un acceso no autorizado en el sistema.', '2025-02-06 12:20:00', 0),
+    (3, 'Aviso: Reinicio programado del servidor para mantenimiento.', '2025-02-05 08:10:00', 1),
+    (1, 'Notificación: Los backups automáticos se completaron exitosamente.', '2025-02-04 14:50:00', 0);
+
+-- --------------------------------------------------------------------------
+-- Tabla: ALERTAS_CREADOS - Creación y volcado de datos
+-- --------------------------------------------------------------------------
+DROP TABLE IF EXISTS `alertas_creados`;
+CREATE TABLE IF NOT EXISTS `alertas_creados` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'ID único de la alerta creada',
+    `titulo` VARCHAR(255) NOT NULL COMMENT 'Título de la alerta',
+    `descripcion` TEXT DEFAULT NULL COMMENT 'Descripción detallada',
+    `fecha_creacion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de creación',
+    `fecha_vencimiento` DATE DEFAULT NULL COMMENT 'Fecha de vencimiento',
+    `estado` ENUM('activa', 'expirada', 'completada') DEFAULT 'activa' COMMENT 'Estado de la alerta',
+    `acciones` VARCHAR(255) DEFAULT NULL COMMENT 'Acciones disponibles',
+    `usuario_id` INT(11) DEFAULT NULL COMMENT 'ID del usuario que creó la alerta',
+    PRIMARY KEY (`id`),
+    KEY `usuario_id` (`usuario_id`),
+    CONSTRAINT `alertas_creados_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `alertas_creados` (`titulo`, `descripcion`, `fecha_vencimiento`, `acciones`, `usuario_id`) VALUES
+    ('Alerta 1', 'Primera descripción de alerta', '2025-03-01', 'Eliminar', 1),
+    ('Alerta 2', 'Segunda descripción de alerta', '2025-03-05', 'Eliminar', 2),
+    ('Alerta 3', 'Tercera descripción de alerta', '2025-02-20', 'Eliminar', 1),
+    ('Alerta 4', 'Cuarta descripción de alerta', '2025-04-10', 'Eliminar', 3),
+    ('Alerta 5', 'Quinta descripción de alerta', '2025-05-15', 'Eliminar', 2);
 
 SET FOREIGN_KEY_CHECKS = 1;
 COMMIT;

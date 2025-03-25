@@ -61,7 +61,7 @@ $this->title = 'Alertas de tu Ciudad';
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <p class="text-center">No hay alertas para esta ubicación.</p>
+                    <p class="text-center">No hay alertas para estos parámetros.</p>
                 <?php endif; ?>
             </div>
         </div>

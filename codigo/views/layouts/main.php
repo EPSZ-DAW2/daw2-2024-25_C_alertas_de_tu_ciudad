@@ -70,10 +70,16 @@ $role = Yii::$app->user->isGuest ? 'guest' : Yii::$app->user->identity->role;
         $menuItems[] = ['label' => 'Ubicaciones', 'url' => ['/ubicacion/index']];
         $menuItems[] = ['label' => 'Imágenes', 'url' => ['/imagen/index']];
         $menuItems[] = ['label' => 'Usuarios', 'url' => ['/usuarios/index']];
+        $menuItems[] = ['label' => 'Alertas', 'url' => ['/alertasCreados/index']];
+        $menuItems[] = ['label' => 'Incidencias', 'url' => ['/incidencia/index']];
+        $menuItems[] = ['label' => 'Categorías', 'url' => ['/categoria/index']];
+        $menuItems[] = ['label' => 'Etiquetas', 'url' => ['/etiqueta/index']];
+        $menuItems[] = ['label' => 'Comentarios', 'url' => ['/cometarios/index']];
     } elseif (in_array($role, ['user', 'guest'])) {
         // Para usuarios o invitados, mostrar opciones básicas
         $menuItems[] = ['label' => 'Búsqueda', 'url' => ['/site/busqueda']];
-        $menuItems[] = ['label' => 'Alertas', 'url' => ['/site/alertas']];
+        $menuItems[] = ['label' => 'Categorías', 'url' => ['/site/categorias']];
+        $menuItems[] = ['label' => 'Etiquetas', 'url' => ['/site/etiquetas']];
     }
 
     // Renderizar el menú izquierdo
@@ -91,6 +97,7 @@ $role = Yii::$app->user->isGuest ? 'guest' : Yii::$app->user->identity->role;
     // Si el usuario no ha iniciado sesión, ofrecer opción de login
     if (Yii::$app->user->isGuest) {
         $menuItemsRight[] = ['label' => 'Iniciar Sesión', 'url' => ['/site/login']];
+        $menuItemsRight[] = ['label' => 'Registrarse', 'url' => ['/site/registrar']];
     } else {
         // Si está autenticado, mostrar opción de logout y nombre de usuario
         $menuItemsRight[] = '<li class="nav-item">'

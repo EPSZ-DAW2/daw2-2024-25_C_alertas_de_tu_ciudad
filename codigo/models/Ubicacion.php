@@ -10,7 +10,7 @@ use yii\db\ActiveRecord;
  * Representa una ubicación geográfica en el sistema
  *
  * @property int $id Identificador único
- * @property int $ub_code Tipo de ubicación (1=Continente, 2=País, etc.)
+ * @property int $ub_code Tipo de ubicación (1=Continente, 2=País, 3=Comunidad Autónoma, 4=Provincia, 6=Localidad, 7=Barrio/Zona)
  * @property string $nombre Nombre de la ubicación
  * @property string|null $code_iso Código ISO para países/regiones
  * @property int $ub_code_padre ID de la ubicación padre
