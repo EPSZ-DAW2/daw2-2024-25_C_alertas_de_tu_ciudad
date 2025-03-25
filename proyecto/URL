@@ -1,0 +1,15 @@
+http://localhost/daw2-2024-25_C_alertas_de_tu_ciudad/codigo/web/index.php?r=site%2Fbusqueda
+
+http://localhost/daw2-2024-25_C_alertas_de_tu_ciudad/codigo/web/index.php?CategoriaSearch%5Bnombre%5D=&CategoriaSearch%5Bdescripcion%5D=&r=categoria%2Findex
+
+http://localhost/daw2-2024-25_C_alertas_de_tu_ciudad/codigo/web/index.php?r=etiqueta%2Findex
+
+http://localhost/daw2-2024-25_C_alertas_de_tu_ciudad/codigo/web/index.php?r=etiqueta/view-categorias&id=3
+
+http://localhost/daw2-2024-25_C_alertas_de_tu_ciudad/codigo/web/index.php?r=site%2Fcategorias&id_categoria=2
+
+http://localhost/daw2-2024-25_C_alertas_de_tu_ciudad/codigo/web/index.php?r=site%2Fetiquetas&id_etiqueta=41
+
+http://localhost/daw2-2024-25_C_alertas_de_tu_ciudad/codigo/web/index.php?r=propuesta%2Findex
+
+http://localhost/daw2-2024-25_C_alertas_de_tu_ciudad/codigo/web/index.php?r=propuesta%2Fproponer-etiqueta
